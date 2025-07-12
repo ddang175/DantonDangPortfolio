@@ -25,7 +25,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* PRELOADING IMAGES */}
         <link rel="preload" as="image" href="/shojiLeft.webp" />
         <link rel="preload" as="image" href="/shojiRight.webp" />
       </head>
