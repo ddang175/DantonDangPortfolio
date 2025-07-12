@@ -114,9 +114,9 @@
       "alphaMode": "BLEND",
       "doubleSided": true,
       "emissiveFactor": [
-        1.0,
-        1.0,
-        1.0
+        1,
+        1,
+        1
       ],
       "emissiveTexture": {
         "index": 2
