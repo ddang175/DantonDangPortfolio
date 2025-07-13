@@ -18,14 +18,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Danton Dang - Software Engineer",
-  description: "Portfolio of Danton Dang, Software Engineer specializing in modern web development and 3D graphics.",
-  keywords: ["software engineer", "web development", "3D graphics", "portfolio"],
+  description: "Danton Dang's Portfolio.",
+  keywords: ["software engineer", "portfolio"],
   authors: [{ name: "Danton Dang" }],
   viewport: "width=device-width, initial-scale=1",
   robots: "index, follow",
   openGraph: {
     title: "Danton Dang - Software Engineer",
-    description: "Portfolio of Danton Dang, Software Engineer specializing in modern web development and 3D graphics.",
+    description: "Danton Dang's Portfolio.",
     type: "website",
   },
 };
@@ -38,6 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* preloading assets */}
         <link rel="preload" as="image" href="/shojiLeft.webp" />
         <link rel="preload" as="image" href="/shojiRight.webp" />
         <link rel="preload" as="fetch" href="/ae86pixel/scene.gltf" crossOrigin="anonymous" />

@@ -1,8 +1,13 @@
-// Performance monitoring utility
 export class PerformanceMonitor {
   private static instance: PerformanceMonitor;
   private metrics: Map<string, number[]> = new Map();
   private observers: Set<(metric: string, value: number) => void> = new Set();
+  private fpsInterval: NodeJS.Timeout | null = null;
+  private memoryInterval: NodeJS.Timeout | null = null;
+  private warningInterval: NodeJS.Timeout | null = null;
+  private frameCount = 0;
+  private lastTime = 0;
+  private isRunning = false;
 
   static getInstance(): PerformanceMonitor {
     if (!PerformanceMonitor.instance) {
@@ -11,20 +16,23 @@ export class PerformanceMonitor {
     return PerformanceMonitor.instance;
   }
 
-  // Track FPS
   trackFPS(): void {
-    let frameCount = 0;
-    let lastTime = performance.now();
-
+    if (this.isRunning) return;
+    
+    this.lastTime = performance.now();
+    this.isRunning = true;
+    
     const measureFPS = () => {
-      frameCount++;
+      if (!this.isRunning) return;
+      
+      this.frameCount++;
       const currentTime = performance.now();
       
-      if (currentTime - lastTime >= 1000) {
-        const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+      if (currentTime - this.lastTime >= 1000) {
+        const fps = Math.round((this.frameCount * 1000) / (currentTime - this.lastTime));
         this.recordMetric('fps', fps);
-        frameCount = 0;
-        lastTime = currentTime;
+        this.frameCount = 0;
+        this.lastTime = currentTime;
       }
       
       requestAnimationFrame(measureFPS);
@@ -33,16 +41,19 @@ export class PerformanceMonitor {
     requestAnimationFrame(measureFPS);
   }
 
-  // Track memory usage
   trackMemory(): void {
     if ('memory' in performance) {
-      const memory = (performance as any).memory;
-      this.recordMetric('memory-used', memory.usedJSHeapSize / 1024 / 1024); // MB
-      this.recordMetric('memory-total', memory.totalJSHeapSize / 1024 / 1024); // MB
+      this.memoryInterval = setInterval(() => {
+        if (!this.isRunning) return;
+        
+        const memory = (performance as any).memory;
+        this.recordMetric('memory-used', memory.usedJSHeapSize / 1024 / 1024);
+        this.recordMetric('memory-total', memory.totalJSHeapSize / 1024 / 1024);
+        this.recordMetric('memory-limit', memory.jsHeapSizeLimit / 1024 / 1024);
+      }, 5000);
     }
   }
 
-  // Record a performance metric
   recordMetric(name: string, value: number): void {
     if (!this.metrics.has(name)) {
       this.metrics.set(name, []);
@@ -51,50 +62,101 @@ export class PerformanceMonitor {
     const values = this.metrics.get(name)!;
     values.push(value);
     
-    // Keep only last 100 values
-    if (values.length > 100) {
+    if (values.length > 30) {
       values.shift();
     }
     
-    // Notify observers
     this.observers.forEach(observer => observer(name, value));
   }
 
-  // Get average metric value
   getAverageMetric(name: string): number {
     const values = this.metrics.get(name);
     if (!values || values.length === 0) return 0;
     
-    const sum = values.reduce((a, b) => a + b, 0);
-    return sum / values.length;
+    if (values.length > 10) {
+      const sum = values.reduce((a, b) => a + b, 0);
+      return sum / values.length;
+    } else {
+      return values.reduce((a, b) => a + b, 0) / values.length;
+    }
   }
 
-  // Subscribe to metric changes
+  getLatestMetric(name: string): number {
+    const values = this.metrics.get(name);
+    if (!values || values.length === 0) return 0;
+    return values[values.length - 1];
+  }
+
   subscribe(observer: (metric: string, value: number) => void): () => void {
     this.observers.add(observer);
     return () => this.observers.delete(observer);
   }
 
-  // Start monitoring
   start(): void {
+    if (this.isRunning) return;
+    
     this.trackFPS();
     this.trackMemory();
     
-    // Monitor for performance issues
-    setInterval(() => {
-      const fps = this.getAverageMetric('fps');
-      const memory = this.getAverageMetric('memory-used');
+    this.warningInterval = setInterval(() => {
+      if (!this.isRunning) return;
       
-      if (fps < 30) {
+      const fps = this.getLatestMetric('fps');
+      const memory = this.getLatestMetric('memory-used');
+      
+      if (fps < 30 && fps > 0) {
         console.warn('Low FPS detected:', fps);
       }
       
       if (memory > 100) {
         console.warn('High memory usage detected:', memory, 'MB');
       }
-    }, 5000);
+    }, 15000);
+  }
+
+  stop(): void {
+    this.isRunning = false;
+    
+    if (this.fpsInterval) {
+      clearInterval(this.fpsInterval);
+      this.fpsInterval = null;
+    }
+    
+    if (this.memoryInterval) {
+      clearInterval(this.memoryInterval);
+      this.memoryInterval = null;
+    }
+    
+    if (this.warningInterval) {
+      clearInterval(this.warningInterval);
+      this.warningInterval = null;
+    }
+    
+    this.metrics.clear();
+    this.observers.clear();
+    this.frameCount = 0;
+    this.lastTime = 0;
+  }
+
+  getPerformanceSummary(): { fps: number; memory: number; warnings: string[] } {
+    const fps = this.getAverageMetric('fps');
+    const memory = this.getLatestMetric('memory-used');
+    const warnings: string[] = [];
+    
+    if (fps < 30 && fps > 0) {
+      warnings.push(`Low FPS: ${fps}`);
+    }
+    
+    if (memory > 100) {
+      warnings.push(`High memory usage: ${memory.toFixed(1)}MB`);
+    }
+    
+    return { fps, memory, warnings };
+  }
+
+  isActive(): boolean {
+    return this.isRunning;
   }
 }
 
-// Export singleton instance
 export const performanceMonitor = PerformanceMonitor.getInstance(); 

@@ -1,15 +1,15 @@
 'use client';
 
 import { Text3D, Center } from '@react-three/drei';
-import { useMemo } from 'react';
+import { useMemo, useCallback, useEffect } from 'react';
 import * as THREE from 'three';
 
-const fontUrl = '/font/PixelFont.json';
+const fontUrl = '/font/Chromia_Bold.json';
 
 interface LetterConfig {
   char: string;
   position: [number, number, number];
-  rotation?: [number, number, number]; // pitch
+  rotation?: [number, number, number];
 }
 
 interface NeonText3DProps {
@@ -21,6 +21,43 @@ interface NeonText3DProps {
   lightColor?: string;
 }
 
+const materialCache = new Map<string, THREE.MeshStandardMaterial>();
+const MAX_CACHE_SIZE = 10;
+
+const getOrCreateMaterial = (color: string, lightColor: string): THREE.MeshStandardMaterial => {
+  const key = `${color}-${lightColor}`;
+  
+  if (!materialCache.has(key)) {
+    if (materialCache.size >= MAX_CACHE_SIZE) {
+      const firstKey = materialCache.keys().next().value;
+      if (firstKey) {
+        const materialToDispose = materialCache.get(firstKey);
+        if (materialToDispose) {
+          materialToDispose.dispose();
+        }
+        materialCache.delete(firstKey);
+      }
+    }
+    
+    const material = new THREE.MeshStandardMaterial({
+      color,
+      emissive: lightColor,
+      emissiveIntensity: 2,
+      fog: false,
+    });
+    materialCache.set(key, material);
+  }
+  
+  return materialCache.get(key)!;
+};
+
+const cleanupMaterialCache = () => {
+  materialCache.forEach(material => {
+    material.dispose();
+  });
+  materialCache.clear();
+};
+
 export default function NeonText3D({
   letters,
   fontSize = 0.6,
@@ -29,40 +66,40 @@ export default function NeonText3D({
   color = '#796094',
   lightColor = '#d09eff',
 }: NeonText3DProps) {
-  // Memoize material to prevent recreation on every render
-  const material = useMemo(() => (
-    <meshStandardMaterial
-      color={color}
-      emissive={lightColor}
-      emissiveIntensity={1.8}
-      side={THREE.FrontSide}
-      fog={false}
-    />
-  ), [color, lightColor]);
-
-  return (
-    <group>
-      {letters.map((letter, i) => (
-        <group 
-          key={`${letter.char}-${i}`} 
-          position={letter.position}
-          rotation={letter.rotation || [0, 0, 0]}
-        >
-          <Center>
-            <Text3D
-              font={fontUrl}
-              size={fontSize}
-              height={height}
-              letterSpacing={letterSpacing}
-              castShadow={false}
-              receiveShadow={false}
-            >
-              {letter.char}
-              {material}
-            </Text3D>
-          </Center>
-        </group>
-      ))}
-    </group>
+  const material = useMemo(() => 
+    getOrCreateMaterial(color, lightColor), 
+    [color, lightColor]
   );
+
+  const letterGroups = useMemo(() => 
+    letters.map((letter, i) => (
+      <group 
+        key={`${letter.char}-${i}`} 
+        position={letter.position}
+        rotation={letter.rotation || [0, 0, 0]}
+      >
+        <Center>
+          <Text3D
+            font={fontUrl}
+            size={fontSize}
+            height={height}
+            letterSpacing={letterSpacing}
+            castShadow={false}
+            receiveShadow={false}
+            material={material}
+          >
+            {letter.char}
+          </Text3D>
+        </Center>
+      </group>
+    )), [letters, fontSize, height, letterSpacing, material]);
+
+  useEffect(() => {
+    return () => {
+    };
+  }, []);
+
+  return <group>{letterGroups}</group>;
 }
+
+export { cleanupMaterialCache };
