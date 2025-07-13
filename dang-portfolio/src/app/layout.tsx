@@ -41,6 +41,7 @@ export default function RootLayout({
         {/* preloading assets */}
         <link rel="preload" as="image" href="/shojiLeft.webp" />
         <link rel="preload" as="image" href="/shojiRight.webp" />
+        <link rel="preload" as="image" href="/glow.webp" />
         <link rel="preload" as="fetch" href="/ae86pixel/scene.gltf" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
