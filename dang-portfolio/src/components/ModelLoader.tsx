@@ -1,7 +1,7 @@
 'use client';
 
 import { useGLTF } from '@react-three/drei';
-import { Suspense, useMemo, useCallback } from 'react';
+import { Suspense, useMemo, useCallback, useEffect } from 'react';
 import * as THREE from 'three';
 
 interface ModelLoaderProps {
@@ -10,28 +10,74 @@ interface ModelLoaderProps {
   rotationY: number;
 }
 
+const geometryCache = new Map<string, THREE.BufferGeometry>();
+const MAX_GEOMETRY_CACHE_SIZE = 5;
+
+const optimizeGeometry = (geometry: THREE.BufferGeometry): THREE.BufferGeometry => {
+  const key = geometry.uuid;
+  
+  if (!geometryCache.has(key)) {
+    if (geometryCache.size >= MAX_GEOMETRY_CACHE_SIZE) {
+      const firstKey = geometryCache.keys().next().value;
+      if (firstKey) {
+        const geometryToDispose = geometryCache.get(firstKey);
+        if (geometryToDispose) {
+          geometryToDispose.dispose();
+        }
+        geometryCache.delete(firstKey);
+      }
+    }
+    
+    const optimizedGeometry = geometry.clone();
+    
+    optimizedGeometry.computeBoundingSphere();
+    optimizedGeometry.computeBoundingBox();
+    
+    if (optimizedGeometry.attributes.position) {
+      optimizedGeometry.attributes.position.needsUpdate = true;
+    }
+    
+    geometryCache.set(key, optimizedGeometry);
+  }
+  
+  return geometryCache.get(key)!;
+};
+
+const optimizeTexture = (texture: THREE.Texture): void => {
+  texture.generateMipmaps = true;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.flipY = false;
+  texture.premultiplyAlpha = false;
+  texture.anisotropy = 4;
+};
+
+const cleanupGeometryCache = () => {
+  geometryCache.forEach(geometry => {
+    geometry.dispose();
+  });
+  geometryCache.clear();
+};
+
 function Model({ url, rotationX, rotationY }: { url: string; rotationX: number; rotationY: number }) {
   const { scene } = useGLTF(url);
   
-  // Optimize the scene once on load with useCallback for better performance
   const optimizedScene = useMemo(() => {
     const optimizedScene = scene.clone();
     
     optimizedScene.traverse((child: any) => {
       if (child.isMesh) {
-        // Optimize geometry
         if (child.geometry) {
-          child.geometry.computeBoundingSphere();
-          child.geometry.computeBoundingBox();
+          child.geometry = optimizeGeometry(child.geometry);
           child.frustumCulled = true;
         }
         
-        // Disable shadows for better performance
         child.castShadow = false;
         child.receiveShadow = false;
       
         if (child.material) {
-          // Optimize material for performance
           child.material.transparent = false;
           child.material.opacity = 1.0;
           child.material.alphaTest = 0.5;
@@ -39,22 +85,17 @@ function Model({ url, rotationX, rotationY }: { url: string; rotationX: number; 
           child.material.depthTest = true;
           child.material.needsUpdate = true;
           
-          // Performance optimizations
           child.material.side = THREE.FrontSide;
           child.material.fog = false;
           child.material.flatShading = false;
           
-          // Optimize texture settings for better performance
-          const optimizeTexture = (texture: THREE.Texture) => {
-            texture.generateMipmaps = false;
-            texture.minFilter = THREE.LinearFilter;
-            texture.magFilter = THREE.LinearFilter;
-            texture.wrapS = THREE.ClampToEdgeWrapping;
-            texture.wrapT = THREE.ClampToEdgeWrapping;
-            texture.flipY = false; // Disable flip for better performance
-          };
+          if (child.material.roughness !== undefined) {
+            child.material.roughness = Math.max(0.1, child.material.roughness || 0.5);
+          }
+          if (child.material.metalness !== undefined) {
+            child.material.metalness = Math.min(1.0, child.material.metalness || 0.0);
+          }
           
-          // Reduce texture quality if present
           if (child.material.map) {
             optimizeTexture(child.material.map);
           }
@@ -81,6 +122,22 @@ function Model({ url, rotationX, rotationY }: { url: string; rotationX: number; 
     return optimizedScene;
   }, [scene]);
   
+  useEffect(() => {
+    return () => {
+      if (geometryCache.size > MAX_GEOMETRY_CACHE_SIZE) {
+        const keys = Array.from(geometryCache.keys());
+        for (let i = 0; i < Math.min(2, keys.length); i++) {
+          const key = keys[i];
+          const geometry = geometryCache.get(key);
+          if (geometry) {
+            geometry.dispose();
+            geometryCache.delete(key);
+          }
+        }
+      }
+    };
+  }, []);
+  
   return <primitive object={optimizedScene} rotation={[rotationX, rotationY + Math.PI, 0]} position={[0, -.8, -4]} />;
 }
 
@@ -92,5 +149,6 @@ export default function ModelLoader({ modelPath, rotationX, rotationY }: ModelLo
   );
 }
 
-// Preload the model
-useGLTF.preload('/ae86pixel/scene.gltf'); 
+useGLTF.preload('/ae86pixel/scene.gltf');
+
+export { cleanupGeometryCache }; 
