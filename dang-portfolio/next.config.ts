@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Enable experimental features for better performance
   experimental: {
     optimizePackageImports: ['@react-three/fiber', '@react-three/drei', 'three'],
     turbo: {
@@ -14,7 +13,6 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // Optimize images
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -24,21 +22,8 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-  // Compression and optimization
   compress: true,
-  
-  // Bundle analyzer (optional - uncomment for analysis)
-  // webpack: (config, { isServer }) => {
-  //   if (!isServer) {
-  //     config.resolve.fallback = {
-  //       ...config.resolve.fallback,
-  //       fs: false,
-  //     };
-  //   }
-  //   return config;
-  // },
 
-  // Headers for better caching
   async headers() {
     return [
       {
@@ -79,10 +64,8 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Output configuration for better performance
   output: 'standalone',
   
-  // Enable SWC minification for better performance
   swcMinify: true,
 };
 

@@ -39,9 +39,9 @@ function Background3D({ modelPath }: { modelPath: string }) {
           antialias: false,
         }}
         shadows={false}
-        dpr={[1, 1.5]}
+        dpr={[1, 1]}
         frameloop="demand"
-        performance={{ min: 0.5 }}
+        performance={{ min: 0.3 }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);
           gl.toneMapping = THREE.ACESFilmicToneMapping;
@@ -64,12 +64,12 @@ function Background3D({ modelPath }: { modelPath: string }) {
             target={[0, 0, 0]}
           />
           
-          <EffectComposer multisampling={4}>
+          <EffectComposer multisampling={2}>
             <Bloom
               intensity={1.5}
               luminanceThreshold={0.8}
               luminanceSmoothing={0.3}
-              radius={0.8}
+              radius={0.6}
               mipmapBlur={true}
             />
           </EffectComposer>

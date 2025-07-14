@@ -17,20 +17,7 @@ export default function Home() {
     completeIntroMusic,
     startLoadingMusic,
     completeLoadingMusic,
-  } = useAudioControl({
-    onIntroStart: () => {
-      console.log('Intro music started');
-    },
-    onIntroComplete: () => {
-      console.log('Intro music completed');
-    },
-    onLoadingStart: () => {
-      console.log('Loading music started');
-    },
-    onLoadingComplete: () => {
-      console.log('Loading music completed');
-    },
-  });
+  } = useAudioControl();
 
   const handleButtonClick = useCallback(() => {
     setShowIntroText(true);

@@ -7,7 +7,7 @@ import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
 class StarPool {
   private pool: THREE.Mesh[] = [];
   private activeStars: THREE.Mesh[] = [];
-  private maxStars = 60;
+  private maxStars = 70;
 
   constructor(geometry: THREE.BufferGeometry, material: THREE.Material) {
     for (let i = 0; i < this.maxStars; i++) {
@@ -53,22 +53,24 @@ class StarPool {
 
 export default function StarField() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [mouseVelocity, setMouseVelocity] = useState({ x: 0, y: 0 });
   const starPoolRef = useRef<StarPool | null>(null);
   const animationRef = useRef<number | undefined>(undefined);
   const lastMouseUpdate = useRef(0);
   const isMountedRef = useRef(true);
   
   const lastMousePosition = useRef({ x: 0, y: 0 });
+  const mouseVelocity = useRef({ x: 0, y: 0 });
+  const smoothedMouseVelocity = useRef({ x: 0, y: 0 });
   const mouseMovementThreshold = 0.001;
   const isMouseMoving = useRef(false);
   const mouseIdleTimeout = useRef<NodeJS.Timeout | null>(null);
   
   const animationIntensity = useRef(0);
   const targetIntensity = useRef(0);
-  const easingSpeed = 0.05;
+  const easingSpeed = 0.08;
+  const velocityLerpFactor = 0.15;
 
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 60, enabled: true });
+  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 45, enabled: true });
 
   const { geometry, material } = useMemo(() => {
     const geo = new THREE.PlaneGeometry(0.04, 0.04);
@@ -86,24 +88,38 @@ export default function StarField() {
     if (!starPoolRef.current) {
       starPoolRef.current = new StarPool(geometry, material);
       
-      for (let i = 0; i < 60; i++) {
+      for (let i = 0; i < 70; i++) {
         const star = starPoolRef.current.getStar();
         if (star) {
-          const x = (Math.random() - 0.5) * 20;
-          const y = (Math.random() - 0.5) * 12;
-          const z = -10 + Math.random() * 4;
+          let x, y;
+          
+          if (i < 50) {
+            x = (Math.random() - 0.5) * 12;
+            y = (Math.random() - 0.5) * 6;
+          } else if (i < 65) {
+            x = (Math.random() - 0.5) * 18;
+            y = (Math.random() - 0.5) * 10;
+          } else {
+            x = (Math.random() - 0.5) * 24;
+            y = (Math.random() - 0.5) * 14;
+          }
+          
+          const z = -7 + Math.random() * 3;
           
           star.position.set(x, y, z);
           
           (star as any).originalPosition = [x, y, z];
           (star as any).boundary = {
-            minX: x - (0.3 + Math.random() * 0.15),
-            maxX: x + (0.3 + Math.random() * 0.15),
-            minY: y - (0.3 + Math.random() * 0.15),
-            maxY: y + (0.3 + Math.random() * 0.15)
+            minX: x - (0.6 + Math.random() * 0.4),
+            maxX: x + (0.6 + Math.random() * 0.4),
+            minY: y - (0.6 + Math.random() * 0.4),
+            maxY: y + (0.6 + Math.random() * 0.4)
           };
-          (star as any).parallaxFactor = 0.15 + Math.random() * 0.2;
-          (star as any).velocityMultiplier = 0.5 + Math.random() * 1.0;
+          (star as any).parallaxFactor = 0.3 + Math.random() * 0.4;
+          (star as any).velocityMultiplier = 0.8 + Math.random() * 1.2;
+          (star as any).baseAnimationIntensity = 0.1 + Math.random() * 1.2;
+          (star as any).animationIntensity = 0.3 + Math.random() * 0.7;
+          (star as any).targetPosition = { x: star.position.x, y: star.position.y };
         }
       }
     }
@@ -142,13 +158,15 @@ export default function StarField() {
       mouseIdleTimeout.current = setTimeout(() => {
         isMouseMoving.current = false;
         targetIntensity.current = 0;
-      }, 150);
+      }, 800);
       
       setMousePosition({ x, y });
       
-      if (Math.abs(x) > 0.01 || Math.abs(y) > 0.01) {
-        setMouseVelocity({ x: x * 0.1, y: y * 0.1 });
-      }
+      const deltaX = x - lastMousePosition.current.x;
+      const deltaY = y - lastMousePosition.current.y;
+      
+      mouseVelocity.current.x = deltaX * 0.3;
+      mouseVelocity.current.y = deltaY * 0.3;
     }
     
     lastMousePosition.current = { x, y };
@@ -169,7 +187,7 @@ export default function StarField() {
     
     let animationId: number;
     let lastUpdate = 0;
-    const throttleInterval = 20;
+    const throttleInterval = 32;
     
     const animate = (currentTime: number) => {
       if (!isMountedRef.current) return;
@@ -187,23 +205,37 @@ export default function StarField() {
       
       animationIntensity.current += (targetIntensity.current - animationIntensity.current) * easingSpeed;
       
+      smoothedMouseVelocity.current.x += (mouseVelocity.current.x - smoothedMouseVelocity.current.x) * velocityLerpFactor;
+      smoothedMouseVelocity.current.y += (mouseVelocity.current.y - smoothedMouseVelocity.current.y) * velocityLerpFactor;
+      
       if (animationIntensity.current > 0.001) {
         const mouseDistance = Math.sqrt(mousePosition.x * mousePosition.x + mousePosition.y * mousePosition.y);
+        const velocityMagnitude = Math.sqrt(
+          smoothedMouseVelocity.current.x * smoothedMouseVelocity.current.x + 
+          smoothedMouseVelocity.current.y * smoothedMouseVelocity.current.y
+        );
         
-        if (mouseDistance > 0.001) {
+        if (mouseDistance > 0.001 || velocityMagnitude > 0.001) {
           const normalizedX = mouseDistance > 0 ? mousePosition.x / mouseDistance : 0;
           const normalizedY = mouseDistance > 0 ? mousePosition.y / mouseDistance : 0;
           
-          const edgeSlowdown = Math.max(0.3, 1.0 - mouseDistance * 0.5);
+          const velocityX = smoothedMouseVelocity.current.x * 2;
+          const velocityY = smoothedMouseVelocity.current.y * 2;
+          
+          const edgeSlowdown = Math.max(0.6, 1.0 - mouseDistance * 0.2);
           
           if (starPoolRef.current) {
             const activeStars = starPoolRef.current.getActiveStars();
+            const activeStarsLength = activeStars.length;
             
-            activeStars.forEach(star => {
+            for (let i = 0; i < activeStarsLength; i++) {
+              const star = activeStars[i];
               const starData = star as any;
-              const baseMovement = 0.03 * edgeSlowdown * animationIntensity.current;
-              const parallaxX = normalizedX * starData.parallaxFactor * baseMovement * starData.velocityMultiplier;
-              const parallaxY = normalizedY * starData.parallaxFactor * baseMovement * starData.velocityMultiplier * 1.2;
+              
+              const dynamicIntensity = Math.max(0.1, starData.baseAnimationIntensity - (animationIntensity.current * 0.3));
+              const baseMovement = 0.12 * edgeSlowdown * animationIntensity.current * dynamicIntensity;
+              const parallaxX = (normalizedX + velocityX) * starData.parallaxFactor * baseMovement * starData.velocityMultiplier;
+              const parallaxY = (normalizedY + velocityY) * starData.parallaxFactor * baseMovement * starData.velocityMultiplier * 1.4;
               
               const newX = star.position.x + parallaxX;
               const newY = star.position.y + parallaxY;
@@ -213,7 +245,7 @@ export default function StarField() {
               const distanceFromMinY = Math.abs(newY - starData.boundary.minY);
               const distanceFromMaxY = Math.abs(newY - starData.boundary.maxY);
               
-              const decelZone = 0.3;
+              const decelZone = 0.5;
               const boundarySizeX = starData.boundary.maxX - starData.boundary.minX;
               const boundarySizeY = starData.boundary.maxY - starData.boundary.minY;
               const decelDistanceX = boundarySizeX * decelZone;
@@ -223,15 +255,19 @@ export default function StarField() {
               let decelFactorY = 1.0;
               
               if (newX < starData.boundary.minX + decelDistanceX) {
-                decelFactorX = Math.max(0.01, (newX - starData.boundary.minX) / decelDistanceX);
+                const distanceFromMin = newX - starData.boundary.minX;
+                decelFactorX = Math.max(0.0, distanceFromMin / decelDistanceX);
               } else if (newX > starData.boundary.maxX - decelDistanceX) {
-                decelFactorX = Math.max(0.01, (starData.boundary.maxX - newX) / decelDistanceX);
+                const distanceFromMax = starData.boundary.maxX - newX;
+                decelFactorX = Math.max(0.0, distanceFromMax / decelDistanceX);
               }
               
               if (newY < starData.boundary.minY + decelDistanceY) {
-                decelFactorY = Math.max(0.01, (newY - starData.boundary.minY) / decelDistanceY);
+                const distanceFromMin = newY - starData.boundary.minY;
+                decelFactorY = Math.max(0.0, distanceFromMin / decelDistanceY);
               } else if (newY > starData.boundary.maxY - decelDistanceY) {
-                decelFactorY = Math.max(0.01, (starData.boundary.maxY - newY) / decelDistanceY);
+                const distanceFromMax = starData.boundary.maxY - newY;
+                decelFactorY = Math.max(0.0, distanceFromMax / decelDistanceY);
               }
               
               const adjustedX = star.position.x + (parallaxX * decelFactorX);
@@ -240,8 +276,13 @@ export default function StarField() {
               const finalX = Math.max(starData.boundary.minX, Math.min(starData.boundary.maxX, adjustedX));
               const finalY = Math.max(starData.boundary.minY, Math.min(starData.boundary.maxY, adjustedY));
 
-              star.position.set(finalX, finalY, star.position.z);
-            });
+              starData.targetPosition.x = finalX;
+              starData.targetPosition.y = finalY;
+              
+              const lerpFactor = 0.08 + (starData.animationIntensity * 0.12);
+              star.position.x += (starData.targetPosition.x - star.position.x) * lerpFactor;
+              star.position.y += (starData.targetPosition.y - star.position.y) * lerpFactor;
+            }
           }
         }
       }

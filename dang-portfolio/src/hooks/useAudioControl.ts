@@ -70,7 +70,7 @@ export const useAudioControl = ({
           volumeIntervalRef.current = null;
         }
       }
-    }, 16);
+    }, 32);
   }, []);
 
   const startIntroMusic = useCallback(() => {

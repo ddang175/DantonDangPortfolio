@@ -16,7 +16,7 @@ export const useCarAnimation = (isMouseMoving: boolean, carTargetIntensity: numb
   const carEasingSpeed = 0.08;
   const animationRefs = useRef<number[]>([]);
 
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 60, enabled: true });
+  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 45, enabled: true });
 
   useEffect(() => {
     if (isMouseMoving) {

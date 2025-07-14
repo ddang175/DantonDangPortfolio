@@ -9,7 +9,7 @@ export default function CursorGlow() {
   const [lerpPosition, setLerpPosition] = useState({ x: 0, y: 0 });
   const animationRef = useRef<number | undefined>(undefined);
 
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 60, enabled: true });
+  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 45, enabled: true });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {

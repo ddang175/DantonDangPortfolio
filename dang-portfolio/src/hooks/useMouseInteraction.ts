@@ -16,7 +16,7 @@ export const useMouseInteraction = () => {
 
   useEffect(() => {
     let lastUpdate = 0;
-    const throttleDelay = 16;
+    const throttleDelay = 32;
     
     const handleMouseMove = (event: MouseEvent) => {
       const now = Date.now();
@@ -42,7 +42,7 @@ export const useMouseInteraction = () => {
         mouseIdleTimeout.current = setTimeout(() => {
           isMouseMoving.current = false;
           carTargetIntensity.current = 0;
-        }, 100);
+        }, 1000);
         
         setMousePosition({ x, y });
       }
