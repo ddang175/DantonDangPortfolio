@@ -66,7 +66,7 @@ export default function OptimizedLetterGroup({
   const secondaryYawAmplitude = useMemo(() => FLOATING_CONFIG.YAW_AMPLITUDE * FLOATING_CONFIG.SECONDARY_YAW_MULT, []);
   const secondaryRollAmplitude = useMemo(() => FLOATING_CONFIG.ROLL_AMPLITUDE * FLOATING_CONFIG.SECONDARY_ROLL_MULT, []);
 
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 60, enabled: true });
+  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 45, enabled: true });
 
   useFrame((state) => {
     if (!groupRef.current) return;
