@@ -2,11 +2,14 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
+import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
 
 export default function CursorGlow() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [lerpPosition, setLerpPosition] = useState({ x: 0, y: 0 });
   const animationRef = useRef<number | undefined>(undefined);
+
+  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 60, enabled: true });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -14,6 +17,13 @@ export default function CursorGlow() {
     };
 
     const animate = () => {
+      const currentTime = performance.now();
+      
+      if (!shouldRenderFrame(currentTime)) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      
       setLerpPosition(prev => ({
         x: prev.x + (position.x - prev.x) * 0.05,
         y: prev.y + (position.y - prev.y) * 0.05,

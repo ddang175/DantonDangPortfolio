@@ -8,13 +8,13 @@ import * as THREE from 'three';
 import StarField from './StarField';
 import ModelLoader from './ModelLoader';
 import { SceneLights } from './SceneLights';
-import { LetterTexts } from './LetterTexts';
-import { useMouseInteraction } from '../hooks/useMouseInteraction';
-import { useCarAnimation } from '../hooks/useCarAnimation';
+import { LetterTexts } from '../NeonLetters/LetterTexts';
+import { useMouseInteraction } from '../../hooks/useMouseInteraction';
+import { useCarAnimation } from '../../hooks/useCarAnimation';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 
 function Background3D({ modelPath }: { modelPath: string }) {
-  const { smoothMousePosition, isMouseMoving, carTargetIntensity, mousePosition } = useMouseInteraction();
+  const { isMouseMoving, carTargetIntensity, mousePosition } = useMouseInteraction();
   const { carRotationX, carRotationY } = useCarAnimation(isMouseMoving, carTargetIntensity, mousePosition);
 
   return (
@@ -33,13 +33,13 @@ function Background3D({ modelPath }: { modelPath: string }) {
           stencil: false,
           depth: true,
           logarithmicDepthBuffer: false,
-          precision: "mediump",
+          precision: "lowp",
           preserveDrawingBuffer: false,
           failIfMajorPerformanceCaveat: false,
-          antialias: true,
+          antialias: false,
         }}
         shadows={false}
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
         frameloop="demand"
         performance={{ min: 0.5 }}
         onCreated={({ gl }) => {
@@ -53,7 +53,7 @@ function Background3D({ modelPath }: { modelPath: string }) {
         <Suspense fallback={null}>
           <StarField />
           <SceneLights />
-          <LetterTexts smoothMousePosition={smoothMousePosition} />
+          <LetterTexts />
           <ModelLoader modelPath={modelPath} rotationX={carRotationX} rotationY={carRotationY} />
           
           <OrbitControls 
