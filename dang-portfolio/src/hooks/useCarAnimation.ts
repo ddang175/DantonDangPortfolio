@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useFrameRateLimit } from './useFrameRateLimit';
 
 interface CarAnimationState {
   carRotationX: number;
@@ -15,6 +16,8 @@ export const useCarAnimation = (isMouseMoving: boolean, carTargetIntensity: numb
   const carEasingSpeed = 0.08;
   const animationRefs = useRef<number[]>([]);
 
+  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 60, enabled: true });
+
   useEffect(() => {
     if (isMouseMoving) {
       const rotationY = Math.atan2(mousePosition.x, 0.5) * 0.5; 
@@ -28,6 +31,14 @@ export const useCarAnimation = (isMouseMoving: boolean, carTargetIntensity: numb
     let rafId: number;
     
     const animate = () => {
+      const currentTime = performance.now();
+      
+      if (!shouldRenderFrame(currentTime)) {
+        rafId = requestAnimationFrame(animate);
+        animationRefs.current.push(rafId);
+        return;
+      }
+      
       const currentRotationX = carRotationX;
       const currentRotationY = carRotationY;
       const targetX = targetRotationRef.current.x;

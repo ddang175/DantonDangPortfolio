@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import * as THREE from 'three';
+import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
 
 class StarPool {
   private pool: THREE.Mesh[] = [];
@@ -66,6 +67,8 @@ export default function StarField() {
   const animationIntensity = useRef(0);
   const targetIntensity = useRef(0);
   const easingSpeed = 0.05;
+
+  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 60, enabled: true });
 
   const { geometry, material } = useMemo(() => {
     const geo = new THREE.PlaneGeometry(0.04, 0.04);
@@ -170,6 +173,11 @@ export default function StarField() {
     
     const animate = (currentTime: number) => {
       if (!isMountedRef.current) return;
+      
+      if (!shouldRenderFrame(currentTime)) {
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
       
       if (currentTime - lastUpdate < throttleInterval) {
         animationId = requestAnimationFrame(animate);

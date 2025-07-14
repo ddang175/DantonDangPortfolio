@@ -1,10 +1,31 @@
+import { useEffect, useState } from "react";
+
 interface LoadingPanelProps {
   position: 'top' | 'bottom';
   isVisible: boolean;
+  onAnimationStart?: () => void;
+  onAnimationComplete?: () => void;
   className?: string;
 }
 
-export default function LoadingPanel({ position, isVisible, className = '' }: LoadingPanelProps) {
+export default function LoadingPanel({ position, isVisible, onAnimationStart, onAnimationComplete, className = '' }: LoadingPanelProps) {
+  const [hasTriggeredStart, setHasTriggeredStart] = useState(false);
+  const [hasTriggeredComplete, setHasTriggeredComplete] = useState(false);
+
+  useEffect(() => {
+    if (isVisible && !hasTriggeredStart && onAnimationStart) {
+      onAnimationStart();
+      setHasTriggeredStart(true);
+    }
+  }, [isVisible, hasTriggeredStart, onAnimationStart]);
+
+  useEffect(() => {
+    if (!isVisible && hasTriggeredStart && !hasTriggeredComplete && onAnimationComplete) {
+      onAnimationComplete();
+      setHasTriggeredComplete(true);
+    }
+  }, [isVisible, hasTriggeredStart, hasTriggeredComplete, onAnimationComplete]);
+
   const getPositionClasses = () => {
     switch (position) {
       case 'top':

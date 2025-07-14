@@ -1,4 +1,4 @@
-import { NAME_COLORS, SWE_COLORS } from '../utils/letterConfigs';
+import { NAME_COLORS, SWE_COLORS } from '../NeonLetters/letterConfigs';
 
 export const SceneLights = () => {
   return (

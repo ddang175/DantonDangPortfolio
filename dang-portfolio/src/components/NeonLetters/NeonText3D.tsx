@@ -1,10 +1,8 @@
 'use client';
 
-import { Text3D, Center } from '@react-three/drei';
-import { useMemo, useCallback, useEffect } from 'react';
+import { useMemo } from 'react';
 import * as THREE from 'three';
-
-const fontUrl = '/font/Chromia_Bold.json';
+import AnimatedLetter from './AnimatedLetter';
 
 interface LetterConfig {
   char: string;
@@ -22,7 +20,7 @@ interface NeonText3DProps {
 }
 
 const materialCache = new Map<string, THREE.MeshStandardMaterial>();
-const MAX_CACHE_SIZE = 10;
+const MAX_CACHE_SIZE = 5;
 
 const getOrCreateMaterial = (color: string, lightColor: string): THREE.MeshStandardMaterial => {
   const key = `${color}-${lightColor}`;
@@ -44,6 +42,9 @@ const getOrCreateMaterial = (color: string, lightColor: string): THREE.MeshStand
       emissive: lightColor,
       emissiveIntensity: 2,
       fog: false,
+      transparent: false,
+      depthWrite: true,
+      depthTest: true,
     });
     materialCache.set(key, material);
   }
@@ -73,31 +74,18 @@ export default function NeonText3D({
 
   const letterGroups = useMemo(() => 
     letters.map((letter, i) => (
-      <group 
-        key={`${letter.char}-${i}`} 
+      <AnimatedLetter
+        key={`${letter.char}-${letter.position[0]}-${letter.position[1]}-${i}`}
+        char={letter.char}
         position={letter.position}
-        rotation={letter.rotation || [0, 0, 0]}
-      >
-        <Center>
-          <Text3D
-            font={fontUrl}
-            size={fontSize}
-            height={height}
-            letterSpacing={letterSpacing}
-            castShadow={false}
-            receiveShadow={false}
-            material={material}
-          >
-            {letter.char}
-          </Text3D>
-        </Center>
-      </group>
+        baseRotation={letter.rotation || [0, 0, 0]}
+        fontSize={fontSize}
+        height={height}
+        letterSpacing={letterSpacing}
+        material={material}
+        index={i}
+      />
     )), [letters, fontSize, height, letterSpacing, material]);
-
-  useEffect(() => {
-    return () => {
-    };
-  }, []);
 
   return <group>{letterGroups}</group>;
 }
