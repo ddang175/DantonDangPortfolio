@@ -2,7 +2,6 @@ import { NAME_COLORS, SWE_COLORS } from '../NeonLetters/letterConfigs';
 
 export const SceneLights = () => {
   return (
-    // light for danton dang
     <>
       <pointLight 
         position={[-0.24, 0.39, 1.2]}
@@ -17,7 +16,6 @@ export const SceneLights = () => {
         distance={5.2}
         color={NAME_COLORS.light}
       />
-{/* light for software engineer */}
       <pointLight 
         position={[-0.64, -1.51, -1.5]} 
         intensity={3}

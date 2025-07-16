@@ -134,7 +134,7 @@ export default function IntroText({ onComplete, onAnimationStart, className = ''
     <div className={`absolute inset-0 z-[60] flex flex-col justify-center items-center text-white ${className}`}>
       <div 
         className="text-4xl md:text-6xl font-bold text-center leading-relaxed"
-        style={{ fontFamily: 'Zekton, sans-serif' }}
+        style={{ fontFamily: 'Resamitz, sans-serif' }}
       >
         {lines.map((line, index) => (
           <div key={index} className="mb-4">

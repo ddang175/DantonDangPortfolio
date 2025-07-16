@@ -1,0 +1,11 @@
+Model Information:
+* title:	GitHub
+* source:	https://sketchfab.com/3d-models/github-b2bd1d8290e44ce49e7e41dd495592b5
+* author:	sudo-self (https://sketchfab.com/sudo-self)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "GitHub" (https://sketchfab.com/3d-models/github-b2bd1d8290e44ce49e7e41dd495592b5) by sudo-self (https://sketchfab.com/sudo-self) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

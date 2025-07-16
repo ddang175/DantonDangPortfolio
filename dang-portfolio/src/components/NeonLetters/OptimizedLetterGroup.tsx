@@ -23,13 +23,14 @@ interface OptimizedLetterGroupProps {
   color: string;
   lightColor: string;
   animationIntensity?: number;
+  emissiveIntensity?: number; // new prop
 }
 
-const createMaterial = (color: string, lightColor: string): THREE.MeshStandardMaterial => {
+const createMaterial = (color: string, lightColor: string, emissiveIntensity = 3.5): THREE.MeshStandardMaterial => {
   return new THREE.MeshStandardMaterial({
     color,
     emissive: lightColor,
-    emissiveIntensity: 2,
+    emissiveIntensity,
     fog: false,
     transparent: false,
     depthWrite: true,
@@ -57,10 +58,11 @@ export default function OptimizedLetterGroup({
   letters,
   color,
   lightColor,
-  animationIntensity = 1.0
+  animationIntensity = 1.0,
+  emissiveIntensity = 3.5 // default
 }: OptimizedLetterGroupProps) {
   const groupRef = useRef<THREE.Group>(null);
-  const material = useMemo(() => createMaterial(color, lightColor), [color, lightColor]);
+  const material = useMemo(() => createMaterial(color, lightColor, emissiveIntensity), [color, lightColor, emissiveIntensity]);
   
   const secondaryPitchAmplitude = useMemo(() => FLOATING_CONFIG.PITCH_AMPLITUDE * FLOATING_CONFIG.SECONDARY_PITCH_MULT, []);
   const secondaryYawAmplitude = useMemo(() => FLOATING_CONFIG.YAW_AMPLITUDE * FLOATING_CONFIG.SECONDARY_YAW_MULT, []);

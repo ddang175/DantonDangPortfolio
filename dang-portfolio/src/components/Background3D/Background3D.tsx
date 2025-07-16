@@ -9,6 +9,8 @@ import StarField from './StarField';
 import ModelLoader from './ModelLoader';
 import { SceneLights } from './SceneLights';
 import { LetterTexts } from '../NeonLetters/LetterTexts';
+import { FloatingLinkedInLogo } from '../LinkedInLogo';
+import { FloatingGitHubLogo } from '../GitHubLogo';
 import { useMouseInteraction } from '../../hooks/useMouseInteraction';
 import { useCarAnimation } from '../../hooks/useCarAnimation';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -54,6 +56,13 @@ function Background3D({ modelPath }: { modelPath: string }) {
           <StarField />
           <SceneLights />
           <LetterTexts />
+          <FloatingLinkedInLogo 
+            linkedInUrl="https://www.linkedin.com/in/ddang175"
+            boundarySize={0.1}
+            glowColor="#0077b5"
+            emissiveColor="#00a0dc"
+          />
+          <FloatingGitHubLogo />
           <ModelLoader modelPath={modelPath} rotationX={carRotationX} rotationY={carRotationY} />
           
           <OrbitControls 

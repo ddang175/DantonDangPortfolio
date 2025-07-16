@@ -115,7 +115,7 @@ export default function PortfolioButton({ onButtonClick, className = '' }: Portf
           backdrop-blur-sm
         `}
         style={{
-          fontFamily: 'Zekton, sans-serif',
+          fontFamily: 'Resamitz-Bold, sans-serif',
           fontSize: '2rem',
           fontWeight: 'bold',
           transform: `

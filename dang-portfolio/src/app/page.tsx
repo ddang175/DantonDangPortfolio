@@ -5,6 +5,8 @@ import { BlurMask, LoadingPanel, IntroText } from "@/components/openingSequence"
 import { CursorGlow, PortfolioButton } from "@/components/UI";
 import Background3D from "@/components/Background3D";
 import { useAudioControl } from "@/hooks/useAudioControl";
+import { FloatingLinkedInLogo } from "@/components/LinkedInLogo";
+import { FloatingGitHubLogo } from "@/components/GitHubLogo";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -20,6 +22,7 @@ export default function Home() {
   } = useAudioControl();
 
   const handleButtonClick = useCallback(() => {
+    setShowPortfolioButton(false);
     setShowIntroText(true);
   }, []);
 
@@ -57,8 +60,11 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden bg-black">
       <Background3D modelPath="/ae86pixel/scene.gltf" />
 
+      {/* Remove Social 3D Logos from DOM overlay. They are rendered inside Background3D/Canvas. */}
+
+      {/* Intro Sequence overlays - do not block pointer events for logo buttons */}
       {showPortfolioButton && (
-        <PortfolioButton onButtonClick={handleButtonClick} />
+        <PortfolioButton onButtonClick={handleButtonClick} className="pointer-events-auto" />
       )}
 
       {showIntroText && (
@@ -68,12 +74,12 @@ export default function Home() {
         />
       )}
 
-      <div className="absolute inset-0 z-40">
+      <div className="absolute inset-0 z-40 pointer-events-none">
         <BlurMask position="top" isVisible={isLoading} />
         <BlurMask position="bottom" isVisible={isLoading} />
       </div>
 
-      <div className="absolute inset-0 z-50">
+      <div className="absolute inset-0 z-50 pointer-events-none">
         <LoadingPanel position="top" isVisible={isLoading} onAnimationStart={handleLoadingStart} onAnimationComplete={handleLoadingComplete} />
         <LoadingPanel position="bottom" isVisible={isLoading} onAnimationStart={handleLoadingStart} onAnimationComplete={handleLoadingComplete} />
       </div>

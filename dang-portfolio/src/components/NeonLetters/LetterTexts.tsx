@@ -28,16 +28,25 @@ export const LetterTexts = () => {
       index
     })), [nameLetters]);
 
-  const optimizedSweLetters = useMemo(() => 
-    sweLetters.map((letter, index) => ({
+  const optimizedSweLetters = useMemo(() => {
+    const fontSize = 0.15;
+    const compress = 0.9;
+    const xs = sweLetters.map(l => l.position[0]);
+    const meanX = xs.reduce((a, b) => a + b, 0) / xs.length;
+    return sweLetters.map((letter, index) => ({
       char: letter.char,
-      position: letter.position,
+      position: [
+        (letter.position[0] - meanX) * compress,
+        letter.position[1],
+        letter.position[2]
+      ] as [number, number, number],
       baseRotation: letter.rotation,
-      fontSize: 0.15,
+      fontSize,
       height: 0.02,
-      letterSpacing: 0.04,
+      letterSpacing: 0.009,
       index
-    })), [sweLetters]);
+    }));
+  }, [sweLetters]);
 
   return (
     <>
@@ -52,6 +61,7 @@ export const LetterTexts = () => {
         color={SWE_COLORS.text}
         lightColor={SWE_COLORS.light}
         animationIntensity={0.4}
+        emissiveIntensity={1.95}
       />
     </>
   );
