@@ -25,20 +25,20 @@ interface FloatingGitHubLogoProps {
 }
 
 const FLOATING_CONFIG = {
-  PITCH_SPEED: 0.4,
+  PITCH_SPEED: 0.7,
   YAW_SPEED: 0.6,
-  ROLL_SPEED: 0.3,
-  PITCH_AMPLITUDE: 0.01, // reduced for small logo
-  YAW_AMPLITUDE: 0.015, // reduced for small logo
-  ROLL_AMPLITUDE: 0.008, // reduced for small logo
+  ROLL_SPEED: 0.5,
+  PITCH_AMPLITUDE: 0.15,
+  YAW_AMPLITUDE: 0.15,
+  ROLL_AMPLITUDE: 0.15,
   POSITION_SPEED: 0.15,
-  POSITION_AMPLITUDE: 0.03, // reduced for small logo
+  POSITION_AMPLITUDE: 0.03,
   PHASE_OFFSET: 2.5,
-  HOVER_SCALE: 1.2, // less dramatic for small logo
+  HOVER_SCALE: 1.2,
   HOVER_INTENSITY: 4.2,
   BASE_EMISSIVE_INTENSITY: 3.35,
-  BASE_COLOR: '#2ea44f', // GitHub green
-  HOVER_COLOR: '#34d058', // lighter green
+  BASE_COLOR: '#2ea44f',
+  HOVER_COLOR: '#34d058',
 };
 
 function lerp(a: number, b: number, t: number) {
@@ -71,8 +71,7 @@ function GitHubModel({
 }) {
   const { scene } = useGLTF(url) as GLTF & { scene: THREE.Group };
   const groupRef = useRef<THREE.Group>(null);
-  // Opposite x position of LinkedIn: 0.74 instead of -0.74
-  const basePosition = useRef<[number, number, number]>([0.74, -0.988, -1.3]);
+  const basePosition = useRef<[number, number, number]>([0.5, -1, -1.3]);
   const isHovered = useRef(false);
   const materialsRef = useRef<THREE.Material[]>([]);
 
@@ -149,10 +148,12 @@ function GitHubModel({
 
     hoverT.current += (targetHoverT.current - hoverT.current) * 0.15;
 
-    // Remove rotation animation, only apply baseRotation
-    groupRef.current.rotation.x = baseRotation[0];
-    groupRef.current.rotation.y = baseRotation[1];
-    groupRef.current.rotation.z = baseRotation[2];
+    const pitchOffset = Math.sin(time * FLOATING_CONFIG.PITCH_SPEED) * FLOATING_CONFIG.PITCH_AMPLITUDE;
+    const yawOffset = Math.cos(time * FLOATING_CONFIG.YAW_SPEED) * FLOATING_CONFIG.YAW_AMPLITUDE;
+    const rollOffset = Math.sin(time * FLOATING_CONFIG.ROLL_SPEED) * FLOATING_CONFIG.ROLL_AMPLITUDE;
+    groupRef.current.rotation.x = baseRotation[0] + pitchOffset;
+    groupRef.current.rotation.y = baseRotation[1] + yawOffset;
+    groupRef.current.rotation.z = baseRotation[2] + rollOffset;
 
     groupRef.current.position.set(
       basePosition.current[0],
@@ -179,7 +180,6 @@ function GitHubModel({
     }
   });
 
-  // Place clickable mesh as a sibling, not a child, so it's not affected by group transforms
   return (
     <>
       <group 
@@ -211,7 +211,7 @@ export default function FloatingGitHubLogo({
   boundarySize = 0.005,
   glowColor = '#2ea44f',
   emissiveColor = '#34d058',
-  baseRotation = [-0.48, -0.93, -0.1],
+  baseRotation = [-0.3, 1.4, 0],
   clickBoxScale = [0.35, 0.35, 0.02],
 }: FloatingGitHubLogoProps) {
   const handleLogoClick = useCallback(() => {

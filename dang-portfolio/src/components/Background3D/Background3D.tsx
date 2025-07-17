@@ -11,6 +11,7 @@ import { SceneLights } from './SceneLights';
 import { LetterTexts } from '../NeonLetters/LetterTexts';
 import { FloatingLinkedInLogo } from '../LinkedInLogo';
 import { FloatingGitHubLogo } from '../GitHubLogo';
+import { FloatingEmailLogo } from '../EmailLogo';
 import { useMouseInteraction } from '../../hooks/useMouseInteraction';
 import { useCarAnimation } from '../../hooks/useCarAnimation';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -51,6 +52,7 @@ function Background3D({ modelPath }: { modelPath: string }) {
           gl.outputColorSpace = THREE.SRGBColorSpace;
           gl.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         }}
+        onContextMenu={(e) => e.stopPropagation()}
       >
         <Suspense fallback={null}>
           <StarField />
@@ -63,6 +65,12 @@ function Background3D({ modelPath }: { modelPath: string }) {
             emissiveColor="#00a0dc"
           />
           <FloatingGitHubLogo />
+          <FloatingEmailLogo 
+            emailAddress="ddang175@gmail.com"
+            boundarySize={0.1}
+            glowColor="#ea4335"
+            emissiveColor="#ff6b6b"
+          />
           <ModelLoader modelPath={modelPath} rotationX={carRotationX} rotationY={carRotationY} />
           
           <OrbitControls 

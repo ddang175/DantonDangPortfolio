@@ -9,12 +9,12 @@ interface IntroTextProps {
 export default function IntroText({ onComplete, onAnimationStart, className = '' }: IntroTextProps) {
   const TIMING = {
     NORMAL_CHAR_DELAY: 50,
-    DOT_CHAR_DELAY: 150,
+    DOT_CHAR_DELAY: 100,
     
-    LINE_TRANSITION_DELAY: 600,
+    LINE_TRANSITION_DELAY: 800,
     
-    FINAL_PAUSE: 1250,
-    COMPLETION_DELAY: 250,
+    FINAL_PAUSE: 1100,
+    COMPLETION_DELAY: 200,
     
     DELETE_CHAR_DELAY: 25,
   };
@@ -65,11 +65,6 @@ export default function IntroText({ onComplete, onAnimationStart, className = ''
   };
 
   useEffect(() => {
-    const fontFace = new FontFace('ChromiaBold', 'url(/font/ChromiaBold.otf)');
-    fontFace.load().then(() => {
-      document.fonts.add(fontFace);
-    });
-
     return () => {
       timeoutRefs.current.forEach(clearTimeout);
     };
@@ -133,15 +128,31 @@ export default function IntroText({ onComplete, onAnimationStart, className = ''
   return (
     <div className={`absolute inset-0 z-[60] flex flex-col justify-center items-center text-white ${className}`}>
       <div 
-        className="text-4xl md:text-6xl font-bold text-center leading-relaxed"
-        style={{ fontFamily: 'Resamitz, sans-serif' }}
+        className="text-4xl md:text-6xl text-center leading-relaxed"
+        style={{ fontFamily: 'Inter, sans-serif', 
+          fontWeight: '400',
+        }}
       >
         {lines.map((line, index) => (
-          <div key={index} className="mb-4">
-            {index < currentLine ? line : index === currentLine ? currentText : ''}
+          <div key={index} className="mb-4 relative h-[1.2em]">
+            <div className="absolute inset-0 flex justify-center">
+              <div className="relative">
+                <span 
+                  className="invisible whitespace-nowrap"
+                  style={{ fontFamily: 'Inter, sans-serif', 
+                    fontWeight: '400',
+                  }}
+                >
+                  {line}
+                </span>
+                <span className="absolute left-0 top-0 whitespace-nowrap">
+                  {index < currentLine ? line : index === currentLine ? currentText : ''}
+                </span>
+              </div>
+            </div>
           </div>
         ))}
       </div>
     </div>
   );
-} 
+}

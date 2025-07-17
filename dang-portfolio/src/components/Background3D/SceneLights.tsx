@@ -17,18 +17,14 @@ export const SceneLights = () => {
         color={NAME_COLORS.light}
       />
       <pointLight 
-        position={[-0.64, -1.51, -1.5]} 
-        intensity={3}
-        distance={2}
+        position={[-0, -0.4, 2]} 
+        intensity={7}
+        distance={4.5}
+        decay={0}
         color={SWE_COLORS.light}
       />
       
-      <pointLight 
-        position={[0.64, -1.51, -1.5]} 
-        intensity={1.7}
-        distance={2}
-        color={SWE_COLORS.light}
-      />
+      
     </>
   );
 }; 

@@ -23,7 +23,7 @@ interface OptimizedLetterGroupProps {
   color: string;
   lightColor: string;
   animationIntensity?: number;
-  emissiveIntensity?: number; // new prop
+  emissiveIntensity?: number;
 }
 
 const createMaterial = (color: string, lightColor: string, emissiveIntensity = 3.5): THREE.MeshStandardMaterial => {
@@ -59,7 +59,7 @@ export default function OptimizedLetterGroup({
   color,
   lightColor,
   animationIntensity = 1.0,
-  emissiveIntensity = 3.5 // default
+  emissiveIntensity = 3.5
 }: OptimizedLetterGroupProps) {
   const groupRef = useRef<THREE.Group>(null);
   const material = useMemo(() => createMaterial(color, lightColor, emissiveIntensity), [color, lightColor, emissiveIntensity]);

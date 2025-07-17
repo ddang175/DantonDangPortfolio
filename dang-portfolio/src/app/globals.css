@@ -33,6 +33,56 @@
   font-display: swap;
 }
 
+/* SF Pro Text Font Family */
+@font-face {
+  font-family: 'SF-Pro-Text';
+  src: url('/font/SF-Pro-Text-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF-Pro-Text';
+  src: url('/font/SF-Pro-Text-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF-Pro-Text';
+  src: url('/font/SF-Pro-Text-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF-Pro-Text';
+  src: url('/font/SF-Pro-Text-Bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF-Pro-Text';
+  src: url('/font/SF-Pro-Text-Heavy.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Inter Variable Font */
+@font-face {
+  font-family: 'Inter';
+  src: url('/font/Inter-VariableFont_slnt,wght.ttf') format('truetype-variations');
+  font-weight: 100 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

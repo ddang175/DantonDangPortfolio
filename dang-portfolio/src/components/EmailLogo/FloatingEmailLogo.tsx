@@ -5,29 +5,40 @@ import { useRef, useMemo, useCallback, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
+import { GLTF } from 'three-stdlib';
 
-interface FloatingLinkedInLogoProps {
-  linkedInUrl?: string;
+interface FloatingEmailLogoProps {
+  emailAddress?: string;
   boundarySize?: number;
   glowColor?: string;
   emissiveColor?: string;
+  /**
+   * Base rotation of the logo in radians [x, y, z].
+   * Default: [0, 0, 0]
+   */
+  baseRotation?: [number, number, number];
+  /**
+   * Size of the clickable box [x, y, z].
+   * Default: [0.06, 0.06, 0.02]
+   */
+  clickBoxScale?: [number, number, number];
 }
 
 const FLOATING_CONFIG = {
-  PITCH_SPEED: 0.5,
-  YAW_SPEED: 0.4,
-  ROLL_SPEED: 0.3,
-  PITCH_AMPLITUDE: 0.1,
-  YAW_AMPLITUDE: 0.1,
-  ROLL_AMPLITUDE: 0.1,
+  PITCH_SPEED: 0.3,
+  YAW_SPEED: 0.8,
+  ROLL_SPEED: 0.6,
+  PITCH_AMPLITUDE: 0.15,
+  YAW_AMPLITUDE: 0.15,
+  ROLL_AMPLITUDE: 0.15,
   POSITION_SPEED: 0.15,
-  POSITION_AMPLITUDE: 0.12,
+  POSITION_AMPLITUDE: 0.03,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 6.0,
-  BASE_EMISSIVE_INTENSITY: 7,
-  BASE_COLOR: '#0077b5',
-  HOVER_COLOR: '#38b6ff',
+  HOVER_INTENSITY: 4.2,
+  BASE_EMISSIVE_INTENSITY: 4,
+  BASE_COLOR: '#ea4335',
+  HOVER_COLOR: '#ff6b6b',
 };
 
 function lerp(a: number, b: number, t: number) {
@@ -45,18 +56,22 @@ function lerpColor(a: string, b: string, t: number) {
   return `#${((1 << 24) + (rr << 16) + (rg << 8) + rb).toString(16).slice(1)}`;
 }
 
-function LinkedInModel({ 
+function EmailModel({ 
   url, 
   boundarySize = 0.005,
-  onLogoClick 
-}: { 
-  url: string; 
-  boundarySize: number;
+  onLogoClick,
+  baseRotation = [0, 0, 0],
+  clickBoxScale = [0.06, 0.06, 0.02],
+}: {
+  url: string;
+  boundarySize?: number;
   onLogoClick: () => void;
+  baseRotation?: [number, number, number];
+  clickBoxScale?: [number, number, number];
 }) {
-  const { scene } = useGLTF(url);
+  const { scene } = useGLTF(url) as GLTF & { scene: THREE.Group };
   const groupRef = useRef<THREE.Group>(null);
-  const basePosition = useRef<[number, number, number]>([-0.5, -1, -1.3]);
+  const basePosition = useRef<[number, number, number]>([0, -1, -1.3]);
   const isHovered = useRef(false);
   const materialsRef = useRef<THREE.Material[]>([]);
 
@@ -136,9 +151,9 @@ function LinkedInModel({
     const pitchOffset = Math.sin(time * FLOATING_CONFIG.PITCH_SPEED) * FLOATING_CONFIG.PITCH_AMPLITUDE;
     const yawOffset = Math.cos(time * FLOATING_CONFIG.YAW_SPEED) * FLOATING_CONFIG.YAW_AMPLITUDE;
     const rollOffset = Math.sin(time * FLOATING_CONFIG.ROLL_SPEED) * FLOATING_CONFIG.ROLL_AMPLITUDE;
-    groupRef.current.rotation.x = pitchOffset;
-    groupRef.current.rotation.y = yawOffset;
-    groupRef.current.rotation.z = rollOffset;
+    groupRef.current.rotation.x = baseRotation[0] + pitchOffset;
+    groupRef.current.rotation.y = baseRotation[1] + yawOffset;
+    groupRef.current.rotation.z = baseRotation[2] + rollOffset;
 
     groupRef.current.position.set(
       basePosition.current[0],
@@ -146,11 +161,11 @@ function LinkedInModel({
       basePosition.current[2]
     );
 
-    const baseScale = 0.15;
+    const baseScale = 0.0023;
     const scale = lerp(baseScale, baseScale * FLOATING_CONFIG.HOVER_SCALE, hoverT.current);
     groupRef.current.scale.setScalar(scale);
 
-    const basePulse = 0.2 * Math.sin(time * 2) + 1;
+    const basePulse = 0.03 * Math.sin(time * 2) + 1;
     const currentColor = lerpColor(FLOATING_CONFIG.BASE_COLOR, FLOATING_CONFIG.HOVER_COLOR, hoverT.current);
     const currentEmissive = lerp(
       FLOATING_CONFIG.BASE_EMISSIVE_INTENSITY * basePulse,
@@ -166,45 +181,51 @@ function LinkedInModel({
   });
 
   return (
-    <group 
-      ref={groupRef}
-      position={basePosition.current}
-    >
-      <primitive object={optimizedScene} />
+    <>
+      <group 
+        ref={groupRef}
+        position={basePosition.current}
+      >
+        <primitive object={optimizedScene} />
+      </group>
       <mesh
         onClick={handleClick}
         onPointerEnter={handlePointerEnter}
         onPointerLeave={handlePointerLeave}
-        position={[0, 0, 0]}
+        position={basePosition.current}
       >
-        <boxGeometry args={[2.3, 2.3, 0.1]} />
+        <boxGeometry args={clickBoxScale as [number, number, number]} />
         <meshBasicMaterial 
-          transparent={true} 
-          opacity={0} 
+          transparent={true}
+          opacity={0}
           colorWrite={false}
           depthWrite={false}
         />
       </mesh>
-    </group>
+    </>
   );
 }
 
-export default function FloatingLinkedInLogo({
-  linkedInUrl = "https://www.linkedin.com/in/ddang175",
+export default function FloatingEmailLogo({
+  emailAddress = "testetsetset@gmail.com",
   boundarySize = 0.005,
-  glowColor = '#0077b5',
-  emissiveColor = '#00a0dc'
-}: FloatingLinkedInLogoProps) {
+  glowColor = '#ea4335',
+  emissiveColor = '#ff6b6b',
+  baseRotation = [0, 0, 0],
+  clickBoxScale = [0.4, 0.4, 0.02],
+}: FloatingEmailLogoProps) {
   const handleLogoClick = useCallback(() => {
-    window.open(linkedInUrl, '_blank', 'noopener,noreferrer');
-  }, [linkedInUrl]);
+    window.open(`mailto:${emailAddress}`, '_blank', 'noopener,noreferrer');
+  }, [emailAddress]);
   return (
-    <LinkedInModel 
-      url="/linkedin_3d/scene.gltf"
+    <EmailModel 
+      url="/email/scene.gltf"
       boundarySize={boundarySize}
       onLogoClick={handleLogoClick}
+      baseRotation={baseRotation}
+      clickBoxScale={clickBoxScale}
     />
   );
 }
 
-useGLTF.preload('/linkedin_3d/scene.gltf'); 
+useGLTF.preload('/email/scene.gltf'); 
