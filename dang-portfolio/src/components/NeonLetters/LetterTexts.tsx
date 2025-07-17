@@ -16,7 +16,7 @@ export const LetterTexts = () => {
       position: letter.position,
       baseRotation: letter.rotation,
       fontSize: 0.1,
-      height: 0.02,
+      height: 0.01,
       letterSpacing: 0.04,
       index
     })), [nameLetters]);

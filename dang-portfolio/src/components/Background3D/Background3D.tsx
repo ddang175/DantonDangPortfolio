@@ -66,7 +66,7 @@ function Background3D({ modelPath }: { modelPath: string }) {
           />
           <FloatingGitHubLogo />
           <FloatingEmailLogo 
-            emailAddress="ddang175@gmail.com"
+            emailAddress="testsetset@gmail.com"
             boundarySize={0.1}
             glowColor="#ea4335"
             emissiveColor="#ff6b6b"

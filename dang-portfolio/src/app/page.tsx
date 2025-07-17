@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { BlurMask, LoadingPanel, IntroText } from "@/components/openingSequence";
-import { CursorGlow, PortfolioButton } from "@/components/UI";
+import { CursorGlow, PortfolioButton, ExperienceButton, ProjectsButton, ContactButton } from "@/components/UI";
 import Background3D from "@/components/Background3D";
 import { useAudioControl } from "@/hooks/useAudioControl";
 import { FloatingLinkedInLogo } from "@/components/LinkedInLogo";
@@ -60,7 +60,15 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden bg-black">
       <Background3D modelPath="/ae86pixel/scene.gltf" />
 
-      {/* Remove Social 3D Logos from DOM overlay. They are rendered inside Background3D/Canvas. */}
+      {/* Nav Bar with three buttons at top left */}
+      <div
+        className="fixed top-0 left-0 w-1/3 flex flex-row justify-between items-center py-6 pl-10 z-50"
+        style={{ minWidth: 400 }}
+      >
+        <ExperienceButton onButtonClick={() => { console.log('Experience button clicked'); }} />
+        <ProjectsButton onButtonClick={() => { console.log('Projects button clicked'); }} />
+        <ContactButton onButtonClick={() => { console.log('Contact button clicked'); }} />
+      </div>
 
       {/* Intro Sequence overlays - do not block pointer events for logo buttons */}
       {showPortfolioButton && (
@@ -73,6 +81,8 @@ export default function Home() {
           onAnimationStart={handleAnimationStart}
         />
       )}
+
+      {/* Remove standalone ExperienceButton from here */}
 
       <div className="absolute inset-0 z-40 pointer-events-none">
         <BlurMask position="top" isVisible={isLoading} />
