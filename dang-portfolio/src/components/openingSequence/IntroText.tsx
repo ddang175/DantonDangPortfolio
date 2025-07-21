@@ -9,7 +9,7 @@ interface IntroTextProps {
 export default function IntroText({ onComplete, onAnimationStart, className = '' }: IntroTextProps) {
   const TIMING = {
     NORMAL_CHAR_DELAY: 50,
-    DOT_CHAR_DELAY: 100,
+    DOT_CHAR_DELAY: 75,
     
     LINE_TRANSITION_DELAY: 800,
     

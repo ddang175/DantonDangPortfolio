@@ -12,6 +12,7 @@ import { LetterTexts } from '../NeonLetters/LetterTexts';
 import { FloatingLinkedInLogo } from '../LinkedInLogo';
 import { FloatingGitHubLogo } from '../GitHubLogo';
 import { FloatingEmailLogo } from '../EmailLogo';
+import { FloatingResumeLogo } from '../ResumeLogo';
 import { useMouseInteraction } from '../../hooks/useMouseInteraction';
 import { useCarAnimation } from '../../hooks/useCarAnimation';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -70,6 +71,12 @@ function Background3D({ modelPath }: { modelPath: string }) {
             boundarySize={0.1}
             glowColor="#ea4335"
             emissiveColor="#ff6b6b"
+          />
+          <FloatingResumeLogo 
+            resumeUrl="/resume/resume.gltf"
+            boundarySize={0.1}
+            glowColor="#FFD700"
+            emissiveColor="#FFFACD"
           />
           <ModelLoader modelPath={modelPath} rotationX={carRotationX} rotationY={carRotationY} />
           

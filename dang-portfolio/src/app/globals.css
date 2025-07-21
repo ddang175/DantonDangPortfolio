@@ -10,39 +10,6 @@
 
 
 @font-face {
-  font-family: 'Zekton';
-  src: url('/font/Zekton.otf') format('opentype');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Resamitz';
-  src: url('/font/Resamitz.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Resamitz-Bold';
-  src: url('/font/ResamitzBold.otf') format('opentype');
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* SF Pro Text Font Family */
-@font-face {
-  font-family: 'SF-Pro-Text';
-  src: url('/font/SF-Pro-Text-Regular.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'SF-Pro-Text';
   src: url('/font/SF-Pro-Text-Medium.otf') format('opentype');
   font-weight: 500;

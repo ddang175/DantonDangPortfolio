@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { BlurMask, LoadingPanel, IntroText } from "@/components/openingSequence";
-import { CursorGlow, PortfolioButton, ExperienceButton, ProjectsButton, ContactButton } from "@/components/UI";
+import { CursorGlow, PortfolioButton, ExperienceButton, ProjectsButton, EducationButton, SkillsButton, LeadershipButton, AboutMeButton } from "@/components/UI";
 import Background3D from "@/components/Background3D";
 import { useAudioControl } from "@/hooks/useAudioControl";
 import { FloatingLinkedInLogo } from "@/components/LinkedInLogo";
@@ -60,14 +60,17 @@ export default function Home() {
     <div className="min-h-screen relative overflow-hidden bg-black">
       <Background3D modelPath="/ae86pixel/scene.gltf" />
 
-      {/* Nav Bar with three buttons at top left */}
+      {/* Nav Bar with three buttons centered at the bottom */}
       <div
-        className="fixed top-0 left-0 w-1/3 flex flex-row justify-between items-center py-6 pl-10 z-50"
-        style={{ minWidth: 400 }}
+        className="fixed bottom-1/5 left-1/2 transform -translate-x-1/2 flex flex-row justify-center items-center gap-8 z-50"
       >
-        <ExperienceButton onButtonClick={() => { console.log('Experience button clicked'); }} />
-        <ProjectsButton onButtonClick={() => { console.log('Projects button clicked'); }} />
-        <ContactButton onButtonClick={() => { console.log('Contact button clicked'); }} />
+        <div className="flex flex-row gap-12">
+          <ExperienceButton onButtonClick={() => { console.log('Experience button clicked'); }} />
+          <ProjectsButton onButtonClick={() => { console.log('Projects button clicked'); }} />
+          <SkillsButton onButtonClick={() => { console.log('Skills button clicked'); }} />
+          <LeadershipButton onButtonClick={() => { console.log('Leadership button clicked'); }} />
+          <AboutMeButton onButtonClick={() => { console.log('About Me button clicked'); }} />
+        </div>
       </div>
 
       {/* Intro Sequence overlays - do not block pointer events for logo buttons */}

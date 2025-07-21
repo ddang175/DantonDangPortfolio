@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-interface ProjectButtonProps {
+interface LeadershipButtonProps {
   onButtonClick: () => void;
   className?: string;
   disabled?: boolean;
@@ -8,8 +8,8 @@ interface ProjectButtonProps {
   children?: React.ReactNode;
 }
 
-const ProjectButton: React.FC<ProjectButtonProps> = ({
-  children = 'Projects',
+const LeadershipButton: React.FC<LeadershipButtonProps> = ({
+  children = 'Leadership',
   onButtonClick = () => {},
   className = '',
   disabled = false,
@@ -61,9 +61,6 @@ const ProjectButton: React.FC<ProjectButtonProps> = ({
           zIndex: -1,
         }}
       />
-      
-     
-
       <span className={
         `relative z-10 transition-all duration-300 ${isHovered ? 'text-white drop-shadow-lg' : 'text-gray-200'}`
       }>
@@ -73,4 +70,4 @@ const ProjectButton: React.FC<ProjectButtonProps> = ({
   );
 };
 
-export default ProjectButton;
+export default LeadershipButton; 

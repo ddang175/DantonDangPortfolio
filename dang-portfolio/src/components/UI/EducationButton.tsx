@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-interface ProjectButtonProps {
+interface EducationButtonProps {
   onButtonClick: () => void;
   className?: string;
   disabled?: boolean;
@@ -8,8 +8,8 @@ interface ProjectButtonProps {
   children?: React.ReactNode;
 }
 
-const ProjectButton: React.FC<ProjectButtonProps> = ({
-  children = 'Projects',
+const EducationButton: React.FC<EducationButtonProps> = ({
+  children = 'EDUCATION',
   onButtonClick = () => {},
   className = '',
   disabled = false,
@@ -24,7 +24,7 @@ const ProjectButton: React.FC<ProjectButtonProps> = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`
-        relative  px-20 py-10 rounded-full
+        relative px-20 py-8 rounded-full
         bg-black text-white
         font-sans text-sm tracking-widest uppercase
         transition-all duration-300 ease-out
@@ -73,4 +73,4 @@ const ProjectButton: React.FC<ProjectButtonProps> = ({
   );
 };
 
-export default ProjectButton;
+export default EducationButton;
