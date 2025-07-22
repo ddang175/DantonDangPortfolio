@@ -12,15 +12,9 @@ interface FloatingGitHubLogoProps {
   boundarySize?: number;
   glowColor?: string;
   emissiveColor?: string;
-  /**
-   * Base rotation of the logo in radians [x, y, z].
-   * Default: [0, 0, 0]
-   */
+  
   baseRotation?: [number, number, number];
-  /**
-   * Size of the clickable box [x, y, z].
-   * Default: [0.06, 0.06, 0.02]
-   */
+ 
   clickBoxScale?: [number, number, number];
 }
 
@@ -219,7 +213,7 @@ export default function FloatingGitHubLogo({
   }, [githubUrl]);
   return (
     <GitHubModel 
-      url="/github/scene.gltf"
+      url="/github/scene.glb"
       boundarySize={boundarySize}
       onLogoClick={handleLogoClick}
       baseRotation={baseRotation}
@@ -228,4 +222,4 @@ export default function FloatingGitHubLogo({
   );
 }
 
-useGLTF.preload('/github/scene.gltf'); 
+useGLTF.preload('/github/scene.glb'); 

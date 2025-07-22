@@ -25,8 +25,8 @@ export default function CursorGlow() {
       }
       
       setLerpPosition(prev => ({
-        x: prev.x + (position.x - prev.x) * 0.05,
-        y: prev.y + (position.y - prev.y) * 0.05,
+        x: prev.x + (position.x - prev.x) * 0.07,
+        y: prev.y + (position.y - prev.y) * 0.07,
       }));
       animationRef.current = requestAnimationFrame(animate);
     };

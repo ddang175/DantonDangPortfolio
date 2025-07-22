@@ -1,7 +1,7 @@
 'use client';
 
 import { useGLTF } from '@react-three/drei';
-import { useRef, useMemo, useCallback, useEffect, useState } from 'react';
+import { useRef, useMemo, useCallback, useEffect, useState, memo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
@@ -189,7 +189,8 @@ function LinkedInModel({
   );
 }
 
-export default function FloatingLinkedInLogo({
+
+const FloatingLinkedInLogo = memo(function FloatingLinkedInLogo({
   linkedInUrl = "https://www.linkedin.com/in/ddang175",
   boundarySize = 0.005,
   glowColor = '#0077b5',
@@ -200,11 +201,13 @@ export default function FloatingLinkedInLogo({
   }, [linkedInUrl]);
   return (
     <LinkedInModel 
-      url="/linkedin_3d/scene.gltf"
+      url="/linkedin_3d/scene.glb"
       boundarySize={boundarySize}
       onLogoClick={handleLogoClick}
     />
   );
-}
+});
 
-useGLTF.preload('/linkedin_3d/scene.gltf'); 
+export default FloatingLinkedInLogo;
+
+useGLTF.preload('/linkedin_3d/scene.glb'); 

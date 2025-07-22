@@ -3,15 +3,17 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { BlurMask, LoadingPanel, IntroText } from "@/components/openingSequence";
 import { CursorGlow, PortfolioButton, ExperienceButton, ProjectsButton, EducationButton, SkillsButton, LeadershipButton, AboutMeButton } from "@/components/UI";
-import Background3D from "@/components/Background3D";
 import { useAudioControl } from "@/hooks/useAudioControl";
 import { FloatingLinkedInLogo } from "@/components/LinkedInLogo";
 import { FloatingGitHubLogo } from "@/components/GitHubLogo";
+import { BackgroundCanvas } from "@/components/Background3D";
+import { useGLTF } from '@react-three/drei';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [showPortfolioButton, setShowPortfolioButton] = useState(true);
   const [showIntroText, setShowIntroText] = useState(false);
+  const [show3D, setShow3D] = useState(false); // New state to control when 3D scene is mounted
   const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
   const {
@@ -36,8 +38,10 @@ export default function Home() {
     startIntroMusic();
   }, [startIntroMusic]);
 
+  // When the intro text starts deleting, show the 3D scene (but don't start animation yet)
   const handleIntroCompleteWithAudio = useCallback(() => {
     completeIntroMusic();
+    setShow3D(true); // Mount the 3D scene as soon as intro text starts deleting
     handleIntroComplete();
   }, [completeIntroMusic, handleIntroComplete]);
 
@@ -50,6 +54,7 @@ export default function Home() {
   }, [completeLoadingMusic]);
 
   useEffect(() => {
+    useGLTF.preload('/ae86pixel/scene.glb');
     return () => {
       timeoutRefs.current.forEach(clearTimeout);
       timeoutRefs.current = [];
@@ -57,10 +62,17 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-black">
-      <Background3D modelPath="/ae86pixel/scene.gltf" />
+    <main className="w-full h-screen relative overflow-hidden bg-black">
 
-      {/* Nav Bar with three buttons centered at the bottom */}
+      {show3D && (
+        <div className="absolute inset-0 w-full h-full">
+          <BackgroundCanvas 
+            modelPath="/ae86pixel/scene.glb" 
+            startAnimation={!showIntroText} 
+          />
+        </div>
+      )}
+
       <div
         className="fixed bottom-1/5 left-1/2 transform -translate-x-1/2 flex flex-row justify-center items-center gap-8 z-50"
       >
@@ -73,7 +85,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Intro Sequence overlays - do not block pointer events for logo buttons */}
+
       {showPortfolioButton && (
         <PortfolioButton onButtonClick={handleButtonClick} className="pointer-events-auto" />
       )}
@@ -84,8 +96,6 @@ export default function Home() {
           onAnimationStart={handleAnimationStart}
         />
       )}
-
-      {/* Remove standalone ExperienceButton from here */}
 
       <div className="absolute inset-0 z-40 pointer-events-none">
         <BlurMask position="top" isVisible={isLoading} />
@@ -98,6 +108,6 @@ export default function Home() {
       </div>
 
       <CursorGlow />
-    </div>
+    </main>
   );
-}
+};

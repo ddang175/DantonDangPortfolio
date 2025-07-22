@@ -38,13 +38,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* preloading assets */}
         <link rel="preload" as="image" href="/shojiLeft.webp" />
         <link rel="preload" as="image" href="/shojiRight.webp" />
         <link rel="preload" as="image" href="/glow.webp" />
-        <link rel="preload" as="fetch" href="/ae86pixel/scene.gltf" crossOrigin="anonymous" />
+        <link rel="preload" as="fetch" href="/ae86pixel/scene.glb" crossOrigin="anonymous" />
         
-        {/* preload keyboard audio files */}
         <link rel="preload" as="audio" href="/audio/keys/1.mp3" />
         <link rel="preload" as="audio" href="/audio/keys/2.mp3" />
         <link rel="preload" as="audio" href="/audio/keys/3.mp3" />

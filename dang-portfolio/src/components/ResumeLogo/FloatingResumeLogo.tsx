@@ -199,7 +199,7 @@ function ResumeModel({
 }
 
 export default function FloatingResumeLogo({
-  resumeUrl = "/resume/resume.gltf",
+  resumeUrl = "/resume/scene.glb",
   boundarySize = 0.005,
   glowColor = '#ffffff',
   emissiveColor = '#ffffff',
@@ -220,4 +220,4 @@ export default function FloatingResumeLogo({
   );
 }
 
-useGLTF.preload('/resume/resume.gltf'); 
+useGLTF.preload('/resume/scene.glb'); 

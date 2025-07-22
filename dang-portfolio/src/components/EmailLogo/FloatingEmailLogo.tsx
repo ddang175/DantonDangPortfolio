@@ -12,15 +12,9 @@ interface FloatingEmailLogoProps {
   boundarySize?: number;
   glowColor?: string;
   emissiveColor?: string;
-  /**
-   * Base rotation of the logo in radians [x, y, z].
-   * Default: [0, 0, 0]
-   */
+ 
   baseRotation?: [number, number, number];
-  /**
-   * Size of the clickable box [x, y, z].
-   * Default: [0.06, 0.06, 0.02]
-   */
+ 
   clickBoxScale?: [number, number, number];
 }
 
@@ -219,7 +213,7 @@ export default function FloatingEmailLogo({
   }, [emailAddress]);
   return (
     <EmailModel 
-      url="/email/scene.gltf"
+      url="/email/scene.glb"
       boundarySize={boundarySize}
       onLogoClick={handleLogoClick}
       baseRotation={baseRotation}
@@ -228,4 +222,4 @@ export default function FloatingEmailLogo({
   );
 }
 
-useGLTF.preload('/email/scene.gltf'); 
+useGLTF.preload('/email/scene.glb'); 
