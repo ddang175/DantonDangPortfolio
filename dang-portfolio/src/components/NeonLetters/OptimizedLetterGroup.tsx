@@ -3,7 +3,7 @@
 import { Text3D, Center } from '@react-three/drei';
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { MeshStandardMaterial, Object3D } from 'three';
 import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
 
 const fontUrl = '/font/Chromia_Bold.json';
@@ -26,15 +26,13 @@ interface OptimizedLetterGroupProps {
   emissiveIntensity?: number;
 }
 
-const createMaterial = (color: string, lightColor: string, emissiveIntensity = 3.5): THREE.MeshStandardMaterial => {
-  return new THREE.MeshStandardMaterial({
+const createMaterial = (color: string, lightColor: string, emissiveIntensity = 3.5): MeshStandardMaterial => {
+  return new MeshStandardMaterial({
     color,
     emissive: lightColor,
     emissiveIntensity,
-    fog: false,
-    transparent: false,
-    depthWrite: true,
-    depthTest: true,
+    roughness: 0.3,
+    metalness: 0.8,
   });
 };
 
@@ -61,7 +59,7 @@ export default function OptimizedLetterGroup({
   animationIntensity = 1.0,
   emissiveIntensity = 3.5
 }: OptimizedLetterGroupProps) {
-  const groupRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<Object3D>(null);
   const material = useMemo(() => createMaterial(color, lightColor, emissiveIntensity), [color, lightColor, emissiveIntensity]);
   
   const secondaryPitchAmplitude = useMemo(() => FLOATING_CONFIG.PITCH_AMPLITUDE * FLOATING_CONFIG.SECONDARY_PITCH_MULT, []);
@@ -77,7 +75,7 @@ export default function OptimizedLetterGroup({
     
     const time = state.clock.elapsedTime;
     
-    groupRef.current.children.forEach((child, index) => {
+    groupRef.current.children.forEach((child: Object3D, index: number) => {
       const letter = letters[index];
       if (!letter) return;
       

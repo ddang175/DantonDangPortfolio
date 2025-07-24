@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { Group, Object3D, Mesh, Material, FrontSide } from 'three';
 import type { GLTF } from 'three-stdlib';
 import { useFrameRateLimit } from '@/hooks/useFrameRateLimit';
 
@@ -13,8 +13,8 @@ interface ModelSceneProps {
 }
 
 interface GLTFResult extends GLTF {
-  nodes: Record<string, THREE.Mesh>;
-  materials: Record<string, THREE.Material>;
+  nodes: Record<string, Mesh>;
+  materials: Record<string, Material>;
 }
 
 export const ModelScene: React.FC<ModelSceneProps> = ({ 
@@ -23,7 +23,7 @@ export const ModelScene: React.FC<ModelSceneProps> = ({
   rotation = [0, 0, 0],
   scale = 1
 }) => {
-  const modelRef = useRef<THREE.Group>(null);
+  const modelRef = useRef<Group>(null);
   const gltf = useGLTF(modelPath) as unknown as GLTFResult;
   const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 60 });
 
@@ -43,11 +43,11 @@ export const ModelScene: React.FC<ModelSceneProps> = ({
   useEffect(() => {
     if (!modelRef.current) return;
 
-    gltf.scene.traverse((child: THREE.Object3D) => {
-      if (child instanceof THREE.Mesh) {
+    gltf.scene.traverse((child: Object3D) => {
+      if (child instanceof Mesh) {
         if (child.material) {
           child.material.transparent = false;
-          child.material.side = THREE.FrontSide;
+          child.material.side = FrontSide;
           child.material.alphaTest = 0.5;
           child.material.depthWrite = true;
           child.material.depthTest = true;

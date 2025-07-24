@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import * as THREE from 'three';
+import { MeshStandardMaterial } from 'three';
 import AnimatedLetter from './AnimatedLetter';
 
 interface LetterConfig {
@@ -19,10 +19,10 @@ interface NeonText3DProps {
   lightColor?: string;
 }
 
-const materialCache = new Map<string, THREE.MeshStandardMaterial>();
+const materialCache = new Map<string, MeshStandardMaterial>();
 const MAX_CACHE_SIZE = 5;
 
-const getOrCreateMaterial = (color: string, lightColor: string): THREE.MeshStandardMaterial => {
+const getOrCreateMaterial = (color: string, lightColor: string): MeshStandardMaterial => {
   const key = `${color}-${lightColor}`;
   
   if (!materialCache.has(key)) {
@@ -37,14 +37,12 @@ const getOrCreateMaterial = (color: string, lightColor: string): THREE.MeshStand
       }
     }
     
-    const material = new THREE.MeshStandardMaterial({
+    const material = new MeshStandardMaterial({
       color,
       emissive: lightColor,
       emissiveIntensity: 2,
-      fog: false,
-      transparent: false,
-      depthWrite: true,
-      depthTest: true,
+      roughness: 0.3,
+      metalness: 0.8,
     });
     materialCache.set(key, material);
   }

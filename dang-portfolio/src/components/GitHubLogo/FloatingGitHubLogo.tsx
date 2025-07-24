@@ -3,7 +3,7 @@
 import { useGLTF } from '@react-three/drei';
 import { useRef, useMemo, useCallback, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { MeshStandardMaterial, Group, Material, Color } from 'three';
 import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
 import { GLTF } from 'three-stdlib';
 
@@ -19,18 +19,18 @@ interface FloatingGitHubLogoProps {
 }
 
 const FLOATING_CONFIG = {
-  PITCH_SPEED: 0.7,
-  YAW_SPEED: 0.6,
-  ROLL_SPEED: 0.5,
-  PITCH_AMPLITUDE: 0.15,
-  YAW_AMPLITUDE: 0.15,
-  ROLL_AMPLITUDE: 0.15,
+  PITCH_SPEED: 0.5,
+  YAW_SPEED: 0.4,
+  ROLL_SPEED: 0.3,
+  PITCH_AMPLITUDE: 0.1,
+  YAW_AMPLITUDE: 0.1,
+  ROLL_AMPLITUDE: 0.1,
   POSITION_SPEED: 0.15,
-  POSITION_AMPLITUDE: 0.03,
+  POSITION_AMPLITUDE: 0.12,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 4.2,
-  BASE_EMISSIVE_INTENSITY: 3.35,
+  HOVER_INTENSITY: 5.0,
+  BASE_EMISSIVE_INTENSITY: 3.5,
   BASE_COLOR: '#2ea44f',
   HOVER_COLOR: '#34d058',
 };
@@ -52,7 +52,6 @@ function lerpColor(a: string, b: string, t: number) {
 
 function GitHubModel({ 
   url, 
-  boundarySize = 0.005,
   onLogoClick,
   baseRotation = [0, 0, 0],
   clickBoxScale = [0.06, 0.06, 0.02],
@@ -63,11 +62,10 @@ function GitHubModel({
   baseRotation?: [number, number, number];
   clickBoxScale?: [number, number, number];
 }) {
-  const { scene } = useGLTF(url) as GLTF & { scene: THREE.Group };
-  const groupRef = useRef<THREE.Group>(null);
-  const basePosition = useRef<[number, number, number]>([0.5, -1, -1.3]);
+  const { scene } = useGLTF(url) as GLTF & { scene: Group };
+  const groupRef = useRef<Group>(null);
+  const basePosition = useRef<[number, number, number]>([0, 0, 0]);
   const isHovered = useRef(false);
-  const materialsRef = useRef<THREE.Material[]>([]);
 
   const hoverT = useRef(0);
   const targetHoverT = useRef(0);
@@ -88,7 +86,7 @@ function GitHubModel({
   const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 30, enabled: true });
 
   const material = useMemo(() => {
-    const mat = new THREE.MeshStandardMaterial({
+    const mat = new MeshStandardMaterial({
       color: FLOATING_CONFIG.BASE_COLOR,
       emissive: FLOATING_CONFIG.BASE_COLOR,
       emissiveIntensity: FLOATING_CONFIG.BASE_EMISSIVE_INTENSITY,
@@ -166,8 +164,8 @@ function GitHubModel({
       FLOATING_CONFIG.HOVER_INTENSITY,
       hoverT.current
     );
-    if (material.emissive.getHexString() !== new THREE.Color(currentColor).getHexString()) {
-      material.emissive = new THREE.Color(currentColor);
+    if (material.emissive.getHexString() !== new Color(currentColor).getHexString()) {
+      material.emissive = new Color(currentColor);
     }
     if (material.emissiveIntensity !== currentEmissive) {
       material.emissiveIntensity = currentEmissive;
@@ -205,7 +203,7 @@ export default function FloatingGitHubLogo({
   boundarySize = 0.005,
   glowColor = '#2ea44f',
   emissiveColor = '#34d058',
-  baseRotation = [-0.3, 1.4, 0],
+  baseRotation = [.3, 2.1, -.1],
   clickBoxScale = [0.35, 0.35, 0.02],
 }: FloatingGitHubLogoProps) {
   const handleLogoClick = useCallback(() => {

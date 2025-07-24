@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { useThree } from '@react-three/fiber';
-import { useFrameRateLimit } from '@/hooks/useFrameRateLimit';
-import * as THREE from 'three';
+import { useThree, useFrame } from '@react-three/fiber';
+import { PerspectiveCamera, Vector3 } from 'three';
 
 interface CameraAnimationProps {
   onAnimationComplete?: () => void;
@@ -14,82 +13,59 @@ interface CameraAnimationProps {
 
 export const CameraAnimation: React.FC<CameraAnimationProps> = ({
   onAnimationComplete,
-  duration = 3000,
-  initialPosition = [0, 0, 20],
+  duration = 2500,
+  initialPosition = [0, 0, 10],
   targetPosition = [0, 0, 0],
-  initialFov = 85,
+  initialFov = 300,
   targetFov = 45
 }) => {
   const { camera } = useThree();
-  const perspectiveCamera = camera as THREE.PerspectiveCamera;
+  const perspectiveCamera = camera as PerspectiveCamera;
+
   const startTime = useRef<number | null>(null);
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 60 });
   const isComplete = useRef(false);
 
-  const initialCameraPosition = useRef(new THREE.Vector3(...initialPosition));
-  const targetCameraPosition = useRef(new THREE.Vector3(...targetPosition));
+  const initialCameraPosition = useRef(new Vector3(...initialPosition));
+  const targetCameraPosition = useRef(new Vector3(...targetPosition));
 
   useEffect(() => {
     camera.position.copy(initialCameraPosition.current);
     perspectiveCamera.fov = initialFov;
-    
     camera.lookAt(0, 0, 0);
     camera.up.set(0, 0, 0);
-    
     perspectiveCamera.updateProjectionMatrix();
-    
-    let animationFrameId: number;
+  }, [camera, initialFov]);
 
-    const animate = (currentTime: number) => {
-      if (startTime.current === null) {
-        startTime.current = currentTime;
-      }
+  useFrame(({ clock }) => {
+    if (isComplete.current) return;
 
-      if (!shouldRenderFrame(currentTime)) {
-        animationFrameId = requestAnimationFrame(animate);
-        return;
-      }
+    if (startTime.current === null) {
+      startTime.current = clock.getElapsedTime() * 1000;
+    }
 
-      const elapsed = currentTime - startTime.current;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      const eased = progress < 0.5
-        ? 4 * progress * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+    const elapsed = clock.getElapsedTime() * 1000 - startTime.current;
+    const progress = Math.min(elapsed / duration, 1);
 
-      camera.position.lerpVectors(
-        initialCameraPosition.current,
-        targetCameraPosition.current,
-        eased
-      );
+    const eased = progress < 0.5
+    ? 8 * Math.pow(progress, 4)
+    : 1 - 8 * Math.pow(1 - progress, 4);
 
-      camera.lookAt(0, 0, 0);
 
-      // Interpolate FOV
-      perspectiveCamera.fov = initialFov + (targetFov - initialFov) * eased;
-      perspectiveCamera.updateProjectionMatrix();
+    camera.position.lerpVectors(
+      initialCameraPosition.current,
+      targetCameraPosition.current,
+      eased
+    );
 
-      if (progress < 1) {
-        animationFrameId = requestAnimationFrame(animate);
-      } else if (!isComplete.current) {
-        camera.position.copy(targetCameraPosition.current);
-        perspectiveCamera.fov = targetFov;
-        camera.lookAt(0, 0, 0);
-        perspectiveCamera.updateProjectionMatrix();
-        
-        isComplete.current = true;
-        onAnimationComplete?.();
-      }
-    };
+    perspectiveCamera.fov = initialFov + (targetFov - initialFov) * eased;
+    camera.lookAt(0, 0, 0);
+    perspectiveCamera.updateProjectionMatrix();
 
-    animationFrameId = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-    };
-  }, [camera, perspectiveCamera, duration, initialFov, targetFov, onAnimationComplete, shouldRenderFrame]);
+    if (progress >= 1 && !isComplete.current) {
+      isComplete.current = true;
+      onAnimationComplete?.();
+    }
+  });
 
   return null;
-}; 
+};

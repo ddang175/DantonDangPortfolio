@@ -3,9 +3,9 @@
 import { useGLTF } from '@react-three/drei';
 import { useRef, useMemo, useCallback, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
 import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
 import { GLTF } from 'three-stdlib';
+import { MeshStandardMaterial, Group, Object3D, FrontSide, Material, Color } from 'three';
 
 interface FloatingEmailLogoProps {
   emailAddress?: string;
@@ -19,17 +19,17 @@ interface FloatingEmailLogoProps {
 }
 
 const FLOATING_CONFIG = {
-  PITCH_SPEED: 0.3,
-  YAW_SPEED: 0.8,
-  ROLL_SPEED: 0.6,
-  PITCH_AMPLITUDE: 0.15,
-  YAW_AMPLITUDE: 0.15,
-  ROLL_AMPLITUDE: 0.15,
+  PITCH_SPEED: 0.5,
+  YAW_SPEED: 0.4,
+  ROLL_SPEED: 0.3,
+  PITCH_AMPLITUDE: 0.1,
+  YAW_AMPLITUDE: 0.1,
+  ROLL_AMPLITUDE: 0.1,
   POSITION_SPEED: 0.15,
-  POSITION_AMPLITUDE: 0.03,
+  POSITION_AMPLITUDE: 0.12,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 4.2,
+  HOVER_INTENSITY: 6.0,
   BASE_EMISSIVE_INTENSITY: 4,
   BASE_COLOR: '#ea4335',
   HOVER_COLOR: '#ff6b6b',
@@ -63,11 +63,11 @@ function EmailModel({
   baseRotation?: [number, number, number];
   clickBoxScale?: [number, number, number];
 }) {
-  const { scene } = useGLTF(url) as GLTF & { scene: THREE.Group };
-  const groupRef = useRef<THREE.Group>(null);
-  const basePosition = useRef<[number, number, number]>([0, -1, -1.3]);
+  const { scene } = useGLTF(url) as GLTF & { scene: Group };
+  const groupRef = useRef<Group>(null);
+  const basePosition = useRef<[number, number, number]>([0, 0, 0]);
   const isHovered = useRef(false);
-  const materialsRef = useRef<THREE.Material[]>([]);
+  const materialsRef = useRef<Material[]>([]);
 
   const hoverT = useRef(0);
   const targetHoverT = useRef(0);
@@ -88,7 +88,7 @@ function EmailModel({
   const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 30, enabled: true });
 
   const material = useMemo(() => {
-    const mat = new THREE.MeshStandardMaterial({
+    const mat = new MeshStandardMaterial({
       color: FLOATING_CONFIG.BASE_COLOR,
       emissive: FLOATING_CONFIG.BASE_COLOR,
       emissiveIntensity: FLOATING_CONFIG.BASE_EMISSIVE_INTENSITY,
@@ -166,8 +166,8 @@ function EmailModel({
       FLOATING_CONFIG.HOVER_INTENSITY,
       hoverT.current
     );
-    if (material.emissive.getHexString() !== new THREE.Color(currentColor).getHexString()) {
-      material.emissive = new THREE.Color(currentColor);
+    if (material.emissive.getHexString() !== new Color(currentColor).getHexString()) {
+      material.emissive = new Color(currentColor);
     }
     if (material.emissiveIntensity !== currentEmissive) {
       material.emissiveIntensity = currentEmissive;
@@ -221,5 +221,4 @@ export default function FloatingEmailLogo({
     />
   );
 }
-
 useGLTF.preload('/email/scene.glb'); 

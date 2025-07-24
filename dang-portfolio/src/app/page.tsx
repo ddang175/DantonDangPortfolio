@@ -14,6 +14,7 @@ export default function Home() {
   const [showPortfolioButton, setShowPortfolioButton] = useState(true);
   const [showIntroText, setShowIntroText] = useState(false);
   const [show3D, setShow3D] = useState(false); // New state to control when 3D scene is mounted
+  const [canStartCameraAnimation, setCanStartCameraAnimation] = useState(false);
   const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
   const {
@@ -51,6 +52,7 @@ export default function Home() {
 
   const handleLoadingComplete = useCallback(() => {
     completeLoadingMusic();
+    setCanStartCameraAnimation(true);
   }, [completeLoadingMusic]);
 
   useEffect(() => {
@@ -68,7 +70,7 @@ export default function Home() {
         <div className="absolute inset-0 w-full h-full">
           <BackgroundCanvas 
             modelPath="/ae86pixel/scene.glb" 
-            startAnimation={!showIntroText} 
+            startAnimation={canStartCameraAnimation}
           />
         </div>
       )}

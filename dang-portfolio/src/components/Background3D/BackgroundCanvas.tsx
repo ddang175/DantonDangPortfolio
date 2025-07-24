@@ -11,6 +11,7 @@ import FloatingLinkedInLogo from '@/components/LinkedInLogo/FloatingLinkedInLogo
 import FloatingEmailLogo from '@/components/EmailLogo/FloatingEmailLogo';
 import FloatingResumeLogo from '@/components/ResumeLogo/FloatingResumeLogo';
 import NeonText3D from '@/components/NeonLetters/NeonText3D';
+import { EffectComposer, Bloom } from '@react-three/postprocessing';
 
 interface BackgroundCanvasProps {
   modelPath: string;
@@ -18,12 +19,16 @@ interface BackgroundCanvasProps {
 }
 
 const neonLetters = [
-  { char: 'D', position: [-2, 0, 0] as [number, number, number] },
-  { char: 'A', position: [-1, 0, 0] as [number, number, number] },
-  { char: 'N', position: [0, 0, 0] as [number, number, number] },
-  { char: 'T', position: [1, 0, 0] as [number, number, number] },
-  { char: 'O', position: [2, 0, 0] as [number, number, number] },
-  { char: 'N', position: [3, 0, 0] as [number, number, number] },
+  { char: 'D', position: [-1.75, -0.5, 0] as [number, number, number] },
+  { char: 'A', position: [-1.05, -0.5, 0] as [number, number, number] },
+  { char: 'N', position: [-0.35, -0.5, 0] as [number, number, number] },
+  { char: 'T', position: [0.35, -0.5, 0] as [number, number, number] },
+  { char: 'O', position: [1.05, -0.5, 0] as [number, number, number] },
+  { char: 'N', position: [1.75, -0.5, 0] as [number, number, number] },
+  { char: 'D', position: [-1.05, -1.5, 0] as [number, number, number] },
+  { char: 'A', position: [-0.35, -1.5, 0] as [number, number, number] },
+  { char: 'N', position: [0.35, -1.5, 0] as [number, number, number] },
+  { char: 'G', position: [1.05, -1.5, 0] as [number, number, number] },
 ];
 
 const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({ 
@@ -33,9 +38,9 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
   const [cameraAnimationComplete, setCameraAnimationComplete] = useState(false);
 
   const sceneY = 0;
-  const initialCameraPos: [number, number, number] = [0, 0, 20];
+  const initialCameraPos: [number, number, number] = [0, 0, 50];
   const targetCameraPos: [number, number, number] = [0, 0, 5];
-  const initialFov = 120;
+  const initialFov = 160;
   const targetFov = 70;
 
   const modelPosition: [number, number, number] = [0, -0.7, 0]; 
@@ -56,6 +61,9 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
         }}
         style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
       >
+        <EffectComposer>
+          <Bloom intensity={2} luminanceThreshold={0.1} luminanceSmoothing={0.025} radius={0.7} />
+        </EffectComposer>
         <group position={[0, 0, 0]}>
           <Stars
             radius={0.1}
@@ -91,16 +99,16 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
             </group>
 
             <group>
-              <group position={[-5, 2, 0]}>
+              <group position={[-1, 0.6, 3]}>
                 <FloatingGitHubLogo />
               </group>
-              <group position={[5, 2, 0]}>
+              <group position={[-1, 0.2, 3]}>
                 <FloatingLinkedInLogo />
               </group>
-              <group position={[-5, -2, 0]}>
+              <group position={[1, 0.6, 3]}>
                 <FloatingEmailLogo />
               </group>
-              <group position={[5, -2, 0]}>
+              <group position={[1, 0.2, 3]}>
                 <FloatingResumeLogo />
               </group>
             </group>

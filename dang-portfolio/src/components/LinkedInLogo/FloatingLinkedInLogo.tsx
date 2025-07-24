@@ -3,7 +3,7 @@
 import { useGLTF } from '@react-three/drei';
 import { useRef, useMemo, useCallback, useEffect, useState, memo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { MeshStandardMaterial, Group, Material, Color } from 'three';
 import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
 
 interface FloatingLinkedInLogoProps {
@@ -55,10 +55,10 @@ function LinkedInModel({
   onLogoClick: () => void;
 }) {
   const { scene } = useGLTF(url);
-  const groupRef = useRef<THREE.Group>(null);
-  const basePosition = useRef<[number, number, number]>([-0.5, -1, -1.3]);
+  const groupRef = useRef<Group>(null);
+  const basePosition = useRef<[number, number, number]>([0, 0, 0]);
   const isHovered = useRef(false);
-  const materialsRef = useRef<THREE.Material[]>([]);
+  const materialsRef = useRef<Material[]>([]);
 
   const hoverT = useRef(0);
   const targetHoverT = useRef(0);
@@ -79,7 +79,7 @@ function LinkedInModel({
   const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 30, enabled: true });
 
   const material = useMemo(() => {
-    const mat = new THREE.MeshStandardMaterial({
+    const mat = new MeshStandardMaterial({
       color: FLOATING_CONFIG.BASE_COLOR,
       emissive: FLOATING_CONFIG.BASE_COLOR,
       emissiveIntensity: FLOATING_CONFIG.BASE_EMISSIVE_INTENSITY,
@@ -157,8 +157,8 @@ function LinkedInModel({
       FLOATING_CONFIG.HOVER_INTENSITY,
       hoverT.current
     );
-    if (material.emissive.getHexString() !== new THREE.Color(currentColor).getHexString()) {
-      material.emissive = new THREE.Color(currentColor);
+    if (material.emissive.getHexString() !== new Color(currentColor).getHexString()) {
+      material.emissive = new Color(currentColor);
     }
     if (material.emissiveIntensity !== currentEmissive) {
       material.emissiveIntensity = currentEmissive;

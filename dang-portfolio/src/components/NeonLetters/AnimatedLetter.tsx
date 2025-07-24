@@ -3,7 +3,7 @@
 import { Text3D, Center } from '@react-three/drei';
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { Group, MeshStandardMaterial } from 'three';
 import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
 
 const fontUrl = '/font/Chromia_Bold.json';
@@ -15,24 +15,24 @@ interface AnimatedLetterProps {
   fontSize: number;
   height: number;
   letterSpacing: number;
-  material: THREE.MeshStandardMaterial;
+  material: MeshStandardMaterial;
   index: number;
 }
 
 const FLOATING_CONFIG = {
-  PITCH_SPEED: 0.8,
-  YAW_SPEED: 0.8,
-  ROLL_SPEED: 0.8,
+  PITCH_SPEED: 0.6,
+  YAW_SPEED: 0.6,
+  ROLL_SPEED: 0.6,
   PITCH_AMPLITUDE: 0.15,
-  YAW_AMPLITUDE: 0.2,
-  ROLL_AMPLITUDE: 0.4,
-  PHASE_OFFSET: 4,
-  SECONDARY_PITCH_MULT: 0.5,
-  SECONDARY_YAW_MULT: 0.5,
-  SECONDARY_ROLL_MULT: 0.5,
-  SECONDARY_PITCH_SPEED: 0.5,
-  SECONDARY_YAW_SPEED: 0.5,
-  SECONDARY_ROLL_SPEED: 0.5,
+  YAW_AMPLITUDE: 0.15,
+  ROLL_AMPLITUDE: 0.15,
+  PHASE_OFFSET: 5,
+  SECONDARY_PITCH_MULT: 0.3,
+  SECONDARY_YAW_MULT: 0.3,
+  SECONDARY_ROLL_MULT: 0.3,
+  SECONDARY_PITCH_SPEED: 0.3,
+  SECONDARY_YAW_SPEED: 0.3,
+  SECONDARY_ROLL_SPEED: 0.3,
 };
 
 export default function AnimatedLetter({
@@ -45,7 +45,7 @@ export default function AnimatedLetter({
   material,
   index
 }: AnimatedLetterProps) {
-  const groupRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<Group>(null);
   const timeRef = useRef(0);
   
   const phaseOffset = useMemo(() => index * FLOATING_CONFIG.PHASE_OFFSET, [index]);
