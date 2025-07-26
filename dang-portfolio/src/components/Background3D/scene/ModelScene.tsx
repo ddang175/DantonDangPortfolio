@@ -10,6 +10,12 @@ interface ModelSceneProps {
   position?: [number, number, number];
   rotation?: [number, number, number];
   scale?: number;
+  enableMouseRotation?: boolean;
+  maxRotationX?: number;
+  maxRotationY?: number;
+  rotationSensitivity?: number;
+  rotationSmoothness?: number;
+  onReady?: () => void;
 }
 
 interface GLTFResult extends GLTF {
@@ -21,13 +27,19 @@ export const ModelScene: React.FC<ModelSceneProps> = ({
   modelPath,
   position = [0, 0, 0],
   rotation = [0, 0, 0],
-  scale = 1
+  scale = 1,
+  enableMouseRotation = true,
+  maxRotationX = Math.PI / 12,
+  maxRotationY = Math.PI / 6,
+  rotationSensitivity = 1.0,
+  rotationSmoothness = 0.06,
+  onReady,
 }) => {
   const modelRef = useRef<Group>(null);
   const gltf = useGLTF(modelPath) as unknown as GLTFResult;
   const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 60 });
+  const hasNotifiedReady = useRef(false);
 
-  // Mouse tracking for rotation only (not position)
   const mouse = useRef({ x: 0, y: 0 });
   const lastUpdate = useRef(0);
 
@@ -62,39 +74,31 @@ export const ModelScene: React.FC<ModelSceneProps> = ({
     gltf.scene.scale.setScalar(scale);
     
     modelRef.current.add(gltf.scene);
-  }, [gltf.scene, position, rotation, scale]);
+
+    if (onReady && !hasNotifiedReady.current) {
+      hasNotifiedReady.current = true;
+      onReady();
+    }
+  }, [gltf.scene, position, rotation, scale, onReady]);
 
   useFrame((_, delta) => {
     if (!modelRef.current || !shouldRenderFrame(performance.now())) return;
+    if (!enableMouseRotation) return;
     const now = performance.now();
     if (now - lastUpdate.current < 16) return;
     lastUpdate.current = now;
 
-    const maxY = Math.PI / 6; 
-    const maxX = Math.PI / 12; 
-    const targetY = mouse.current.x * maxY;
-    const targetX = mouse.current.y * maxX;
+    const targetY = mouse.current.x * maxRotationY * rotationSensitivity;
+    const targetX = mouse.current.y * maxRotationX * rotationSensitivity;
 
-    modelRef.current.rotation.y += (targetY - modelRef.current.rotation.y) * 0.06;
-    modelRef.current.rotation.x += (targetX - modelRef.current.rotation.x) * 0.06;
+    modelRef.current.rotation.y += (targetY - modelRef.current.rotation.y) * rotationSmoothness;
+    modelRef.current.rotation.x += (targetX - modelRef.current.rotation.x) * rotationSmoothness;
   });
 
   return (
     <group ref={modelRef}>
-      <spotLight
-        position={[0, 0, 8]}
-        intensity={4}
-        color={0xdcb9f5} 
-        angle={Math.PI / 1} 
-        penumbra={0.5}
-        distance={10} 
-        decay={0.5}
-        castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
-      />
     </group>
   );
 };
 
-useGLTF.preload('/ae86pixel/scene.glb');
+useGLTF.preload('/ae86/initialdcarmesh.glb');

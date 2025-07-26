@@ -24,11 +24,11 @@ const FLOATING_CONFIG = {
   PITCH_AMPLITUDE: 0.1,
   YAW_AMPLITUDE: 0.1,
   ROLL_AMPLITUDE: 0.1,
-  POSITION_SPEED: 0.15,
-  POSITION_AMPLITUDE: 0.12,
+  POSITION_SPEED: 0.1,
+  POSITION_AMPLITUDE: 0.1,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 2.0,
+  HOVER_INTENSITY: 2.2,
   BASE_EMISSIVE_INTENSITY: 1,
   BASE_COLOR: '#ffffff', // white
   HOVER_COLOR: '#ffffff', // white
@@ -51,13 +51,11 @@ function lerpColor(a: string, b: string, t: number) {
 
 function ResumeModel({ 
   url, 
-  boundarySize = 0.005,
   onLogoClick,
   baseRotation = [0, 0, 0],
   clickBoxScale = [0.06, 0.06, 0.02],
 }: {
   url: string;
-  boundarySize?: number;
   onLogoClick: () => void;
   baseRotation?: [number, number, number];
   clickBoxScale?: [number, number, number];
@@ -153,7 +151,7 @@ function ResumeModel({
       basePosition.current[2]
     );
 
-    const baseScale = 0.0035;
+    const baseScale = 0.0005;
     const scale = lerp(baseScale, baseScale * FLOATING_CONFIG.HOVER_SCALE, hoverT.current);
     groupRef.current.scale.setScalar(scale);
 
@@ -200,11 +198,8 @@ function ResumeModel({
 
 export default function FloatingResumeLogo({
   resumeUrl = "/resume/scene.glb",
-  boundarySize = 0.005,
-  glowColor = '#ffffff',
-  emissiveColor = '#ffffff',
   baseRotation = [0, 0, 0],
-  clickBoxScale = [0.4, 0.4, 0.02],
+  clickBoxScale = [0.11, 0.11, 0.02],
 }: FloatingResumeLogoProps) {
   const handleLogoClick = useCallback(() => {
     window.open(resumeUrl, '_blank', 'noopener,noreferrer');
@@ -212,7 +207,6 @@ export default function FloatingResumeLogo({
   return (
     <ResumeModel 
       url={resumeUrl}
-      boundarySize={boundarySize}
       onLogoClick={handleLogoClick}
       baseRotation={baseRotation}
       clickBoxScale={clickBoxScale}

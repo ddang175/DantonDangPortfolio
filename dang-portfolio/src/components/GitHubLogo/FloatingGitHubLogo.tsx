@@ -9,7 +9,6 @@ import { GLTF } from 'three-stdlib';
 
 interface FloatingGitHubLogoProps {
   githubUrl?: string;
-  boundarySize?: number;
   glowColor?: string;
   emissiveColor?: string;
   
@@ -25,12 +24,12 @@ const FLOATING_CONFIG = {
   PITCH_AMPLITUDE: 0.1,
   YAW_AMPLITUDE: 0.1,
   ROLL_AMPLITUDE: 0.1,
-  POSITION_SPEED: 0.15,
-  POSITION_AMPLITUDE: 0.12,
+  POSITION_SPEED: 0.1,
+  POSITION_AMPLITUDE: 0.05,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 5.0,
-  BASE_EMISSIVE_INTENSITY: 3.5,
+  HOVER_INTENSITY: 4,
+  BASE_EMISSIVE_INTENSITY: 3,
   BASE_COLOR: '#2ea44f',
   HOVER_COLOR: '#34d058',
 };
@@ -57,7 +56,6 @@ function GitHubModel({
   clickBoxScale = [0.06, 0.06, 0.02],
 }: {
   url: string;
-  boundarySize?: number;
   onLogoClick: () => void;
   baseRotation?: [number, number, number];
   clickBoxScale?: [number, number, number];
@@ -153,7 +151,7 @@ function GitHubModel({
       basePosition.current[2]
     );
 
-    const baseScale = 0.003;
+    const baseScale = 0.0005;
     const scale = lerp(baseScale, baseScale * FLOATING_CONFIG.HOVER_SCALE, hoverT.current);
     groupRef.current.scale.setScalar(scale);
 
@@ -200,11 +198,10 @@ function GitHubModel({
 
 export default function FloatingGitHubLogo({
   githubUrl = "https://github.com/ddang175",
-  boundarySize = 0.005,
   glowColor = '#2ea44f',
   emissiveColor = '#34d058',
-  baseRotation = [.3, 2.1, -.1],
-  clickBoxScale = [0.35, 0.35, 0.02],
+  baseRotation = [0, 1.3, -0.1],
+  clickBoxScale = [0.11, 0.1, 0.02],
 }: FloatingGitHubLogoProps) {
   const handleLogoClick = useCallback(() => {
     window.open(githubUrl, '_blank', 'noopener,noreferrer');
@@ -212,7 +209,6 @@ export default function FloatingGitHubLogo({
   return (
     <GitHubModel 
       url="/github/scene.glb"
-      boundarySize={boundarySize}
       onLogoClick={handleLogoClick}
       baseRotation={baseRotation}
       clickBoxScale={clickBoxScale}

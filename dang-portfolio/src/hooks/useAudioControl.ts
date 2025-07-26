@@ -2,9 +2,9 @@ import { useEffect, useRef, useCallback } from 'react';
 
 export const VOLUME_CONFIG = {
   INTRO_START: 0,
-  INTRO_END: 0.1,
-  LOADING_START: 0.1,
-  LOADING_END: 0.25,
+  INTRO_END: 0.05,
+  LOADING_START: 0.05,
+  LOADING_END: 0.12,
 };
 
 interface UseAudioControlProps {

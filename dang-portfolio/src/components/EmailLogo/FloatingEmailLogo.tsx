@@ -22,15 +22,15 @@ const FLOATING_CONFIG = {
   PITCH_SPEED: 0.5,
   YAW_SPEED: 0.4,
   ROLL_SPEED: 0.3,
-  PITCH_AMPLITUDE: 0.1,
-  YAW_AMPLITUDE: 0.1,
-  ROLL_AMPLITUDE: 0.1,
+  PITCH_AMPLITUDE: 0.2,
+  YAW_AMPLITUDE: 0.2,
+  ROLL_AMPLITUDE: 0.2,
   POSITION_SPEED: 0.15,
   POSITION_AMPLITUDE: 0.12,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 6.0,
-  BASE_EMISSIVE_INTENSITY: 4,
+  HOVER_INTENSITY: 3.5,
+  BASE_EMISSIVE_INTENSITY: 3,
   BASE_COLOR: '#ea4335',
   HOVER_COLOR: '#ff6b6b',
 };
@@ -52,13 +52,11 @@ function lerpColor(a: string, b: string, t: number) {
 
 function EmailModel({ 
   url, 
-  boundarySize = 0.005,
   onLogoClick,
   baseRotation = [0, 0, 0],
-  clickBoxScale = [0.06, 0.06, 0.02],
+  clickBoxScale = [0.0, 0.001, 0.02],
 }: {
   url: string;
-  boundarySize?: number;
   onLogoClick: () => void;
   baseRotation?: [number, number, number];
   clickBoxScale?: [number, number, number];
@@ -155,7 +153,7 @@ function EmailModel({
       basePosition.current[2]
     );
 
-    const baseScale = 0.0023;
+    const baseScale = 0.0004;
     const scale = lerp(baseScale, baseScale * FLOATING_CONFIG.HOVER_SCALE, hoverT.current);
     groupRef.current.scale.setScalar(scale);
 
@@ -202,11 +200,8 @@ function EmailModel({
 
 export default function FloatingEmailLogo({
   emailAddress = "testetsetset@gmail.com",
-  boundarySize = 0.005,
-  glowColor = '#ea4335',
-  emissiveColor = '#ff6b6b',
   baseRotation = [0, 0, 0],
-  clickBoxScale = [0.4, 0.4, 0.02],
+  clickBoxScale = [0.11, 0.11, 0.02],
 }: FloatingEmailLogoProps) {
   const handleLogoClick = useCallback(() => {
     window.open(`mailto:${emailAddress}`, '_blank', 'noopener,noreferrer');
@@ -214,7 +209,6 @@ export default function FloatingEmailLogo({
   return (
     <EmailModel 
       url="/email/scene.glb"
-      boundarySize={boundarySize}
       onLogoClick={handleLogoClick}
       baseRotation={baseRotation}
       clickBoxScale={clickBoxScale}

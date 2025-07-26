@@ -35,7 +35,7 @@ const EducationButton: React.FC<EducationButtonProps> = ({
       `}
       style={{
         fontFamily: 'Inter, Arial, sans-serif',
-        fontSize: '20px',
+        fontSize: '25px',
         background: 'linear-gradient(90deg, #000000 0%, #000000 100%)',
         border: '5px solid transparent',
         backgroundImage: `

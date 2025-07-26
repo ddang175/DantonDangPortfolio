@@ -53,7 +53,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: '/ae86pixel/(.*)',
+        source: '/ae86/(.*)',
         headers: [
           {
             key: 'Cache-Control',

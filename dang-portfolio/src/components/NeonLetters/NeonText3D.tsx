@@ -40,9 +40,9 @@ const getOrCreateMaterial = (color: string, lightColor: string): MeshStandardMat
     const material = new MeshStandardMaterial({
       color,
       emissive: lightColor,
-      emissiveIntensity: 2,
-      roughness: 0.3,
-      metalness: 0.8,
+      emissiveIntensity: 1.6,
+      roughness: 0.1,
+      metalness: 0.9,
     });
     materialCache.set(key, material);
   }
@@ -59,7 +59,7 @@ const cleanupMaterialCache = () => {
 
 export default function NeonText3D({
   letters,
-  fontSize = 0.6,
+  fontSize = 0.3,
   height = 0.15,
   letterSpacing = 0.04,
   color = '#796094',

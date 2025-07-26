@@ -39,7 +39,7 @@ export default function IntroText({ onComplete, onAnimationStart, className = ''
     for (let i = 1; i <= 12; i++) {
       const audio = new Audio(`/audio/keys/${i}.mp3`);
       audio.preload = 'metadata';
-      audio.volume = 0.8;
+      audio.volume = 0.2;
       audioFiles.push(audio);
     }
     audioRefs.current = audioFiles;

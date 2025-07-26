@@ -16,15 +16,15 @@ interface FloatingLinkedInLogoProps {
 const FLOATING_CONFIG = {
   PITCH_SPEED: 0.5,
   YAW_SPEED: 0.4,
-  ROLL_SPEED: 0.3,
-  PITCH_AMPLITUDE: 0.1,
-  YAW_AMPLITUDE: 0.1,
-  ROLL_AMPLITUDE: 0.1,
-  POSITION_SPEED: 0.15,
+  ROLL_SPEED: 0.4,
+  PITCH_AMPLITUDE: 0.2,
+  YAW_AMPLITUDE: 0.2,
+  ROLL_AMPLITUDE: 0.2,
+  POSITION_SPEED: 0.2,
   POSITION_AMPLITUDE: 0.12,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 6.0,
+  HOVER_INTENSITY: 8.0,
   BASE_EMISSIVE_INTENSITY: 7,
   BASE_COLOR: '#0077b5',
   HOVER_COLOR: '#38b6ff',
@@ -47,7 +47,7 @@ function lerpColor(a: string, b: string, t: number) {
 
 function LinkedInModel({ 
   url, 
-  boundarySize = 0.005,
+  boundarySize = 0.001,
   onLogoClick 
 }: { 
   url: string; 
@@ -146,7 +146,7 @@ function LinkedInModel({
       basePosition.current[2]
     );
 
-    const baseScale = 0.15;
+    const baseScale = 0.024;
     const scale = lerp(baseScale, baseScale * FLOATING_CONFIG.HOVER_SCALE, hoverT.current);
     groupRef.current.scale.setScalar(scale);
 

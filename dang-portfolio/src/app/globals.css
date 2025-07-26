@@ -41,7 +41,6 @@
   font-display: swap;
 }
 
-/* Inter Variable Font */
 @font-face {
   font-family: 'Inter';
   src: url('/font/Inter-VariableFont.ttf') format('truetype-variations');
@@ -69,7 +68,6 @@
   }
 }
 
-/* Performance optimizations */
 * {
   box-sizing: border-box;
 }

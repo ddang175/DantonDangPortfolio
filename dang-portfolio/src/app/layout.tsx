@@ -38,10 +38,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="preload" as="image" href="/shojiLeft.webp" />
-        <link rel="preload" as="image" href="/shojiRight.webp" />
         <link rel="preload" as="image" href="/glow.webp" />
-        <link rel="preload" as="fetch" href="/ae86pixel/scene.glb" crossOrigin="anonymous" />
+        
+        <link rel="preload" as="fetch" href="/ae86/initialdcarmesh.glb" crossOrigin="anonymous" />
+        <link rel="preload" as="fetch" href="/city/city.glb" crossOrigin="anonymous" />
+        <link rel="preload" as="fetch" href="/github/scene.glb" crossOrigin="anonymous" />
+        <link rel="preload" as="fetch" href="/linkedin_3d/scene.glb" crossOrigin="anonymous" />
+        <link rel="preload" as="fetch" href="/email/scene.glb" crossOrigin="anonymous" />
+        <link rel="preload" as="fetch" href="/resume/scene.glb" crossOrigin="anonymous" />
         
         <link rel="preload" as="audio" href="/audio/keys/1.mp3" />
         <link rel="preload" as="audio" href="/audio/keys/2.mp3" />

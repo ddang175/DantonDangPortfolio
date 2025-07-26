@@ -13,11 +13,11 @@ interface CameraAnimationProps {
 
 export const CameraAnimation: React.FC<CameraAnimationProps> = ({
   onAnimationComplete,
-  duration = 2500,
+  duration = 3000,
   initialPosition = [0, 0, 10],
   targetPosition = [0, 0, 0],
   initialFov = 300,
-  targetFov = 45
+  targetFov = 70
 }) => {
   const { camera } = useThree();
   const perspectiveCamera = camera as PerspectiveCamera;
