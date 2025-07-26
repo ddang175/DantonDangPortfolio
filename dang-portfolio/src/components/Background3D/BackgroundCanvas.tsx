@@ -17,6 +17,7 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 interface BackgroundCanvasProps {
   modelPath: string;
   startAnimation?: boolean;
+  onReady?: () => void;
 }
 
 const neonLetters = [
@@ -34,7 +35,8 @@ const neonLetters = [
 
 const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({ 
   modelPath,
-  startAnimation = false 
+  startAnimation = false,
+  onReady
 }) => {
   const [cameraAnimationComplete, setCameraAnimationComplete] = useState(false);
   const [modelsReady, setModelsReady] = useState({ city: false, car: false, neonText: false });
@@ -63,17 +65,21 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
     console.log('Should start animation:', shouldStartAnimation);
   }, [modelsReady, startAnimation, allModelsReady, shouldStartAnimation]);
 
-  // Add delay after all models are ready before starting animation
+  // Start animation immediately when all models are ready
   useEffect(() => {
     if (startAnimation && allModelsReady && !shouldStartAnimation) {
-      console.log('All models ready, starting camera animation in 500ms...');
-      const timer = setTimeout(() => {
-        console.log('Starting camera animation now');
-        setShouldStartAnimation(true);
-      }, 500);
-      return () => clearTimeout(timer);
+      console.log('All models ready, starting camera animation now');
+      setShouldStartAnimation(true);
     }
   }, [startAnimation, allModelsReady, shouldStartAnimation]);
+
+  // Notify parent when all models are ready
+  useEffect(() => {
+    if (allModelsReady && onReady) {
+      console.log('All models ready, notifying parent');
+      onReady();
+    }
+  }, [allModelsReady, onReady]);
 
   return (
     <div className="absolute inset-0 w-full h-full z-0">
@@ -219,8 +225,8 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
                 onReady={() => handleModelReady('car')}
               />
               {shouldStartAnimation && (
-                <CameraAnimation
-                  onAnimationComplete={() => setCameraAnimationComplete(true)}
+                        <CameraAnimation
+          onAnimationComplete={() => setCameraAnimationComplete(true)}
                   initialPosition={initialCameraPos}
                   targetPosition={targetCameraPos}
                   initialFov={initialFov}

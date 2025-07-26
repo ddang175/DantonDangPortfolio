@@ -4,7 +4,7 @@ export const VOLUME_CONFIG = {
   INTRO_START: 0,
   INTRO_END: 0.05,
   LOADING_START: 0.05,
-  LOADING_END: 0.12,
+  LOADING_END: 0.1,
 };
 
 interface UseAudioControlProps {
