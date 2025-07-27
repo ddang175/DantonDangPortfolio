@@ -11,6 +11,7 @@ import { useGLTF } from '@react-three/drei';
 import MinimalistNavbar from "@/components/UI/MinimalistNavbar";
 import { CardShowcase } from "@/components/CardShowcase";
 import { CardData } from "@/components/CardShowcase/types";
+import { AboutMe } from "@/components/AboutMe";
 
 // Sample data for projects
 const projectsData: CardData[] = [
@@ -45,7 +46,7 @@ const experienceData: CardData[] = [
     id: 'exp-1',
     title: 'Software Engineer',
     company: 'John Deere',
-    description: "At John Deere Financial, I worked on two internal apps.\nFor the Security Access Management app, I enhanced UX, integrated AWS APIs, and automated HR record cleanup.\nFor the Database team, I automated JIRA tickets, managed EC2 events, and maintained data integrity.\nAlso wrote API documentation following SALAD standards.",
+    description: "At John Deere Financial, I contributed to two major internal applications that improved operational efficiency and data integrity. For a global Security Access Management app used by over 470 managers, I helped build the front end using Next.js and MUI, improved UI/UX, and supported backend integration with API Gateway and AWS Lambda. Also, I created a TypeScript CRON job using Prisma and Deere's HR API to automate the cleanup of terminated employee records and fix invalid IDs across a 2,000+ entry database.. This tool reduced manual effort and saved the company over $18,000 annually. Separately, I developed an internal data management tool for the Database team. I automated JIRA ticket creation, managed AWS EC2 lifecycle events, and documented secure API integrations using Deere's internal SALAD standards.",
     shortDescription: 'Full stack engineer on the CyCloud team at ISU Research Park.',
     previewImageUrl: '/experience/johndeere.gif',
     modalImageUrl: '/experience/deereIN.webp',
@@ -56,13 +57,28 @@ const experienceData: CardData[] = [
     id: 'exp-2',
     title: 'Site Reliability Engineer Intern',
     company: 'Principal Financial Group',
-    description: "I migrated 100+ AWS resources across regions using updated IaC and AWS CDK.\nAutomated Nobl9-ServiceNow label sync with a Lambda CRON job, removing manual steps.\nUpgraded 300+ AWS Lambdas across accounts by updating IaC and testing.",
+    description: "At Principal, I led several key infrastructure initiatives to improve scalability, automation, and compliance. I migrated over 100 AWS resources across regions by modifying Infrastructure as Code and deploying updated CloudFormation stacks using the AWS CDK, ensuring alignment with regional standards. I also automated the synchronization of labels between Nobl9 and ServiceNow using a daily AWS Lambda CRON job, which eliminated manual effort and improved data accuracy. Additionally, I upgraded more than 300 AWS Lambda functions across 10 accounts by updating code and infrastructure configurations, testing functionality, and adjusting Lambda layers to maintain compatibility and avoid deprecated runtimes.",
     shortDescription: "Ensured uptime and performance of internal and external applications.",
     previewImageUrl: '/experience/principal.gif',
     modalImageUrl: '/experience/backgroundpattern.webp',
     technologies: ['TypeScript', 'Python', 'AWS', 'PostgreSQL', 'Nobl9', 'ServiceNow'],
     date: 'May 2025 - August 2025'
   }
+];
+
+//leadership data
+const leadershipData: CardData[] = [
+  {
+    id: 'lead-1',
+    title: 'Vice President',
+    company: 'Asian Student Union',
+    description: "At John Deerfffffffffffff ffffffffff f f f f ff f f ff f f ff f f f ffffffff   ffffffffffff f f fffff  ffff fffff fffff ff ffffffff fffffffffffff f ff ffffffffff f  f f f  ffff ffffff ffe Financial, I worked on two internal apps.\nFor the Security Access Management app, I enhanced UX, integrated AWS APIs, and automated HR record cleanup.\nFor the Database team, I automated JIRA tickets, managed EC2 events, and maintained data integrity.\nAlso wrote API documentation following SALAD standards.",
+    shortDescription: 'Full stack engineer on the CyCloud team at ISU Research Park.',
+    previewImageUrl: '/experience/johndeere.gif',
+    modalImageUrl: '/experience/deereIN.webp',
+    date: 'May 2025 - Present'
+  },
+  
 ];
 
 export default function Home() {
@@ -73,6 +89,7 @@ export default function Home() {
   const [start3DLoading, setStart3DLoading] = useState(false);
   const [canStartCameraAnimation, setCanStartCameraAnimation] = useState(false);
   const [showCardShowcase, setShowCardShowcase] = useState(false);
+  const [showAboutMe, setShowAboutMe] = useState(false);
   const [currentCards, setCurrentCards] = useState<CardData[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
@@ -96,10 +113,9 @@ export default function Home() {
 
   const handleButtonClick = useCallback(() => {
     setShowPortfolioButton(false);
-    setStart3DLoading(true); // Start loading 3D models immediately
-    startIntroMusic(); // Start music when button is clicked
+    setStart3DLoading(true);
+    startIntroMusic();
     
-    // Only show loading indicator if loading takes longer than 500ms
     const loadingDelay = setTimeout(() => {
       setShowLoadingIndicator(true);
     }, 250);
@@ -107,7 +123,6 @@ export default function Home() {
   }, [startIntroMusic]);
 
   const handle3DReady = useCallback(() => {
-    // Clear the loading delay timer if 3D models load before 1 second
     timeoutRefs.current.forEach((timer, index) => {
       if (timer && typeof timer === 'number') {
         clearTimeout(timer);
@@ -137,7 +152,6 @@ export default function Home() {
     setCanStartCameraAnimation(true);
   }, [completeIntroMusic]);
 
-  // Navigation handlers
   const handleExperienceClick = useCallback(() => {
     setCurrentCards(experienceData);
     setShowCardShowcase(true);
@@ -149,15 +163,20 @@ export default function Home() {
   }, []);
 
   const handleLeadershipClick = useCallback(() => {
-    console.log('Leadership button clicked');
+    setCurrentCards(leadershipData);
+    setShowCardShowcase(true);
   }, []);
 
   const handleAboutMeClick = useCallback(() => {
-    console.log('About Me button clicked');
+    setShowAboutMe(true);
   }, []);
 
   const handleCardShowcaseClose = useCallback(() => {
     setShowCardShowcase(false);
+  }, []);
+
+  const handleAboutMeClose = useCallback(() => {
+    setShowAboutMe(false);
   }, []);
 
   useEffect(() => {
@@ -197,6 +216,13 @@ export default function Home() {
         <CardShowcase
           cards={currentCards}
           onClose={handleCardShowcaseClose}
+          isMobile={isMobile}
+        />
+      )}
+
+      {showAboutMe && (
+        <AboutMe
+          onClose={handleAboutMeClose}
           isMobile={isMobile}
         />
       )}

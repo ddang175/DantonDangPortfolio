@@ -103,7 +103,7 @@ const CardModal: React.FC<CardModalProps> = ({
                   flex items-center justify-center
                   text-gray-400 hover:text-white
                   transition-colors duration-200
-                  rounded-full hover:bg-white/10
+                  rounded-full hover:bg-white/10 cursor-pointer
                 "
               >
                 <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
