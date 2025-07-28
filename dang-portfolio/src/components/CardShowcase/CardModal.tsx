@@ -43,7 +43,7 @@ const CardModal: React.FC<CardModalProps> = ({
   const getModalPositioning = () => {
     if (isMobile) {
       return {
-        bottom: 'calc(340px + 1rem + 1rem)', // CardShowcase height + bottom gap + modal gap
+        bottom: 'calc(340px - 1rem)', // CardShowcase height + bottom gap + modal gap
         maxHeight: 'calc(100vh - 340px - 1rem - 1rem - 2rem)', // Screen - CardShowcase - gaps - padding
       };
     } else {
@@ -81,8 +81,8 @@ const CardModal: React.FC<CardModalProps> = ({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-black/80 backdrop-blur-sm">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-wider uppercase">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-black/80 backdrop-blur-sm">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-wider uppercase">
             {card.title}
           </h2>
           <button
@@ -110,7 +110,7 @@ const CardModal: React.FC<CardModalProps> = ({
             scrollbarColor: 'rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05)'
           }}
         >
-          <div className="p-6 space-y-6">
+          <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
             {(card.modalImageUrl || card.imageUrl) && (
               <div className="w-full">
                 <div className="relative aspect-video rounded-lg overflow-hidden bg-black/20">
@@ -127,7 +127,7 @@ const CardModal: React.FC<CardModalProps> = ({
               {(card.company || card.date) && (
                 <div className="flex items-center justify-between">
                   {card.company && (
-                    <p className="text-purple-400 text-xl font-medium tracking-wider">
+                    <p className="text-purple-400 text-base sm:text-lg font-medium tracking-wider">
                       {card.company}
                     </p>
                   )}
@@ -145,7 +145,7 @@ const CardModal: React.FC<CardModalProps> = ({
 
               {card.technologies && card.technologies.length > 0 && (
                 <div>
-                  <h4 className="text-white font-semibold mb-2 tracking-wider uppercase text-sm">
+                  <h4 className="text-white font-semibold mb-2 tracking-wider uppercase text-xs sm:text-sm">
                     Technologies
                   </h4>
                   <div className="flex flex-wrap gap-2">

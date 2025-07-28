@@ -42,13 +42,13 @@ const AboutMe: React.FC<AboutMeProps> = ({
   const getModalPositioning = () => {
     if (isMobile) {
       return {
-        bottom: 'calc(340px + 1rem + 1rem)',
-        maxHeight: 'calc(100vh - 340px - 1rem - 1rem - 2rem)', 
+        bottom: 'calc(18vh + 1rem)', // 1rem gap above navbar (bottom-4) + 1rem padding
+        maxHeight: 'calc(80vh - 1rem - 1rem - 2rem)', // Screen - navbar gap - padding - margins
       };
     } else {
       return {
-        bottom: 'calc(17vh + 15vh + 1rem)', 
-        maxHeight: 'calc(100vh - 17vh - 15vh - 1rem - 2rem)', 
+        bottom: 'calc(17vh + 1rem)', // 1rem gap above navbar (bottom-[17vh]) + 1rem padding
+        maxHeight: 'calc(100vh - 17vh - 1rem - 2rem)', // Screen - navbar position - gap - margins
       };
     }
   };
@@ -82,8 +82,8 @@ const AboutMe: React.FC<AboutMeProps> = ({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-black/80 backdrop-blur-sm">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-wider uppercase">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-black/80 backdrop-blur-sm">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-wider uppercase">
             About Me
           </h2>
           <button
@@ -111,9 +111,9 @@ const AboutMe: React.FC<AboutMeProps> = ({
             scrollbarColor: 'rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05)'
           }}
         >
-          <div className="p-6 space-y-8">
-            <div className="space-y-4">
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-wider uppercase border-b border-white/10 pb-2">
+          <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white tracking-wider uppercase border-b border-white/10 pb-2">
                 Bio
               </h3>
               <div className="flex flex-col md:flex-row gap-6">
@@ -154,14 +154,14 @@ const AboutMe: React.FC<AboutMeProps> = ({
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-xl sm:text-2xl font-bold text-white tracking-wider uppercase border-b border-white/10 pb-2">
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white tracking-wider uppercase border-b border-white/10 pb-2">
                 Education
               </h3>
               <div className="space-y-6">
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-lg font-semibold text-white">
+                    <h4 className="text-base sm:text-lg font-semibold text-white">
                       Bachelor of Science in Software Engineering
                     </h4>
                     <span className="text-purple-300 text-sm font-medium tracking-wider uppercase">
@@ -184,7 +184,7 @@ const AboutMe: React.FC<AboutMeProps> = ({
 
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                   <div className="flex items-center justify-between mb-2">
-                    <h4 className="text-lg font-semibold text-white">
+                    <h4 className="text-base sm:text-lg font-semibold text-white">
                       Relevant Coursework
                     </h4>
                   </div>
@@ -216,7 +216,7 @@ const AboutMe: React.FC<AboutMeProps> = ({
                 </div>
 
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <h4 className="text-lg font-semibold text-white mb-2">Skills & Technologies</h4>
+                  <h4 className="text-base sm:text-lg font-semibold text-white mb-2">Skills & Technologies</h4>
                   <div className="space-y-4">
                     <div>
                       <h5 className="text-purple-300 font-medium mb-2">Frontend</h5>

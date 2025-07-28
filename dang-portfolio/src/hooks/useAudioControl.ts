@@ -2,9 +2,9 @@ import { useEffect, useRef, useCallback } from 'react';
 
 export const VOLUME_CONFIG = {
   INTRO_START: 0,
-  INTRO_END: 0.05,
-  LOADING_START: 0.05,
-  LOADING_END: 0.1,
+  INTRO_END: 0.02,
+  LOADING_START: 0.04,
+  LOADING_END: 0.08,
   WHOOSH_VOLUME: 0.3,
 };
 
