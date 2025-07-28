@@ -24,8 +24,8 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
       className={`
         relative flex items-center
         ${isMobile 
-          ? 'w-full h-32 px-4' 
-          : 'min-w-[220px] max-w-[370px] h-35 px-4'
+          ? 'w-full h-32 px-3' 
+          : 'min-w-[200px] max-w-[320px] h-40 px-4'
         }
         text-white font-sans
         transition-all duration-300 ease-out
@@ -34,7 +34,7 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
         border border-white/10
         rounded-xl
         overflow-hidden
-        ${isActive ? 'border-purple-400/50 bg-purple-900/20 scale-105 shadow-lg shadow-purple-500/20' : 'scale-100'}
+        ${isActive ? 'border-purple-400/50 bg-purple-900/20 scale-102 shadow-lg shadow-purple-500/20' : 'scale-100'}
         ${isHovered && !isActive ? 'border-white/30 bg-white/10 scale-101' : ''}
         transform-gpu
         flex-shrink-0
@@ -43,8 +43,7 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
         fontFamily: 'Inter, Arial, sans-serif',
       }}
     >
-      {/* Text Content - Left Side */}
-      <div className="flex-1 text-left pr-2">
+      <div className="flex-1 text-left pr-2 min-w-0 overflow-hidden">
         <h3 className={`
           font-semibold text-sm tracking-wide uppercase
           transition-all duration-300 ease-out
@@ -52,6 +51,7 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
           ${isHovered && !isActive ? 'text-white' : ''}
           transform-gpu
           line-clamp-2
+          break-words
         `}>
           {card.title}
         </h3>
@@ -60,6 +60,7 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
             text-purple-400 mt-1 text-xs font-medium tracking-wider
             transition-opacity duration-300 ease-out
             ${isActive ? 'opacity-100' : 'opacity-90'}
+            break-words
           `}>
             {card.company}
           </p>
@@ -69,6 +70,7 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
             text-purple-300 mt-1 text-xs font-medium tracking-wider uppercase
             transition-opacity duration-300 ease-out
             ${isActive ? 'opacity-100' : 'opacity-80'}
+            break-words
           `}>
             {card.date}
           </p>
@@ -79,14 +81,14 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
           ${isHovered ? 'text-gray-300' : ''}
           ${isActive ? 'opacity-100' : 'opacity-80'}
           line-clamp-3
+          break-words
         `}>
           {card.shortDescription}
         </p>
       </div>
 
-      {/* Image - Right Side */}
       <div className={`
-        w-28 h-28 rounded-lg overflow-hidden bg-black/30 border border-white/10 flex-shrink-0
+        ${isMobile ? 'w-24 h-24' : 'w-28 h-28'} rounded-lg overflow-hidden bg-black/30 border border-white/10 flex-shrink-0
         transition-all duration-300 ease-out
         ${isActive ? 'border-purple-400/30 shadow-md' : ''}
         ${isHovered && !isActive ? 'border-white/20' : ''}
@@ -98,7 +100,6 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
             className="w-full h-full object-cover"
           />
         ) : (
-          // Fallback icon if no image
           <div className="w-full h-full flex items-center justify-center text-gray-500">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -107,7 +108,6 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
         )}
       </div>
 
-      {/* Active indicator */}
       <div className={`
         absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-400 to-purple-300
         transition-all duration-300 ease-out

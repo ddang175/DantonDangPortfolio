@@ -43,9 +43,9 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
   const modelsReadyRef = useRef({ city: false, car: false, neonText: false });
 
   const sceneY = 0;
-  const initialCameraPos: [number, number, number] = [0, 0, 50];
+  const initialCameraPos: [number, number, number] = [0, 0, 60];
   const targetCameraPos: [number, number, number] = [0, 0, 5];
-  const initialFov = 160;
+  const initialFov = 170;
   const targetFov = 70;
 
   const handleModelReady = (modelType: 'city' | 'car' | 'neonText') => {
@@ -57,7 +57,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
   const allModelsReady = modelsReady.city && modelsReady.car && modelsReady.neonText;
   const [shouldStartAnimation, setShouldStartAnimation] = useState(false);
 
-  // Debug logging
   useEffect(() => {
     console.log('Models ready state:', modelsReady);
     console.log('Start animation:', startAnimation);
@@ -65,7 +64,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
     console.log('Should start animation:', shouldStartAnimation);
   }, [modelsReady, startAnimation, allModelsReady, shouldStartAnimation]);
 
-  // Start animation immediately when all models are ready
   useEffect(() => {
     if (startAnimation && allModelsReady && !shouldStartAnimation) {
       console.log('All models ready, starting camera animation now');
@@ -73,7 +71,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
     }
   }, [startAnimation, allModelsReady, shouldStartAnimation]);
 
-  // Notify parent when all models are ready
   useEffect(() => {
     if (allModelsReady && onReady) {
       console.log('All models ready, notifying parent');
@@ -113,7 +110,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
           shadow-mapSize-height={1024}
         />
         
-        {/* left side  - warm white */}
         <spotLight
           position={[-2, 1, 2]}
           intensity={2}
@@ -127,7 +123,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
           shadow-mapSize-height={1024}
         />
         
-        {/* right neon light - cyan/teal */}
         <spotLight
           position={[4, 3, 6]}
           intensity={4}
@@ -141,7 +136,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
           shadow-mapSize-height={512}
         />
         
-        {/* left neon light - purple */}
         <spotLight
           position={[-3, 2, -4]}
           intensity={3.5}
@@ -155,7 +149,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
           shadow-mapSize-height={512}
         />
         
-        {/* right neon light - orange/amber */}
         <spotLight
           position={[3, 2, -4]}
           intensity={3.5}

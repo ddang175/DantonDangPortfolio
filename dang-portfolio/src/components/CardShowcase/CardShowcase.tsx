@@ -64,59 +64,65 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
         fixed z-60 transition-all duration-300 ease-out
         ${isVisible && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'}
         ${isMobile 
-          ? 'bottom-4 left-1/2 transform -translate-x-1/2 w-[90vw] sm:w-[85vw] md:w-[80vw] l:max-w-[95vw]' 
-          : 'bottom-[17vh] left-1/2 transform -translate-x-1/2 max-w-[95vw]'
+          ? 'bottom-4 left-1/2 transform -translate-x-1/2 w-[92vw] max-w-[92vw]' 
+          : 'bottom-[17vh] left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[90vw]'
         }
       `}>
         <div className={`
-          backdrop-blur-md bg-black/20 
-          border border-white/10
-          rounded-2xl sm:rounded-3xl
-          p-2 sm:p-3 md:p-4
           transition-all duration-300 ease-out
           ${isClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}
-          shadow-2xl shadow-black/50
+          ${isMobile ? 'max-h-[340px]' : 'max-h-[20vh]'}
         `}>
           <div className={`
             ${isMobile 
-              ? 'flex flex-col gap-3 sm:gap-4' 
-              : 'flex flex-wrap items-center justify-center gap-5 lg:gap-6'
+              ? 'max-h-[calc(340px-2rem)] overflow-y-auto custom-scrollbar' 
+              : 'max-h-[calc(20vh-2rem)] overflow-y-auto custom-scrollbar'
             }
-          `}>
-            {cards.map((card, index) => (
-              <PreviewCard
-                key={card.id}
-                card={card}
-                isActive={index === activeCardIndex}
-                onClick={() => handleCardClick(index)}
-                isMobile={isMobile}
-              />
-            ))}
-            
-            {/* Back Button */}
-            <button
-              onClick={handleClose}
-              className={`
-                flex items-center justify-center
-                ${isMobile 
-                  ? 'w-full h-20' 
-                  : 'min-w-[140px] h-20'
-                }
-                text-white font-sans tracking-widest uppercase
-                transition-all duration-300 ease-out
-                cursor-pointer
-                backdrop-blur-md bg-black/20 
-                border border-white/10
-                rounded-lg
-                hover:border-white/30 hover:bg-white/10
-                flex-shrink-0
-              `}
-              style={{
-                fontFamily: 'Inter, Arial, sans-serif',
-              }}
-            >
-              <span className="text-sm font-medium">Back</span>
-            </button>
+          `}
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05)'
+          }}>
+            <div className={`
+              ${isMobile 
+                ? 'flex flex-col gap-3 sm:gap-4 pb-2 w-full px-2 py-2' 
+                : 'flex flex-wrap items-center justify-center gap-4 lg:gap-5 xl:gap-6 pb-2 w-full py-2'
+              }
+            `}>
+              {cards.map((card, index) => (
+                <PreviewCard
+                  key={card.id}
+                  card={card}
+                  isActive={index === activeCardIndex}
+                  onClick={() => handleCardClick(index)}
+                  isMobile={isMobile}
+                />
+              ))}
+              
+              <button
+                onClick={handleClose}
+                className={`
+                  flex items-center justify-center
+                  ${isMobile 
+                    ? 'w-full h-20' 
+                    : 'min-w-[140px] h-20'
+                  }
+                  text-white font-sans tracking-widest uppercase
+                  transition-all duration-300 ease-out
+                  cursor-pointer
+                  backdrop-blur-md bg-black/20 
+                  border border-white/10
+                  rounded-lg
+                  hover:border-white/30 hover:bg-white/10
+                  flex-shrink-0
+                `}
+                style={{
+                  fontFamily: 'Inter, Arial, sans-serif',
+                }}
+              >
+                <span className="text-sm font-medium">Back</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -130,6 +136,7 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
           isMobile={isMobile}
         />
       )}
+
     </>
   );
 };

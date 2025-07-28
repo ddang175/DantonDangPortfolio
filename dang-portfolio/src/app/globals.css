@@ -99,7 +99,6 @@ img {
   image-rendering: crisp-edges;
 }
 
-/* Line clamp utilities */
 .line-clamp-1 {
   overflow: hidden;
   display: -webkit-box;
@@ -121,34 +120,29 @@ img {
   -webkit-line-clamp: 3;
 }
 
-/* Animation performance optimizations */
 .transform-gpu {
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
 }
 
-/* Smooth card transitions */
 .card-transition {
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform, opacity, backdrop-filter;
 }
 
-/* Modal backdrop transition */
 .modal-backdrop {
   transition: backdrop-filter 300ms cubic-bezier(0.4, 0, 0.2, 1),
               background-color 300ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change: backdrop-filter, background-color;
 }
 
-/* Content fade transition */
 .content-fade {
   transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1),
               transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
   will-change: opacity, transform;
 }
 
-/* Scale utilities for smoother animations */
 .scale-102 {
   transform: scale(1.02);
 }
@@ -157,7 +151,24 @@ img {
   transform: scale(1.05);
 }
 
-/* Prevent layout shifts during animations */
 .animation-container {
   contain: layout style paint;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }

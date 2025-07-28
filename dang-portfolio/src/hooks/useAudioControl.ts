@@ -5,6 +5,7 @@ export const VOLUME_CONFIG = {
   INTRO_END: 0.05,
   LOADING_START: 0.05,
   LOADING_END: 0.1,
+  WHOOSH_VOLUME: 0.3,
 };
 
 interface UseAudioControlProps {
@@ -21,6 +22,7 @@ export const useAudioControl = ({
   onLoadingComplete,
 }: UseAudioControlProps = {}) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const whooshAudioRef = useRef<HTMLAudioElement | null>(null);
   const volumeIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -28,10 +30,18 @@ export const useAudioControl = ({
     audioRef.current.loop = true;
     audioRef.current.volume = 0;
 
+    whooshAudioRef.current = new Audio('/audio/whoosh.mp3');
+    whooshAudioRef.current.volume = VOLUME_CONFIG.WHOOSH_VOLUME;
+    whooshAudioRef.current.preload = 'auto';
+
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.src = '';
+      }
+      if (whooshAudioRef.current) {
+        whooshAudioRef.current.pause();
+        whooshAudioRef.current.src = '';
       }
       if (volumeIntervalRef.current) {
         clearInterval(volumeIntervalRef.current);
@@ -44,6 +54,23 @@ export const useAudioControl = ({
       audioRef.current.play().catch(err => {
         console.log('Audio play failed:', err);
       });
+    }
+  }, []);
+
+  const playWhoosh = useCallback((delayMs: number = 0) => {
+    if (!whooshAudioRef.current) return;
+
+    const playWithDelay = () => {
+      whooshAudioRef.current!.currentTime = 0;
+      whooshAudioRef.current!.play().catch(err => {
+        console.log('Whoosh audio play failed:', err);
+      });
+    };
+
+    if (delayMs > 0) {
+      setTimeout(playWithDelay, delayMs);
+    } else {
+      playWithDelay();
     }
   }, []);
 
@@ -98,5 +125,6 @@ export const useAudioControl = ({
     completeIntroMusic,
     startLoadingMusic,
     completeLoadingMusic,
+    playWhoosh,
   };
 }; 

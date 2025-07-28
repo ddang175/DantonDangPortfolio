@@ -40,7 +40,6 @@ const projectsData: CardData[] = [
   
 ];
 
-// Sample data for experience
 const experienceData: CardData[] = [
   {
     id: 'exp-1',
@@ -63,10 +62,10 @@ const experienceData: CardData[] = [
     modalImageUrl: '/experience/backgroundpattern.webp',
     technologies: ['TypeScript', 'Python', 'AWS', 'PostgreSQL', 'Nobl9', 'ServiceNow'],
     date: 'May 2025 - August 2025'
-  }
+  },
+  
 ];
 
-//leadership data
 const leadershipData: CardData[] = [
   {
     id: 'lead-1',
@@ -82,6 +81,8 @@ const leadershipData: CardData[] = [
 ];
 
 export default function Home() {
+  const WHOOSH_DELAY_MS = 700;
+  
   const [isLoading, setIsLoading] = useState(true);
   const [showPortfolioButton, setShowPortfolioButton] = useState(true);
   const [showLoadingIndicator, setShowLoadingIndicator] = useState(false);
@@ -99,9 +100,9 @@ export default function Home() {
     completeIntroMusic,
     startLoadingMusic,
     completeLoadingMusic,
+    playWhoosh,
   } = useAudioControl();
 
-  // Check if mobile
   useEffect(() => {
     const updateScreenSize = () => {
       setIsMobile(window.innerWidth < 1024);
@@ -150,26 +151,39 @@ export default function Home() {
   const handleLoadingComplete = useCallback(() => {
     completeIntroMusic(); 
     setCanStartCameraAnimation(true);
-  }, [completeIntroMusic]);
+    playWhoosh(WHOOSH_DELAY_MS);
+  }, [completeIntroMusic, playWhoosh, WHOOSH_DELAY_MS]);
 
   const handleExperienceClick = useCallback(() => {
+    if (showAboutMe) {
+      setShowAboutMe(false);
+    }
     setCurrentCards(experienceData);
     setShowCardShowcase(true);
-  }, []);
+  }, [showAboutMe]);
 
   const handleProjectsClick = useCallback(() => {
+    if (showAboutMe) {
+      setShowAboutMe(false);
+    }
     setCurrentCards(projectsData);
     setShowCardShowcase(true);
-  }, []);
+  }, [showAboutMe]);
 
   const handleLeadershipClick = useCallback(() => {
+    if (showAboutMe) {
+      setShowAboutMe(false);
+    }
     setCurrentCards(leadershipData);
     setShowCardShowcase(true);
-  }, []);
+  }, [showAboutMe]);
 
   const handleAboutMeClick = useCallback(() => {
+    if (showCardShowcase) {
+      setShowCardShowcase(false);
+    }
     setShowAboutMe(true);
-  }, []);
+  }, [showCardShowcase]);
 
   const handleCardShowcaseClose = useCallback(() => {
     setShowCardShowcase(false);

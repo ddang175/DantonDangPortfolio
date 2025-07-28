@@ -15,14 +15,17 @@ const AboutMe: React.FC<AboutMeProps> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [contentOpacity, setContentOpacity] = useState(1);
+  
+  const imagePosition = {
+    mobile: { x: 50, y: 25 }, 
+    desktop: { x: 50, y: 50 } 
+  };
 
   useEffect(() => {
-    // Trigger entrance animation
     const timer = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle content transitions when card changes
   useEffect(() => {
     if (isTransitioning) {
       setContentOpacity(0.3);
@@ -36,22 +39,23 @@ const AboutMe: React.FC<AboutMeProps> = ({
     setTimeout(onClose, 300);
   };
 
-  // Calculate dynamic positioning to sit just above CardShowcase without overlap
   const getModalPositioning = () => {
     if (isMobile) {
       return {
-        bottom: 'calc(32vh + 1rem + 1rem)', // CardShowcase space + bottom gap + modal gap
-        maxHeight: 'calc(100vh - 32vh - 1rem - 1rem - 2rem)', // Screen - CardShowcase - gaps - padding
+        bottom: 'calc(340px + 1rem + 1rem)',
+        maxHeight: 'calc(100vh - 340px - 1rem - 1rem - 2rem)', 
       };
     } else {
       return {
-        bottom: 'calc(17vh + 15vh + 1rem)', // CardShowcase position + height + gap
-        maxHeight: 'calc(100vh - 17vh - 15vh - 1rem - 2rem)', // Screen - CardShowcase space - gaps - padding
+        bottom: 'calc(17vh + 15vh + 1rem)', 
+        maxHeight: 'calc(100vh - 17vh - 15vh - 1rem - 2rem)', 
       };
     }
   };
 
   const modalPositioning = getModalPositioning();
+
+  const currentPosition = isMobile ? imagePosition.mobile : imagePosition.desktop;
 
   return (
     <div 
@@ -60,13 +64,11 @@ const AboutMe: React.FC<AboutMeProps> = ({
         bottom: modalPositioning.bottom
       }}
     >
-      {/* Backdrop */}
       <div 
         className="absolute inset-0 pointer-events-auto"
         onClick={handleClose}
       />
       
-      {/* Modal Container */}
       <div 
         className={`
           relative w-full max-w-4xl bg-black/90 border border-white/20 rounded-2xl
@@ -80,7 +82,6 @@ const AboutMe: React.FC<AboutMeProps> = ({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header - Fixed */}
         <div className="flex items-center justify-between p-6 border-b border-white/10 bg-black/80 backdrop-blur-sm">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-wider uppercase">
             About Me
@@ -101,49 +102,40 @@ const AboutMe: React.FC<AboutMeProps> = ({
           </button>
         </div>
 
-        {/* Scrollable Content */}
         <div 
           className="overflow-y-auto custom-scrollbar transition-opacity duration-150 ease-out"
           style={{ 
             opacity: contentOpacity,
-            height: 'calc(100% - 89px)', // Full height minus header height
+            height: 'calc(100% - 89px)', 
             scrollbarWidth: 'thin',
             scrollbarColor: 'rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05)'
           }}
         >
           <div className="p-6 space-y-8">
-            {/* About Me / Bio Section */}
             <div className="space-y-4">
               <h3 className="text-xl sm:text-2xl font-bold text-white tracking-wider uppercase border-b border-white/10 pb-2">
                 Bio
               </h3>
               <div className="flex flex-col md:flex-row gap-6">
-                {/* Image Space */}
-                <div className="md:w-64 md:flex-shrink-0">
+                <div className="md:w-70 md:flex-shrink-0">
                   <div className="
-                    w-full h-64 md:h-80
+                    w-full h-80 md:h-100
                     bg-white/5 border border-white/10 rounded-lg
                     flex items-center justify-center
                     overflow-hidden
+                    relative
                   ">
-                    {/* Placeholder for image - replace with actual image */}
-                    <div className="text-gray-400 text-center p-4">
-                      <svg className="w-16 h-16 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      <span className="text-sm">Profile Image</span>
-                    </div>
-                    {/* To use an actual image, replace the placeholder div above with:
                     <img 
-                      src="/path/to/your/image.jpg" 
+                      src="/me.webp" 
                       alt="Profile" 
                       className="w-full h-full object-cover"
+                      style={{
+                        objectPosition: `${currentPosition.x}% ${currentPosition.y}%`
+                      }}
                     />
-                    */}
                   </div>
                 </div>
                 
-                {/* Bio Text */}
                 <div className="flex-1 text-gray-300 leading-relaxed text-base sm:text-lg space-y-4">
                   <p>
                     I'm a passionate software engineer with a strong foundation in full-stack development and site reliability engineering. 
@@ -162,7 +154,6 @@ const AboutMe: React.FC<AboutMeProps> = ({
               </div>
             </div>
 
-            {/* Education Section */}
             <div className="space-y-4">
               <h3 className="text-xl sm:text-2xl font-bold text-white tracking-wider uppercase border-b border-white/10 pb-2">
                 Education
@@ -171,7 +162,7 @@ const AboutMe: React.FC<AboutMeProps> = ({
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="text-lg font-semibold text-white">
-                      Bachelor of Science in Computer Engineering
+                      Bachelor of Science in Software Engineering
                     </h4>
                     <span className="text-purple-300 text-sm font-medium tracking-wider uppercase">
                       2020 - 2024
@@ -182,7 +173,7 @@ const AboutMe: React.FC<AboutMeProps> = ({
                       Iowa State University
                     </p>
                     <span className="text-white text-sm font-semibold">
-                      GPA: 3.X
+                      GPA: 4.0
                     </span>
                   </div>
                   <p className="text-gray-300 text-sm leading-relaxed">

@@ -16,7 +16,7 @@ export default function PortfolioButton({ onButtonClick, className = '' }: Portf
     CURSOR_INFLUENCE_RADIUS: 150,
     CURSOR_FOLLOW_SPEED: 0.03,
     
-    HOVER_SCALE: 1.1,
+    HOVER_SCALE: 1.05,
     HOVER_GLOW_INTENSITY: 1.3,
   };
 
@@ -94,12 +94,6 @@ export default function PortfolioButton({ onButtonClick, className = '' }: Portf
 
   if (!shouldRender) return null;
 
-  const NEON_COLOR = '#6060ff';
-  const NEON_SHADOW = '6px 5px 6px rgb(222, 198, 255), -6px 5px 6px rgb(222, 198, 255), 0 10px 70px rgb(111, 0, 255), 0 0px 2px rgb(255, 255, 255)';
-  const NEON_SHADOW_HOVER = '5px 3px 15px rgb(222, 198, 255), -5px 3px 15px rgb(222, 198, 255), 0 15px 80px rgb(111, 0, 255), 0 0px 4px rgb(255, 255, 255)';
-  const NEON_INSET_SHADOW = 'inset 0 -2px 8px rgb(222, 198, 255), inset 0 0px 20px rgb(72, 0, 167)';
-  const NEON_INSET_SHADOW_HOVER = 'inset 0 -3px 5px rgb(222, 198, 255), inset 0 0px 15px rgb(72, 0, 167)';
-
   return (
     <div 
       className={`absolute inset-0 z-[70] flex items-center justify-center transition-opacity ease-out ${className}`}
@@ -114,30 +108,41 @@ export default function PortfolioButton({ onButtonClick, className = '' }: Portf
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className={`
-          relative px-15 py-10 rounded-full border-2 transition-all duration-300 ease-out
-          bg-black border-[0px] text-white font-bold
-          hover:scale-105 hover:cursor-pointer
-          shadow-none
-          backdrop-blur-sm
+          relative px-12 py-6 sm:px-16 sm:py-8 lg:px-20 lg:py-10
+          backdrop-blur-md bg-white/5
+          border border-white/20
+          rounded-full
+          transition-all duration-300 ease-out
+          hover:cursor-pointer
+          text-lg sm:text-xl lg:text-2xl xl:text-3xl
+          font-sans tracking-widest uppercase
+          shadow-lg shadow-black/20
         `}
         style={{
-          fontFamily: 'Inter, sans-serif',
-          fontSize: '3.2rem',
-          fontWeight: '400',
-          borderColor: NEON_COLOR,
-          background: 'rgba(0,0,0,0.7)',
-          backgroundImage: 'linear-gradient(to top, rgb(153, 107, 212) 40%, #ffffff 53%)',
-          backgroundClip: 'text',
-          WebkitBackgroundClip: 'text',
-          color: 'transparent',
+          fontFamily: 'Inter, Arial, sans-serif',
           transform: `
             translate(${buttonPosition.x}px, ${buttonPosition.y}px) 
             scale(${isHovered ? ANIMATION_CONFIG.HOVER_SCALE : 1})
           `,
-          boxShadow: isHovered ? `${NEON_SHADOW_HOVER}, ${NEON_INSET_SHADOW_HOVER}` : `${NEON_SHADOW}, ${NEON_INSET_SHADOW}`,
         }}
       >
-        View Portfolio
+        <span className={`
+          relative z-10 transition-all duration-300 whitespace-nowrap
+          ${isHovered ? 'text-white drop-shadow-lg' : 'text-gray-200'}
+        `}>
+          View Portfolio
+        </span>
+        
+        {/* Underline effect similar to navbar */}
+        <div
+          className={`
+            absolute left-1/2 bottom-3 transform -translate-x-1/2
+            w-3/4 h-0.5
+            bg-gradient-to-r from-purple-400 to-purple-300
+            transition-all duration-300 ease-out
+            ${isHovered ? 'opacity-100' : 'opacity-0'}
+          `}
+        />
       </button>
     </div>
   );
