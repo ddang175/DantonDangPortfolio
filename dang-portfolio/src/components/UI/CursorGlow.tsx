@@ -1,15 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
-import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
+import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
+import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 
 export default function CursorGlow() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [lerpPosition, setLerpPosition] = useState({ x: 0, y: 0 });
   const animationRef = useRef<number | undefined>(undefined);
 
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 45, enabled: true });
+  const { shouldRenderFrame } = useFrameRateLimit({
+    targetFPS: 45,
+    enabled: true,
+  });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -18,24 +21,24 @@ export default function CursorGlow() {
 
     const animate = () => {
       const currentTime = performance.now();
-      
+
       if (!shouldRenderFrame(currentTime)) {
         animationRef.current = requestAnimationFrame(animate);
         return;
       }
-      
-      setLerpPosition(prev => ({
+
+      setLerpPosition((prev) => ({
         x: prev.x + (position.x - prev.x) * 0.07,
         y: prev.y + (position.y - prev.y) * 0.07,
       }));
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
@@ -48,7 +51,7 @@ export default function CursorGlow() {
       style={{
         left: lerpPosition.x - 400,
         top: lerpPosition.y - 400,
-        transform: 'translate(0, 0)',
+        transform: "translate(0, 0)",
       }}
     >
       <Image
@@ -61,4 +64,4 @@ export default function CursorGlow() {
       />
     </div>
   );
-} 
+}

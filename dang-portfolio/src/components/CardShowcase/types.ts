@@ -10,4 +10,4 @@ export interface CardData {
   technologies?: string[];
   date?: string;
   link?: string;
-} 
+}

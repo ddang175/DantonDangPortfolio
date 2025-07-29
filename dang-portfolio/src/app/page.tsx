@@ -1,88 +1,203 @@
-'use client';
+"use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { BlurMask, LoadingPanel, LoadingIndicator } from "@/components/openingSequence";
+import {
+  BlurMask,
+  LoadingPanel,
+  LoadingIndicator,
+} from "@/components/openingSequence";
 import { CursorGlow, PortfolioButton } from "@/components/UI";
 import { useAudioControl } from "@/hooks/useAudioControl";
 import { FloatingLinkedInLogo } from "@/components/LinkedInLogo";
 import { FloatingGitHubLogo } from "@/components/GitHubLogo";
 import { BackgroundCanvas } from "@/components/Background3D";
-import { useGLTF } from '@react-three/drei';
+import { useGLTF } from "@react-three/drei";
 import MinimalistNavbar from "@/components/UI/MinimalistNavbar";
 import { CardShowcase } from "@/components/CardShowcase";
 import { CardData } from "@/components/CardShowcase/types";
 import { AboutMe } from "@/components/AboutMe";
 
-// Sample data for projects
 const projectsData: CardData[] = [
   {
-    id: 'project-1',
-    title: 'Portfolio Website',
-    description: 'A modern, interactive portfolio website built with Next.js, Three.js, and TypeScript. Features 3D animations, custom audio controls, and a responsive design that showcases my work in an engaging way.',
-    shortDescription: 'Modern portfolio with 3D animations',
-    previewImageUrl: '/backgroundpattern.webp',
-    modalImageUrl: '/glow.webp',
-    technologies: ['Next.js', 'Three.js', 'TypeScript', 'Tailwind CSS'],
-    date: '2024',
-    link: 'https://github.com/yourusername/portfolio'
+    id: "project-1",
+    title: "Dancer - YouTube Dance Assistant",
+    description: `Control panel with video mirroring, segments, looping, countdown, and metronome to make learning choreographies on YouTube easier!
+
+Key Features:
+Video Mirroring - Toggle button to mirror videos so you can learn the choreography correctly
+
+Speed Adjustment - Slider bar where you can adjust the speed quickly in 0.05x increments
+
+Countdown - You can toggle a countdown timer with whatever time you’d like. The countdown will play whenever the the video is unpaused, clicked through, or looped, allowing you time to get into position
+
+Segments - Segments allow you to split the video into different parts so you can practice certain sections of the choreography. Creating a segment will allow you to click play from that segment or loop that segment however long you would like. Segments are created by providing two timestamps.
+
+Looping - You can toggle a loop on any segment you would like, if you have the timer enabled the timer will countdown before the loop restarts.
+
+Metronome - You can toggle the metronome that matches the beat of the music after configuring the timing. To configure the timing you just have to tap to the beat of the music for 15 seconds
+
+Memory - Dancer will remember every segment and metronome timing configuration you make for each video so that you can come back and have everything you need to dance`,
+    shortDescription:
+      "A chrome extension to help people learn choreographies with video controls.",
+    previewImageUrl: "/projects/dancer.gif",
+    modalImageUrl: "/projects/dancermodal.webp",
+    technologies: ["JavaScript", "HTML", "CSS"],
+    date: "July 2025",
+    link: "https://github.com/yourusername/portfolio",
   },
   {
-    id: 'project-2',
-    title: 'E-Commerce Platform',
-    description: 'A full-stack e-commerce platform with user authentication, payment processing, and admin dashboard. Built with modern web technologies and follows best practices for security and performance.',
-    shortDescription: 'Full-stack e-commerce solution',
-    previewImageUrl: '/glow.webp',
-    modalImageUrl: '/backgroundpattern.webp',
-    technologies: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-    date: '2023',
-    link: 'https://github.com/yourusername/ecommerce'
+    id: "project-2",
+    title: "My Portfolio",
+    description: `I created this 3d portfolio to showcase my work, creativity, and who I am as an eningeer and a person.
+
+    I wanted to showcase my personality through this potrfolio and provide you with a different experience from other engineering portfolios. My portfolio is heavily inspired my Tokyo alleyways and night life. I also wanted to incooperate one of my favorite cars, the Toyota AE86 Trueno Sprinter :)
+    
+    ThreeJS was used because I saw so many creative 3D websites, so that was my main focus when creating this portfolio. Since you are already here on my portfolio, please have fun looking around and make sure to contact me!`,
+    shortDescription:
+      "3D Portfolio based on Tokyo alley ways to showcase my work and who I am.",
+    previewImageUrl: "/projects/port.gif",
+    modalImageUrl: "/projects/portmodal.webp",
+    technologies: ["React", "TypeScript", "ThreeJS", "Tailwind CSS"],
+    date: "July 2025",
+    link: "https://github.com/ddang175/portfolioWIP",
   },
-  
+  {
+    id: "project-3",
+    title: "PACC (Principal Automated Code Checker)",
+    description: `PACC (Principal Automated Code Checker) was created the the Principal Intern 2025 Code Jam. My team and I had 3 days to complete this project and present it to an audience.
+ 
+    PACC is an internal tool for developers to check for formatting and create code documentation before the user pushes to GitHub. GitHub Actions is a significant cost for an enterprise like Principal, so we wanted to create something to lower that cost. PACC formats your code by linting it (using ESList or Flake8 and Black) and using AWS Bedrock LLMs to format code. By running PACC, we will catch errors before the code is pushed to GitHub. This prevents wasted GitHub actions and saves the enterprise money. 
+
+    Built into PACC are also connections to GitHub. You can pull, commit, and push straight from the PACC application. When committing from PACC, an autogenerated commit message will be created for you.
+ 
+    For PACC, I created the user interface, implemented the AI functionality, and created the GitHub functionality (pulling, committing, pushing)`,
+    shortDescription: `Internal Principal tool that formats, documents, and pushes code with AI`,
+    previewImageUrl: "/projects/pacc.gif",
+    modalImageUrl: "/projects/paccmodal.webp",
+    technologies: [
+      "Python",
+      "Black",
+      "Flake8",
+      "TypeScript",
+      "Java",
+      "AWS Bedrock",
+    ],
+    date: "June 2025",
+    link: "https://docs.google.com/presentation/d/13RKYf-qMS67b7hrTv9tKtAO8q7U2_7m1PFrmFTfRsAc/edit?usp=sharing",
+  },
+  {
+    id: "project-4",
+    title: "NCT127 - NASA Tech Library",
+    description: `NCT127 (NASA Collection of Technologies), is a full-stack web application designed to educate and inspire users by showcasing a curated collection of NASA’s patents. The core functionalities include:
+Patent Discovery: Users can search for NASA patents using keywords or explore curated categories. NCT127's was created using React for the front end and Express with MongoDB for backend/API calls.
+
+Patent Details: Each patent has a detailed view displayed via a modal, including metadata and descriptions.
+Stashing Patents: Users can temporarily save patents to a "stash" (similar to a cart).
+Saving to Profile: From the stash, users can confirm which patents to save to their personal collection.
+User Authentication: Sign-up and login functionality for personalized access.
+Profile Management: Logged-in users can view, edit, or delete saved patents from their profile.
+Notes System: Users can add, edit, and view notes, links, and tags for each saved patent.
+Tag-Based Filtering: Patents in a user’s profile can be filtered in real-time using tags.
+
+UI Flow
+Authentication: Users must either create an account or log in to access the site.
+Homepage/Dashboard: After login, users land on the homepage where they can search or browse patents.
+Patent Exploration: Users can view patent details and stash interesting ones.
+Stash Page: Users visit the stash to confirm which patents to save to their MongoDB-backed account.
+Profile Page: Saved patents appear here. Users can:
+View patent details
+Edit associated notes, links, and tags
+Delete patents from their collection
+Filter patents using tags
+
+CRUD Operations
+Create:
+User accounts (sign-up), Stashing patents temporarily, Saving patents to user profile, Adding notes, links, and tags
+Read:
+Fetch patents from NASA’s Tech Transfer API, View patent details, user’s saved patents, and associated notes/tags
+Update:
+Edit notes, links, and tags for a saved patent
+Delete:
+Remove patents from stash or profile, Delete specific notes, links, or tags (if implemented)
+`,
+    shortDescription:
+      "3D Portfolio based on Tokyo alley ways to showcase my work and who I am.",
+    previewImageUrl: "/projects/NCT127.gif",
+    modalImageUrl: "/projects/nct127modal.webp",
+    technologies: ["React", "JavaScript XML", "MongoDB", "Express"],
+    date: "April - May 2025",
+    link: "https://github.com/ddang175/NCT127",
+  },
 ];
 
 const experienceData: CardData[] = [
   {
-    id: 'exp-1',
-    title: 'Software Engineer',
-    company: 'John Deere',
-    description: "At John Deere Financial, I contributed to two major internal applications that improved operational efficiency and data integrity. For a global Security Access Management app used by over 470 managers, I helped build the front end using Next.js and MUI, improved UI/UX, and supported backend integration with API Gateway and AWS Lambda. Also, I created a TypeScript CRON job using Prisma and Deere's HR API to automate the cleanup of terminated employee records and fix invalid IDs across a 2,000+ entry database.. This tool reduced manual effort and saved the company over $18,000 annually. Separately, I developed an internal data management tool for the Database team. I automated JIRA ticket creation, managed AWS EC2 lifecycle events, and documented secure API integrations using Deere's internal SALAD standards.",
-    shortDescription: 'Full stack engineer on the CyCloud team at ISU Research Park.',
-    previewImageUrl: '/experience/johndeere.gif',
-    modalImageUrl: '/experience/deereIN.webp',
-    technologies: ['React', 'MUI', 'TypeScript', 'AWS', 'PostgreSQL', "Jenkins", "Prisma"],
-    date: 'May 2024 - Present'
+    id: "exp-1",
+    title: "Software Engineer",
+    company: "John Deere",
+    description: `At John Deere Financial, I contributed to two major internal applications that improved operational efficiency and data integrity.
+    
+    For a global Security Access Management app used by over 470 managers, I helped build the front end using React and MUI, improved UI/UX, and supported backend integration with API Gateway and AWS Lambda. Also, I created a TypeScript CRON job using Prisma and Deere's HR API to automate the cleanup of terminated employee records and fix invalid IDs across a 2,000+ entry database. This tool reduced manual effort and saved the company over $18,000 annually.
+    
+    Separately, I developed an internal data management tool for the Database team. I automated JIRA ticket creation, managed AWS EC2 lifecycle events, and documented secure API integrations using Deere's internal SALAD standards.`,
+    shortDescription:
+      "Full stack engineer on the CyCloud team at ISU Research Park.",
+    previewImageUrl: "/experience/johndeere.gif",
+    modalImageUrl: "/experience/deereIN.webp",
+    technologies: [
+      "React",
+      "MUI",
+      "TypeScript",
+      "AWS",
+      "PostgreSQL",
+      "Jenkins",
+      "Prisma",
+    ],
+    date: "May 2024 - Present",
   },
   {
-    id: 'exp-2',
-    title: 'Site Reliability Engineer Intern',
-    company: 'Principal Financial Group',
-    description: "At Principal, I led several key infrastructure initiatives to improve scalability, automation, and compliance. I migrated over 100 AWS resources across regions by modifying Infrastructure as Code and deploying updated CloudFormation stacks using the AWS CDK, ensuring alignment with regional standards. I also automated the synchronization of labels between Nobl9 and ServiceNow using a daily AWS Lambda CRON job, which eliminated manual effort and improved data accuracy. Additionally, I upgraded more than 300 AWS Lambda functions across 10 accounts by updating code and infrastructure configurations, testing functionality, and adjusting Lambda layers to maintain compatibility and avoid deprecated runtimes.",
-    shortDescription: "Ensured uptime and performance of internal and external applications.",
-    previewImageUrl: '/experience/principal.gif',
-    modalImageUrl: '/experience/backgroundpattern.webp',
-    technologies: ['TypeScript', 'Python', 'AWS', 'PostgreSQL', 'Nobl9', 'ServiceNow'],
-    date: 'May 2025 - August 2025'
+    id: "exp-2",
+    title: "Site Reliability Engineer Intern",
+    company: "Principal Financial Group",
+    description: `At Principal, I led several key infrastructure initiatives to improve scalability, automation, and compliance. I migrated over 100 AWS resources across regions by modifying Infrastructure as Code and deploying updated CloudFormation stacks using the AWS CDK, ensuring alignment with regional standards.
+    
+    I also automated the synchronization of labels between Nobl9 and ServiceNow using a daily AWS Lambda CRON job, which eliminated manual effort and improved data accuracy.
+    
+    Additionally, I upgraded more than 300 AWS Lambda functions across 10 accounts by updating code and infrastructure configurations, testing functionality, and adjusting Lambda layers to maintain compatibility and avoid deprecated runtimes.`,
+    shortDescription:
+      "Ensured uptime and performance of internal and external applications.",
+    previewImageUrl: "/experience/principal.gif",
+    modalImageUrl: "/experience/principalmodal.webp",
+    technologies: [
+      "TypeScript",
+      "Python",
+      "AWS",
+      "PostgreSQL",
+      "Nobl9",
+      "ServiceNow",
+    ],
+    date: "May - August 2025",
   },
-  
 ];
 
 const leadershipData: CardData[] = [
   {
-    id: 'lead-1',
-    title: 'Vice President',
-    company: 'Asian Student Union',
-    description: "At John Deerfffffffffffff ffffffffff f f f f ff f f ff f f ff f f f ffffffff   ffffffffffff f f fffff  ffff fffff fffff ff ffffffff fffffffffffff f ff ffffffffff f  f f f  ffff ffffff ffe Financial, I worked on two internal apps.\nFor the Security Access Management app, I enhanced UX, integrated AWS APIs, and automated HR record cleanup.\nFor the Database team, I automated JIRA tickets, managed EC2 events, and maintained data integrity.\nAlso wrote API documentation following SALAD standards.",
-    shortDescription: 'Full stack engineer on the CyCloud team at ISU Research Park.',
-    previewImageUrl: '/experience/johndeere.gif',
-    modalImageUrl: '/experience/deereIN.webp',
-    date: 'May 2025 - Present'
+    id: "lead-1",
+    title: "Vice President",
+    company: "Asian Student Union",
+    description:
+      "At John Deerfffffffffffff ffffffffff f f f f ff f f ff f f ff f f f ffffffff   ffffffffffff f f fffff  ffff fffff fffff ff ffffffff fffffffffffff f ff ffffffffff f  f f f  ffff ffffff ffe Financial, I worked on two internal apps.\nFor the Security Access Management app, I enhanced UX, integrated AWS APIs, and automated HR record cleanup.\nFor the Database team, I automated JIRA tickets, managed EC2 events, and maintained data integrity.\nAlso wrote API documentation following SALAD standards.",
+    shortDescription:
+      "Full stack engineer on the CyCloud team at ISU Research Park.",
+    previewImageUrl: "/leadership/asu.webp",
+    modalImageUrl: "/leadership/asumodal.webp",
+    date: "February 2025 - Present",
   },
-  
 ];
 
 export default function Home() {
-  const WHOOSH_DELAY_MS = 700;
-  
+  const WHOOSH_DELAY_MS = 650;
+
   const [isLoading, setIsLoading] = useState(true);
   const [showPortfolioButton, setShowPortfolioButton] = useState(true);
   const [showLoadingIndicator, setShowLoadingIndicator] = useState(false);
@@ -108,15 +223,15 @@ export default function Home() {
       setIsMobile(window.innerWidth < 1024);
     };
     updateScreenSize();
-    window.addEventListener('resize', updateScreenSize);
-    return () => window.removeEventListener('resize', updateScreenSize);
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
   }, []);
 
   const handleButtonClick = useCallback(() => {
     setShowPortfolioButton(false);
     setStart3DLoading(true);
     startIntroMusic();
-    
+
     const loadingDelay = setTimeout(() => {
       setShowLoadingIndicator(true);
     }, 250);
@@ -125,19 +240,19 @@ export default function Home() {
 
   const handle3DReady = useCallback(() => {
     timeoutRefs.current.forEach((timer, index) => {
-      if (timer && typeof timer === 'number') {
+      if (timer && typeof timer === "number") {
         clearTimeout(timer);
         timeoutRefs.current[index] = null as any;
       }
     });
-    
+
     setShowLoadingIndicator(false);
     setShow3D(true);
     const loadingTimer = setTimeout(() => setIsLoading(false), 250);
     timeoutRefs.current.push(loadingTimer);
-    
+
     const fallbackTimer = setTimeout(() => {
-      console.log('Fallback: Forcing loading doors to open');
+      console.log("Fallback: Forcing loading doors to open");
       setIsLoading(false);
       setCanStartCameraAnimation(true);
     }, 8000);
@@ -149,7 +264,7 @@ export default function Home() {
   }, [startLoadingMusic]);
 
   const handleLoadingComplete = useCallback(() => {
-    completeIntroMusic(); 
+    completeIntroMusic();
     setCanStartCameraAnimation(true);
     playWhoosh(WHOOSH_DELAY_MS);
   }, [completeIntroMusic, playWhoosh, WHOOSH_DELAY_MS]);
@@ -194,7 +309,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    useGLTF.preload('/ae86/initialdcarmesh.glb');
+    useGLTF.preload("/ae86/initialdcarmesh.glb");
     return () => {
       timeoutRefs.current.forEach(clearTimeout);
       timeoutRefs.current = [];
@@ -203,21 +318,30 @@ export default function Home() {
 
   return (
     <main className="w-full h-screen relative overflow-hidden bg-black">
-
       {start3DLoading && (
-        <div className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${show3D ? 'opacity-100' : 'opacity-0'}`}>
-          <BackgroundCanvas 
-            modelPath="/ae86/initialdcarmesh.glb" 
+        <div
+          className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
+            show3D ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <BackgroundCanvas
+            modelPath="/ae86/initialdcarmesh.glb"
             startAnimation={canStartCameraAnimation}
             onReady={handle3DReady}
           />
         </div>
       )}
 
-      <div className={`
+      <div
+        className={`
         transition-all duration-500 ease-out
-        ${showCardShowcase ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}
-      `}>
+        ${
+          showCardShowcase
+            ? "opacity-0 pointer-events-none"
+            : "opacity-100 pointer-events-auto"
+        }
+      `}
+      >
         <MinimalistNavbar
           onExperienceClick={handleExperienceClick}
           onProjectsClick={handleProjectsClick}
@@ -235,17 +359,21 @@ export default function Home() {
       )}
 
       {showAboutMe && (
-        <AboutMe
-          onClose={handleAboutMeClose}
-          isMobile={isMobile}
-        />
+        <AboutMe onClose={handleAboutMeClose} isMobile={isMobile} />
       )}
 
       {showPortfolioButton && (
-        <PortfolioButton onButtonClick={handleButtonClick} className="pointer-events-auto" />
+        <PortfolioButton
+          onButtonClick={handleButtonClick}
+          className="pointer-events-auto"
+        />
       )}
 
-      <div className={`absolute inset-0 z-[60] transition-opacity duration-500 ${showLoadingIndicator ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+      <div
+        className={`absolute inset-0 z-[60] transition-opacity duration-500 ${
+          showLoadingIndicator ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+      >
         <LoadingIndicator />
       </div>
 
@@ -255,11 +383,21 @@ export default function Home() {
       </div>
 
       <div className="absolute inset-0 z-50 pointer-events-none">
-        <LoadingPanel position="top" isVisible={isLoading} onAnimationStart={handleLoadingStart} onAnimationComplete={handleLoadingComplete} />
-        <LoadingPanel position="bottom" isVisible={isLoading} onAnimationStart={handleLoadingStart} onAnimationComplete={handleLoadingComplete} />
+        <LoadingPanel
+          position="top"
+          isVisible={isLoading}
+          onAnimationStart={handleLoadingStart}
+          onAnimationComplete={handleLoadingComplete}
+        />
+        <LoadingPanel
+          position="bottom"
+          isVisible={isLoading}
+          onAnimationStart={handleLoadingStart}
+          onAnimationComplete={handleLoadingComplete}
+        />
       </div>
 
       <CursorGlow />
     </main>
   );
-};
+}

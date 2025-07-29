@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { MeshStandardMaterial } from 'three';
-import AnimatedLetter from './AnimatedLetter';
+import { useMemo } from "react";
+import { MeshStandardMaterial } from "three";
+import AnimatedLetter from "./AnimatedLetter";
 
 interface LetterConfig {
   char: string;
@@ -22,9 +22,12 @@ interface NeonText3DProps {
 const materialCache = new Map<string, MeshStandardMaterial>();
 const MAX_CACHE_SIZE = 5;
 
-const getOrCreateMaterial = (color: string, lightColor: string): MeshStandardMaterial => {
+const getOrCreateMaterial = (
+  color: string,
+  lightColor: string
+): MeshStandardMaterial => {
   const key = `${color}-${lightColor}`;
-  
+
   if (!materialCache.has(key)) {
     if (materialCache.size >= MAX_CACHE_SIZE) {
       const firstKey = materialCache.keys().next().value;
@@ -36,7 +39,7 @@ const getOrCreateMaterial = (color: string, lightColor: string): MeshStandardMat
         materialCache.delete(firstKey);
       }
     }
-    
+
     const material = new MeshStandardMaterial({
       color,
       emissive: lightColor,
@@ -46,12 +49,12 @@ const getOrCreateMaterial = (color: string, lightColor: string): MeshStandardMat
     });
     materialCache.set(key, material);
   }
-  
+
   return materialCache.get(key)!;
 };
 
 const cleanupMaterialCache = () => {
-  materialCache.forEach(material => {
+  materialCache.forEach((material) => {
     material.dispose();
   });
   materialCache.clear();
@@ -62,28 +65,31 @@ export default function NeonText3D({
   fontSize = 0.3,
   height = 0.15,
   letterSpacing = 0.04,
-  color = '#796094',
-  lightColor = '#d09eff',
+  color = "#796094",
+  lightColor = "#d09eff",
 }: NeonText3DProps) {
-  const material = useMemo(() => 
-    getOrCreateMaterial(color, lightColor), 
+  const material = useMemo(
+    () => getOrCreateMaterial(color, lightColor),
     [color, lightColor]
   );
 
-  const letterGroups = useMemo(() => 
-    letters.map((letter, i) => (
-      <AnimatedLetter
-        key={`${letter.char}-${letter.position[0]}-${letter.position[1]}-${i}`}
-        char={letter.char}
-        position={letter.position}
-        baseRotation={letter.rotation || [0, 0, 0]}
-        fontSize={fontSize}
-        height={height}
-        letterSpacing={letterSpacing}
-        material={material}
-        index={i}
-      />
-    )), [letters, fontSize, height, letterSpacing, material]);
+  const letterGroups = useMemo(
+    () =>
+      letters.map((letter, i) => (
+        <AnimatedLetter
+          key={`${letter.char}-${letter.position[0]}-${letter.position[1]}-${i}`}
+          char={letter.char}
+          position={letter.position}
+          baseRotation={letter.rotation || [0, 0, 0]}
+          fontSize={fontSize}
+          height={height}
+          letterSpacing={letterSpacing}
+          material={material}
+          index={i}
+        />
+      )),
+    [letters, fontSize, height, letterSpacing, material]
+  );
 
   return <group>{letterGroups}</group>;
 }

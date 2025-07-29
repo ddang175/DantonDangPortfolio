@@ -39,14 +39,44 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="preload" as="image" href="/glow.webp" />
-        
-        <link rel="preload" as="fetch" href="/ae86/initialdcarmesh.glb" crossOrigin="anonymous" />
-        <link rel="preload" as="fetch" href="/city/city.glb" crossOrigin="anonymous" />
-        <link rel="preload" as="fetch" href="/github/scene.glb" crossOrigin="anonymous" />
-        <link rel="preload" as="fetch" href="/linkedin_3d/scene.glb" crossOrigin="anonymous" />
-        <link rel="preload" as="fetch" href="/email/scene.glb" crossOrigin="anonymous" />
-        <link rel="preload" as="fetch" href="/resume/scene.glb" crossOrigin="anonymous" />
-        
+
+        <link
+          rel="preload"
+          as="fetch"
+          href="/ae86/initialdcarmesh.glb"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="fetch"
+          href="/city/city.glb"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="fetch"
+          href="/github/scene.glb"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="fetch"
+          href="/linkedin_3d/scene.glb"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="fetch"
+          href="/email/scene.glb"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="fetch"
+          href="/resume/scene.glb"
+          crossOrigin="anonymous"
+        />
+
         <link rel="preload" as="audio" href="/audio/keys/1.mp3" />
         <link rel="preload" as="audio" href="/audio/keys/2.mp3" />
         <link rel="preload" as="audio" href="/audio/keys/3.mp3" />
@@ -59,10 +89,14 @@ export default function RootLayout({
         <link rel="preload" as="audio" href="/audio/keys/10.mp3" />
         <link rel="preload" as="audio" href="/audio/keys/11.mp3" />
         <link rel="preload" as="audio" href="/audio/keys/12.mp3" />
-        
+
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

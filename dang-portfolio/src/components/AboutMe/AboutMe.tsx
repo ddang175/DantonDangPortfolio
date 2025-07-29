@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface AboutMeProps {
   onClose: () => void;
@@ -7,18 +7,18 @@ interface AboutMeProps {
   isMobile?: boolean;
 }
 
-const AboutMe: React.FC<AboutMeProps> = ({ 
-  onClose, 
-  isTransitioning = false, 
+const AboutMe: React.FC<AboutMeProps> = ({
+  onClose,
+  isTransitioning = false,
   isClosing = false,
-  isMobile = false 
+  isMobile = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [contentOpacity, setContentOpacity] = useState(1);
-  
+
   const imagePosition = {
-    mobile: { x: 50, y: 25 }, 
-    desktop: { x: 50, y: 50 } 
+    mobile: { x: 50, y: 25 },
+    desktop: { x: 50, y: 50 },
   };
 
   useEffect(() => {
@@ -42,47 +42,53 @@ const AboutMe: React.FC<AboutMeProps> = ({
   const getModalPositioning = () => {
     if (isMobile) {
       return {
-        bottom: 'calc(18vh + 1rem)', // 1rem gap above navbar (bottom-4) + 1rem padding
-        maxHeight: 'calc(80vh - 1rem - 1rem - 2rem)', // Screen - navbar gap - padding - margins
+        bottom: "calc(18vh + 1rem)",
+        maxHeight: "calc(80vh - 1rem - 1rem - 2rem)",
       };
     } else {
       return {
-        bottom: 'calc(17vh + 1rem)', // 1rem gap above navbar (bottom-[17vh]) + 1rem padding
-        maxHeight: 'calc(100vh - 17vh - 1rem - 2rem)', // Screen - navbar position - gap - margins
+        bottom: "calc(27vh + 1rem)",
+        maxHeight: "calc(100vh - 27vh - 1rem - 2rem)",
       };
     }
   };
 
   const modalPositioning = getModalPositioning();
 
-  const currentPosition = isMobile ? imagePosition.mobile : imagePosition.desktop;
+  const currentPosition = isMobile
+    ? imagePosition.mobile
+    : imagePosition.desktop;
 
   return (
-    <div 
+    <div
       className="fixed inset-x-0 z-[70] flex items-end justify-center p-4 pointer-events-none"
-      style={{ 
-        bottom: modalPositioning.bottom
+      style={{
+        bottom: modalPositioning.bottom,
       }}
     >
-      <div 
+      <div
         className="absolute inset-0 pointer-events-auto"
         onClick={handleClose}
       />
-      
-      <div 
+
+      <div
         className={`
           relative w-full max-w-4xl bg-black/90 border border-white/20 rounded-2xl
           shadow-2xl overflow-hidden pointer-events-auto
           transition-all duration-300 ease-out
-          ${isVisible && !isClosing ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+          ${
+            isVisible && !isClosing
+              ? "opacity-100 scale-100"
+              : "opacity-0 scale-95"
+          }
         `}
-        style={{ 
+        style={{
           maxHeight: modalPositioning.maxHeight,
-          height: modalPositioning.maxHeight
+          height: modalPositioning.maxHeight,
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 bg-black/80 backdrop-blur-sm">
+        <div className="flex items-center justify-between p-2 sm:p-4 border-b border-white/10 bg-black/10 backdrop-blur-sm">
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-wider uppercase">
             About Me
           </h2>
@@ -96,19 +102,30 @@ const AboutMe: React.FC<AboutMeProps> = ({
               rounded-full hover:bg-white/10 cursor-pointer
             "
           >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-5 h-5 sm:w-6 sm:h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
 
-        <div 
+        <div
           className="overflow-y-auto custom-scrollbar transition-opacity duration-150 ease-out"
-          style={{ 
+          style={{
             opacity: contentOpacity,
-            height: 'calc(100% - 89px)', 
-            scrollbarWidth: 'thin',
-            scrollbarColor: 'rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05)'
+            height: "calc(100% - 89px)",
+            scrollbarWidth: "thin",
+            scrollbarColor:
+              "rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05)",
           }}
         >
           <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
@@ -116,41 +133,68 @@ const AboutMe: React.FC<AboutMeProps> = ({
               <h3 className="text-base sm:text-lg lg:text-xl font-bold text-white tracking-wider uppercase border-b border-white/10 pb-2">
                 Bio
               </h3>
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="md:w-70 md:flex-shrink-0">
-                  <div className="
-                    w-full h-80 md:h-100
+
+              <div className="relative">
+                <div
+                  className={`
+                  ${isMobile ? "w-full mb-6" : "w-70 float-left mr-6 mb-4"}
+                  flex-shrink-0
+                `}
+                >
+                  <div
+                    className="
+                    w-full h-90 md:h-120
                     bg-white/5 border border-white/10 rounded-lg
                     flex items-center justify-center
                     overflow-hidden
                     relative
-                  ">
-                    <img 
-                      src="/me.webp" 
-                      alt="Profile" 
+                  "
+                  >
+                    <img
+                      src="/me.webp"
+                      alt="Profile"
                       className="w-full h-full object-cover"
                       style={{
-                        objectPosition: `${currentPosition.x}% ${currentPosition.y}%`
+                        objectPosition: `${currentPosition.x}% ${currentPosition.y}%`,
                       }}
                     />
                   </div>
                 </div>
-                
-                <div className="flex-1 text-gray-300 leading-relaxed text-base sm:text-lg space-y-4">
+
+                <div className="text-gray-300 leading-relaxed text-base sm:text-lg space-y-4">
                   <p>
-                    I'm a passionate software engineer with a strong foundation in full-stack development and site reliability engineering. 
-                    I love building robust, scalable applications and solving complex technical challenges.
+                    Hi! My name is Danton Dang, and I am a Software Engineer and
+                    student based out of Iowa. I am passionate about developing,
+                    problem-solving, and lifelong learning.
                   </p>
                   <p>
-                    Currently working at John Deere as a Software Engineer, I focus on developing internal applications that improve 
-                    business processes and user experiences. My experience spans from frontend development with React and TypeScript 
-                    to backend services with AWS and PostgreSQL.
+                    Currently, I am a Software Engineer at John Deere team
+                    called CyCloud. I focus on developing internal applications
+                    that improve workflows, reduce manual work, and help people
+                    adhere to enterprise standards (all while saving John Deere
+                    some money). My role at Deere requires front and backend
+                    development, exposing me to many different technologies and
+                    skills.
                   </p>
                   <p>
-                    I'm always eager to learn new technologies and best practices, and I enjoy collaborating with cross-functional 
-                    teams to deliver high-quality solutions that make a real impact.
+                    I took a little break in the Summer of 2025 to intern at
+                    Principal Financial Group on the Site Reliability
+                    Engineering (SRE) team. Unlike Deere, my work at Principal
+                    was all backend, throwing me into the deep end of cloud
+                    services and system architecture. Through this internship, I
+                    learned a lot about AWS and the best practices to ensure
+                    systems/applications stay up for those who need it the most.
+                  </p>
+                  <p>
+                    Outside of software engineering, I love playing volleyball,
+                    hanging out with friends, building keyboards, helping run
+                    Iowa State's Asian Student Union as Vice President, and
+                    continuously learning. I am always eager to learn and grow
+                    while collaborating/meeting with others, so let's connect!
                   </p>
                 </div>
+
+                <div className="clear-left"></div>
               </div>
             </div>
 
@@ -162,10 +206,10 @@ const AboutMe: React.FC<AboutMeProps> = ({
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="text-base sm:text-lg font-semibold text-white">
-                      Bachelor of Science in Software Engineering
+                      Bachelor's in Software Engineering
                     </h4>
                     <span className="text-purple-300 text-sm font-medium tracking-wider uppercase">
-                      2020 - 2024
+                      August 2023 - May 2027
                     </span>
                   </div>
                   <div className="flex items-center justify-between mb-2">
@@ -177,8 +221,8 @@ const AboutMe: React.FC<AboutMeProps> = ({
                     </span>
                   </div>
                   <p className="text-gray-300 text-sm leading-relaxed">
-                    Graduated with honors. Focused on software engineering, computer architecture, and embedded systems. 
-                    Completed coursework in data structures, algorithms, software design, and computer networks.
+                    4x Dean's List | 2x President's List | George Washington
+                    Carver Scholar (Full-Tuition Scholarship)
                   </p>
                 </div>
 
@@ -190,14 +234,12 @@ const AboutMe: React.FC<AboutMeProps> = ({
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3">
                     {[
-                      'Data Structures & Algorithms',
-                      'Software Engineering',
-                      'Computer Architecture',
-                      'Database Systems',
-                      'Operating Systems',
-                      'Computer Networks',
-                      'Embedded Systems',
-                      'Digital Logic Design'
+                      "Data Structures & Algorithms",
+                      "Website Development",
+                      "Embedded Systems",
+                      "Discrete Mathematics",
+                      "Digital Logic Design",
+                      "Object Oriented Programming",
                     ].map((course, index) => (
                       <span
                         key={index}
@@ -216,33 +258,95 @@ const AboutMe: React.FC<AboutMeProps> = ({
                 </div>
 
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <h4 className="text-base sm:text-lg font-semibold text-white mb-2">Skills & Technologies</h4>
+                  <h4 className="text-base sm:text-lg font-semibold text-white mb-2">
+                    Skills & Technologies
+                  </h4>
                   <div className="space-y-4">
                     <div>
-                      <h5 className="text-purple-300 font-medium mb-2">Frontend</h5>
+                      <h5 className="text-purple-300 font-medium mb-2">
+                        Programming Languages
+                      </h5>
                       <div className="flex flex-wrap gap-2">
-                        {['React', 'TypeScript', 'Next.js', 'Tailwind CSS', 'Three.js'].map((skill, index) => (
-                          <span key={index} className="px-2 py-1 bg-blue-900/30 border border-blue-400/30 text-blue-300 text-xs rounded">
+                        {[
+                          "JavaScript",
+                          "TypeScript",
+                          "Python",
+                          "Java",
+                          "HTML",
+                          "CSS",
+                        ].map((language, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-purple-900/30 border border-purple-400/30 text-purple-300 text-xs rounded"
+                          >
+                            {language}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <h5 className="text-purple-300 font-medium mb-2">
+                        Frontend
+                      </h5>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          "React",
+                          "ThreeJS",
+                          "Tailwind CSS",
+                          "MUI",
+                          "JavaScript XML",
+                        ].map((skill, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-blue-900/30 border border-blue-400/30 text-blue-300 text-xs rounded"
+                          >
                             {skill}
                           </span>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <h5 className="text-purple-300 font-medium mb-2">Backend</h5>
+                      <h5 className="text-purple-300 font-medium mb-2">
+                        Backend & Cloud
+                      </h5>
                       <div className="flex flex-wrap gap-2">
-                        {['Node.js', 'AWS', 'PostgreSQL', 'MongoDB', 'Docker'].map((skill, index) => (
-                          <span key={index} className="px-2 py-1 bg-green-900/30 border border-green-400/30 text-green-300 text-xs rounded">
+                        {[
+                          "AWS",
+                          "PostgreSQL",
+                          "MongoDB",
+                          "Express",
+                          "AWS Bedrock",
+                          "AWS Lambda",
+                          "AWS CDK",
+                          "CloudFormation",
+                        ].map((skill, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-green-900/30 border border-green-400/30 text-green-300 text-xs rounded"
+                          >
                             {skill}
                           </span>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <h5 className="text-purple-300 font-medium mb-2">Tools & Others</h5>
+                      <h5 className="text-purple-300 font-medium mb-2">
+                        Tools & Others
+                      </h5>
                       <div className="flex flex-wrap gap-2">
-                        {['Git', 'Jenkins', 'Prisma', 'JIRA', 'ServiceNow'].map((skill, index) => (
-                          <span key={index} className="px-2 py-1 bg-orange-900/30 border border-orange-400/30 text-orange-300 text-xs rounded">
+                        {[
+                          "Git",
+                          "Jenkins",
+                          "Prisma",
+                          "ServiceNow",
+                          "Nobl9",
+                          "Black",
+                          "Flake8",
+                        ].map((skill, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-orange-900/30 border border-orange-400/30 text-orange-300 text-xs rounded"
+                          >
                             {skill}
                           </span>
                         ))}

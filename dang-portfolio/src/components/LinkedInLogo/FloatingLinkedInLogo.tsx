@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useGLTF } from '@react-three/drei';
-import { useRef, useMemo, useCallback, useEffect, useState, memo } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { MeshStandardMaterial, Group, Material, Color } from 'three';
-import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
+import { useGLTF } from "@react-three/drei";
+import { useRef, useMemo, useCallback, useEffect, useState, memo } from "react";
+import { useFrame } from "@react-three/fiber";
+import { MeshStandardMaterial, Group, Material, Color } from "three";
+import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 
 interface FloatingLinkedInLogoProps {
   linkedInUrl?: string;
@@ -26,8 +26,8 @@ const FLOATING_CONFIG = {
   HOVER_SCALE: 1.2,
   HOVER_INTENSITY: 8.0,
   BASE_EMISSIVE_INTENSITY: 7,
-  BASE_COLOR: '#0077b5',
-  HOVER_COLOR: '#38b6ff',
+  BASE_COLOR: "#0077b5",
+  HOVER_COLOR: "#38b6ff",
 };
 
 function lerp(a: number, b: number, t: number) {
@@ -35,22 +35,26 @@ function lerp(a: number, b: number, t: number) {
 }
 
 function lerpColor(a: string, b: string, t: number) {
-  const ah = parseInt(a.replace('#', ''), 16);
-  const bh = parseInt(b.replace('#', ''), 16);
-  const ar = (ah >> 16) & 0xff, ag = (ah >> 8) & 0xff, ab = ah & 0xff;
-  const br = (bh >> 16) & 0xff, bg = (bh >> 8) & 0xff, bb = bh & 0xff;
+  const ah = parseInt(a.replace("#", ""), 16);
+  const bh = parseInt(b.replace("#", ""), 16);
+  const ar = (ah >> 16) & 0xff,
+    ag = (ah >> 8) & 0xff,
+    ab = ah & 0xff;
+  const br = (bh >> 16) & 0xff,
+    bg = (bh >> 8) & 0xff,
+    bb = bh & 0xff;
   const rr = Math.round(lerp(ar, br, t));
   const rg = Math.round(lerp(ag, bg, t));
   const rb = Math.round(lerp(ab, bb, t));
   return `#${((1 << 24) + (rr << 16) + (rg << 8) + rb).toString(16).slice(1)}`;
 }
 
-function LinkedInModel({ 
-  url, 
+function LinkedInModel({
+  url,
   boundarySize = 0.001,
-  onLogoClick 
-}: { 
-  url: string; 
+  onLogoClick,
+}: {
+  url: string;
   boundarySize: number;
   onLogoClick: () => void;
 }) {
@@ -67,16 +71,19 @@ function LinkedInModel({
 
   useEffect(() => {
     if (isHoveredState) {
-      document.body.style.cursor = 'pointer';
+      document.body.style.cursor = "pointer";
     } else {
-      document.body.style.cursor = '';
+      document.body.style.cursor = "";
     }
     return () => {
-      document.body.style.cursor = '';
+      document.body.style.cursor = "";
     };
   }, [isHoveredState]);
 
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 30, enabled: true });
+  const { shouldRenderFrame } = useFrameRateLimit({
+    targetFPS: 30,
+    enabled: true,
+  });
 
   const material = useMemo(() => {
     const mat = new MeshStandardMaterial({
@@ -109,10 +116,13 @@ function LinkedInModel({
     return optimizedScene;
   }, [scene, material]);
 
-  const handleClick = useCallback((event: any) => {
-    event.stopPropagation();
-    onLogoClick();
-  }, [onLogoClick]);
+  const handleClick = useCallback(
+    (event: any) => {
+      event.stopPropagation();
+      onLogoClick();
+    },
+    [onLogoClick]
+  );
 
   const handlePointerEnter = useCallback(() => {
     isHovered.current = true;
@@ -133,9 +143,15 @@ function LinkedInModel({
 
     hoverT.current += (targetHoverT.current - hoverT.current) * 0.15;
 
-    const pitchOffset = Math.sin(time * FLOATING_CONFIG.PITCH_SPEED) * FLOATING_CONFIG.PITCH_AMPLITUDE;
-    const yawOffset = Math.cos(time * FLOATING_CONFIG.YAW_SPEED) * FLOATING_CONFIG.YAW_AMPLITUDE;
-    const rollOffset = Math.sin(time * FLOATING_CONFIG.ROLL_SPEED) * FLOATING_CONFIG.ROLL_AMPLITUDE;
+    const pitchOffset =
+      Math.sin(time * FLOATING_CONFIG.PITCH_SPEED) *
+      FLOATING_CONFIG.PITCH_AMPLITUDE;
+    const yawOffset =
+      Math.cos(time * FLOATING_CONFIG.YAW_SPEED) *
+      FLOATING_CONFIG.YAW_AMPLITUDE;
+    const rollOffset =
+      Math.sin(time * FLOATING_CONFIG.ROLL_SPEED) *
+      FLOATING_CONFIG.ROLL_AMPLITUDE;
     groupRef.current.rotation.x = pitchOffset;
     groupRef.current.rotation.y = yawOffset;
     groupRef.current.rotation.z = rollOffset;
@@ -147,17 +163,28 @@ function LinkedInModel({
     );
 
     const baseScale = 0.024;
-    const scale = lerp(baseScale, baseScale * FLOATING_CONFIG.HOVER_SCALE, hoverT.current);
+    const scale = lerp(
+      baseScale,
+      baseScale * FLOATING_CONFIG.HOVER_SCALE,
+      hoverT.current
+    );
     groupRef.current.scale.setScalar(scale);
 
     const basePulse = 0.2 * Math.sin(time * 2) + 1;
-    const currentColor = lerpColor(FLOATING_CONFIG.BASE_COLOR, FLOATING_CONFIG.HOVER_COLOR, hoverT.current);
+    const currentColor = lerpColor(
+      FLOATING_CONFIG.BASE_COLOR,
+      FLOATING_CONFIG.HOVER_COLOR,
+      hoverT.current
+    );
     const currentEmissive = lerp(
       FLOATING_CONFIG.BASE_EMISSIVE_INTENSITY * basePulse,
       FLOATING_CONFIG.HOVER_INTENSITY,
       hoverT.current
     );
-    if (material.emissive.getHexString() !== new Color(currentColor).getHexString()) {
+    if (
+      material.emissive.getHexString() !==
+      new Color(currentColor).getHexString()
+    ) {
       material.emissive = new Color(currentColor);
     }
     if (material.emissiveIntensity !== currentEmissive) {
@@ -166,10 +193,7 @@ function LinkedInModel({
   });
 
   return (
-    <group 
-      ref={groupRef}
-      position={basePosition.current}
-    >
+    <group ref={groupRef} position={basePosition.current}>
       <primitive object={optimizedScene} />
       <mesh
         onClick={handleClick}
@@ -178,9 +202,9 @@ function LinkedInModel({
         position={[0, 0, 0]}
       >
         <boxGeometry args={[2.3, 2.3, 0.1]} />
-        <meshBasicMaterial 
-          transparent={true} 
-          opacity={0} 
+        <meshBasicMaterial
+          transparent={true}
+          opacity={0}
           colorWrite={false}
           depthWrite={false}
         />
@@ -189,18 +213,17 @@ function LinkedInModel({
   );
 }
 
-
 const FloatingLinkedInLogo = memo(function FloatingLinkedInLogo({
   linkedInUrl = "https://www.linkedin.com/in/ddang175",
   boundarySize = 0.005,
-  glowColor = '#0077b5',
-  emissiveColor = '#00a0dc'
+  glowColor = "#0077b5",
+  emissiveColor = "#00a0dc",
 }: FloatingLinkedInLogoProps) {
   const handleLogoClick = useCallback(() => {
-    window.open(linkedInUrl, '_blank', 'noopener,noreferrer');
+    window.open(linkedInUrl, "_blank", "noopener,noreferrer");
   }, [linkedInUrl]);
   return (
-    <LinkedInModel 
+    <LinkedInModel
       url="/linkedin_3d/scene.glb"
       boundarySize={boundarySize}
       onLogoClick={handleLogoClick}
@@ -210,4 +233,4 @@ const FloatingLinkedInLogo = memo(function FloatingLinkedInLogo({
 
 export default FloatingLinkedInLogo;
 
-useGLTF.preload('/linkedin_3d/scene.glb'); 
+useGLTF.preload("/linkedin_3d/scene.glb");

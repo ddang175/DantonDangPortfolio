@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 type ProjectsButtonProps = {
   onButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -6,9 +6,18 @@ type ProjectsButtonProps = {
   [key: string]: any;
 };
 
-export default function ProjectsButton({ onButtonClick, className = "", ...props }: ProjectsButtonProps) {
+export default function ProjectsButton({
+  onButtonClick,
+  className = "",
+  ...props
+}: ProjectsButtonProps) {
   return (
-    <button type="button" onClick={onButtonClick} className={className} {...props}>
+    <button
+      type="button"
+      onClick={onButtonClick}
+      className={className}
+      {...props}
+    >
       Projects
     </button>
   );

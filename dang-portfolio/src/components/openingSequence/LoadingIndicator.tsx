@@ -5,19 +5,22 @@ interface LoadingIndicatorProps {
   className?: string;
 }
 
-export default function LoadingIndicator({ onComplete, className = '' }: LoadingIndicatorProps) {
+export default function LoadingIndicator({
+  onComplete,
+  className = "",
+}: LoadingIndicatorProps) {
   const [progress, setProgress] = useState(0);
   const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
     const progressInterval = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 100) {
           setOpacity(0);
           setTimeout(() => onComplete?.(), 600);
           return 100;
         }
-        return prev + Math.random() * 2 + 1; 
+        return prev + Math.random() * 2 + 1;
       });
     }, 100);
 
@@ -25,7 +28,7 @@ export default function LoadingIndicator({ onComplete, className = '' }: Loading
   }, [onComplete]);
 
   return (
-    <div 
+    <div
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-500 ${className}`}
       style={{ opacity }}
     >
@@ -33,19 +36,19 @@ export default function LoadingIndicator({ onComplete, className = '' }: Loading
         <div className="text-white/90 text-lg font-light tracking-wider">
           Loading
         </div>
-        
+
         <div className="w-64 h-0.5 bg-white/20 rounded-full overflow-hidden">
-          <div 
+          <div
             className="h-full bg-gradient-to-r from-white/60 to-white rounded-full transition-all duration-300 ease-out"
             style={{ width: `${Math.min(progress, 100)}%` }}
           />
         </div>
-        
+
         <div className="text-white/60 text-sm font-mono tabular-nums">
           {Math.floor(Math.min(progress, 100))}%
         </div>
       </div>
-      
+
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent animate-pulse" />
       </div>

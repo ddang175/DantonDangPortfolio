@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 
 interface LoadingPanelProps {
-  position: 'top' | 'bottom';
+  position: "top" | "bottom";
   isVisible: boolean;
   onAnimationStart?: () => void;
   onAnimationComplete?: () => void;
   className?: string;
 }
 
-export default function LoadingPanel({ position, isVisible, onAnimationStart, onAnimationComplete, className = '' }: LoadingPanelProps) {
+export default function LoadingPanel({
+  position,
+  isVisible,
+  onAnimationStart,
+  onAnimationComplete,
+  className = "",
+}: LoadingPanelProps) {
   const [hasTriggeredStart, setHasTriggeredStart] = useState(false);
   const [hasTriggeredComplete, setHasTriggeredComplete] = useState(false);
 
@@ -20,7 +26,12 @@ export default function LoadingPanel({ position, isVisible, onAnimationStart, on
   }, [isVisible, hasTriggeredStart, onAnimationStart]);
 
   useEffect(() => {
-    if (!isVisible && hasTriggeredStart && !hasTriggeredComplete && onAnimationComplete) {
+    if (
+      !isVisible &&
+      hasTriggeredStart &&
+      !hasTriggeredComplete &&
+      onAnimationComplete
+    ) {
       onAnimationComplete();
       setHasTriggeredComplete(true);
     }
@@ -28,26 +39,26 @@ export default function LoadingPanel({ position, isVisible, onAnimationStart, on
 
   const getPositionClasses = () => {
     switch (position) {
-      case 'top':
-        return 'top-0 left-0 w-full h-1/2';
-      case 'bottom':
-        return 'bottom-0 left-0 w-full h-1/2';
+      case "top":
+        return "top-0 left-0 w-full h-1/2";
+      case "bottom":
+        return "bottom-0 left-0 w-full h-1/2";
       default:
-        return '';
+        return "";
     }
   };
 
   const getTransformClass = () => {
-    if (position === 'top') {
-      return isVisible ? 'translate-y-0' : '-translate-y-full';
+    if (position === "top") {
+      return isVisible ? "translate-y-0" : "-translate-y-full";
     } else {
-      return isVisible ? 'translate-y-0' : 'translate-y-full';
+      return isVisible ? "translate-y-0" : "translate-y-full";
     }
   };
 
   return (
-    <div 
+    <div
       className={`absolute ${getPositionClasses()} transition-transform duration-1000 ease-in-out bg-black ${getTransformClass()} ${className}`}
     />
   );
-} 
+}

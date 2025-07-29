@@ -1,1 +1,1 @@
-export { default as FloatingEmailLogo } from './FloatingEmailLogo'; 
+export { default as FloatingEmailLogo } from "./FloatingEmailLogo";

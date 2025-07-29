@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 type ExperienceButtonProps = {
   onButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -6,9 +6,18 @@ type ExperienceButtonProps = {
   [key: string]: any;
 };
 
-export default function ExperienceButton({ onButtonClick, className = "", ...props }: ExperienceButtonProps) {
+export default function ExperienceButton({
+  onButtonClick,
+  className = "",
+  ...props
+}: ExperienceButtonProps) {
   return (
-    <button type="button" onClick={onButtonClick} className={className} {...props}>
+    <button
+      type="button"
+      onClick={onButtonClick}
+      className={className}
+      {...props}
+    >
       Experience
     </button>
   );

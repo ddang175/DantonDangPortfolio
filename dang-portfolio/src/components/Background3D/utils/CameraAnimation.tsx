@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { useThree, useFrame } from '@react-three/fiber';
-import { PerspectiveCamera, Vector3 } from 'three';
+import { useEffect, useRef } from "react";
+import { useThree, useFrame } from "@react-three/fiber";
+import { PerspectiveCamera, Vector3 } from "three";
 
 interface CameraAnimationProps {
   onAnimationComplete?: () => void;
@@ -17,7 +17,7 @@ export const CameraAnimation: React.FC<CameraAnimationProps> = ({
   initialPosition = [0, 0, 10],
   targetPosition = [0, 0, 0],
   initialFov = 300,
-  targetFov = 70
+  targetFov = 70,
 }) => {
   const { camera } = useThree();
   const perspectiveCamera = camera as PerspectiveCamera;
@@ -46,10 +46,10 @@ export const CameraAnimation: React.FC<CameraAnimationProps> = ({
     const elapsed = clock.getElapsedTime() * 1000 - startTime.current;
     const progress = Math.min(elapsed / duration, 1);
 
-    const eased = progress < 0.5
-    ? 8 * Math.pow(progress, 4)
-    : 1 - 8 * Math.pow(1 - progress, 4);
-
+    const eased =
+      progress < 0.5
+        ? 8 * Math.pow(progress, 4)
+        : 1 - 8 * Math.pow(1 - progress, 4);
 
     camera.position.lerpVectors(
       initialCameraPosition.current,

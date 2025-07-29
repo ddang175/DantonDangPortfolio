@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { CardData } from './types';
-import PreviewCard from './PreviewCard';
-import CardModal from './CardModal';
+import React, { useState, useEffect, useRef } from "react";
+import { CardData } from "./types";
+import PreviewCard from "./PreviewCard";
+import CardModal from "./CardModal";
 
 interface CardShowcaseProps {
   cards: CardData[];
@@ -9,10 +9,10 @@ interface CardShowcaseProps {
   isMobile?: boolean;
 }
 
-const CardShowcase: React.FC<CardShowcaseProps> = ({ 
-  cards, 
-  onClose, 
-  isMobile = false 
+const CardShowcase: React.FC<CardShowcaseProps> = ({
+  cards,
+  onClose,
+  isMobile = false,
 }) => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -34,18 +34,18 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
   }, []);
 
   const handleCardClick = (index: number) => {
-    if (index === activeCardIndex || isTransitioning) return; 
-    
+    if (index === activeCardIndex || isTransitioning) return;
+
     if (transitionTimeoutRef.current) {
       clearTimeout(transitionTimeoutRef.current);
     }
-    
+
     setIsTransitioning(true);
-    
+
     transitionTimeoutRef.current = setTimeout(() => {
       setActiveCardIndex(index);
       setIsTransitioning(false);
-    }, 100); 
+    }, 200);
   };
 
   const handleClose = () => {
@@ -53,42 +53,58 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
     setTimeout(() => {
       setIsVisible(false);
       onClose();
-    }, 300); 
+    }, 300);
   };
 
   const activeCard = cards[activeCardIndex];
 
   return (
     <>
-      <div className={`
+      <div
+        className={`
         fixed z-60 transition-all duration-300 ease-out
-        ${isVisible && !isClosing ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'}
-        ${isMobile 
-          ? 'bottom-4 left-1/2 transform -translate-x-1/2 w-[92vw] max-w-[92vw]' 
-          : 'bottom-[17vh] left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[90vw]'
+        ${
+          isVisible && !isClosing
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-full"
         }
-      `}>
-        <div className={`
+        ${
+          isMobile
+            ? "bottom-4 left-1/2 transform -translate-x-1/2 w-[92vw] max-w-[92vw]"
+            : "bottom-[17vh] left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[90vw]"
+        }
+      `}
+      >
+        <div
+          className={`
           transition-all duration-300 ease-out
-          ${isClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}
-          ${isMobile ? 'max-h-[340px]' : 'max-h-[20vh]'}
-        `}>
-          <div className={`
-            ${isMobile 
-              ? 'max-h-[calc(340px-2rem)] overflow-y-auto custom-scrollbar' 
-              : 'max-h-[calc(20vh-2rem)] overflow-y-auto custom-scrollbar'
+          ${isClosing ? "opacity-0 scale-95" : "opacity-100 scale-100"}
+          ${isMobile ? "max-h-[340px]" : "max-h-[20vh]"}
+        `}
+        >
+          <div
+            className={`
+            ${
+              isMobile
+                ? "max-h-[calc(340px-2rem)] overflow-y-auto custom-scrollbar"
+                : "max-h-[calc(20vh-2rem)] overflow-y-auto custom-scrollbar"
             }
           `}
-          style={{
-            scrollbarWidth: 'thin',
-            scrollbarColor: 'rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05)'
-          }}>
-            <div className={`
-              ${isMobile 
-                ? 'flex flex-col gap-3 sm:gap-4 pb-2 w-full px-2 py-2' 
-                : 'flex flex-wrap items-center justify-center gap-4 lg:gap-5 xl:gap-6 pb-2 w-full py-2'
+            style={{
+              scrollbarWidth: "thin",
+              scrollbarColor:
+                "rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05)",
+            }}
+          >
+            <div
+              className={`
+              ${
+                isMobile
+                  ? "flex flex-col gap-3 sm:gap-4 pb-2 w-full px-2 py-2"
+                  : "flex flex-wrap items-center justify-center gap-4 lg:gap-5 xl:gap-6 pb-2 w-full py-2"
               }
-            `}>
+            `}
+            >
               {cards.map((card, index) => (
                 <PreviewCard
                   key={card.id}
@@ -98,15 +114,12 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
                   isMobile={isMobile}
                 />
               ))}
-              
+
               <button
                 onClick={handleClose}
                 className={`
                   flex items-center justify-center
-                  ${isMobile 
-                    ? 'w-full h-20' 
-                    : 'min-w-[140px] h-20'
-                  }
+                  ${isMobile ? "w-full h-20" : "min-w-[140px] h-20"}
                   text-white font-sans tracking-widest uppercase
                   transition-all duration-300 ease-out
                   cursor-pointer
@@ -117,7 +130,7 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
                   flex-shrink-0
                 `}
                 style={{
-                  fontFamily: 'Inter, Arial, sans-serif',
+                  fontFamily: "Inter, Arial, sans-serif",
                 }}
               >
                 <span className="text-sm font-medium">Back</span>
@@ -136,7 +149,6 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
           isMobile={isMobile}
         />
       )}
-
     </>
   );
 };

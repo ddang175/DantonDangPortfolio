@@ -1,12 +1,11 @@
-// FloatingResumeLogo.tsx
-'use client';
+"use client";
 
-import { useGLTF } from '@react-three/drei';
-import { useRef, useMemo, useCallback, useEffect, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
-import { GLTF } from 'three-stdlib';
-import { MeshStandardMaterial, Group, Object3D, FrontSide, Color } from 'three';
+import { useGLTF } from "@react-three/drei";
+import { useRef, useMemo, useCallback, useEffect, useState } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
+import { GLTF } from "three-stdlib";
+import { MeshStandardMaterial, Group, Object3D, FrontSide, Color } from "three";
 
 interface FloatingResumeLogoProps {
   resumeUrl?: string;
@@ -30,8 +29,8 @@ const FLOATING_CONFIG = {
   HOVER_SCALE: 1.2,
   HOVER_INTENSITY: 2.2,
   BASE_EMISSIVE_INTENSITY: 1,
-  BASE_COLOR: '#ffffff', // white
-  HOVER_COLOR: '#ffffff', // white
+  BASE_COLOR: "#ffffff",
+  HOVER_COLOR: "#ffffff",
 };
 
 function lerp(a: number, b: number, t: number) {
@@ -39,18 +38,22 @@ function lerp(a: number, b: number, t: number) {
 }
 
 function lerpColor(a: string, b: string, t: number) {
-  const ah = parseInt(a.replace('#', ''), 16);
-  const bh = parseInt(b.replace('#', ''), 16);
-  const ar = (ah >> 16) & 0xff, ag = (ah >> 8) & 0xff, ab = ah & 0xff;
-  const br = (bh >> 16) & 0xff, bg = (bh >> 8) & 0xff, bb = bh & 0xff;
+  const ah = parseInt(a.replace("#", ""), 16);
+  const bh = parseInt(b.replace("#", ""), 16);
+  const ar = (ah >> 16) & 0xff,
+    ag = (ah >> 8) & 0xff,
+    ab = ah & 0xff;
+  const br = (bh >> 16) & 0xff,
+    bg = (bh >> 8) & 0xff,
+    bb = bh & 0xff;
   const rr = Math.round(lerp(ar, br, t));
   const rg = Math.round(lerp(ag, bg, t));
   const rb = Math.round(lerp(ab, bb, t));
   return `#${((1 << 24) + (rr << 16) + (rg << 8) + rb).toString(16).slice(1)}`;
 }
 
-function ResumeModel({ 
-  url, 
+function ResumeModel({
+  url,
   onLogoClick,
   baseRotation = [0, 0, 0],
   clickBoxScale = [0.06, 0.06, 0.02],
@@ -72,16 +75,19 @@ function ResumeModel({
 
   useEffect(() => {
     if (isHoveredState) {
-      document.body.style.cursor = 'pointer';
+      document.body.style.cursor = "pointer";
     } else {
-      document.body.style.cursor = '';
+      document.body.style.cursor = "";
     }
     return () => {
-      document.body.style.cursor = '';
+      document.body.style.cursor = "";
     };
   }, [isHoveredState]);
 
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 30, enabled: true });
+  const { shouldRenderFrame } = useFrameRateLimit({
+    targetFPS: 30,
+    enabled: true,
+  });
 
   const material = useMemo(() => {
     const mat = new MeshStandardMaterial({
@@ -114,10 +120,13 @@ function ResumeModel({
     return optimizedScene;
   }, [scene, material]);
 
-  const handleClick = useCallback((event: any) => {
-    event.stopPropagation();
-    onLogoClick();
-  }, [onLogoClick]);
+  const handleClick = useCallback(
+    (event: any) => {
+      event.stopPropagation();
+      onLogoClick();
+    },
+    [onLogoClick]
+  );
 
   const handlePointerEnter = useCallback(() => {
     isHovered.current = true;
@@ -138,9 +147,15 @@ function ResumeModel({
 
     hoverT.current += (targetHoverT.current - hoverT.current) * 0.15;
 
-    const pitchOffset = Math.sin(time * FLOATING_CONFIG.PITCH_SPEED) * FLOATING_CONFIG.PITCH_AMPLITUDE;
-    const yawOffset = Math.cos(time * FLOATING_CONFIG.YAW_SPEED) * FLOATING_CONFIG.YAW_AMPLITUDE;
-    const rollOffset = Math.sin(time * FLOATING_CONFIG.ROLL_SPEED) * FLOATING_CONFIG.ROLL_AMPLITUDE;
+    const pitchOffset =
+      Math.sin(time * FLOATING_CONFIG.PITCH_SPEED) *
+      FLOATING_CONFIG.PITCH_AMPLITUDE;
+    const yawOffset =
+      Math.cos(time * FLOATING_CONFIG.YAW_SPEED) *
+      FLOATING_CONFIG.YAW_AMPLITUDE;
+    const rollOffset =
+      Math.sin(time * FLOATING_CONFIG.ROLL_SPEED) *
+      FLOATING_CONFIG.ROLL_AMPLITUDE;
     groupRef.current.rotation.x = baseRotation[0] + pitchOffset;
     groupRef.current.rotation.y = baseRotation[1] + yawOffset;
     groupRef.current.rotation.z = baseRotation[2] + rollOffset;
@@ -152,17 +167,28 @@ function ResumeModel({
     );
 
     const baseScale = 0.0005;
-    const scale = lerp(baseScale, baseScale * FLOATING_CONFIG.HOVER_SCALE, hoverT.current);
+    const scale = lerp(
+      baseScale,
+      baseScale * FLOATING_CONFIG.HOVER_SCALE,
+      hoverT.current
+    );
     groupRef.current.scale.setScalar(scale);
 
     const basePulse = 0.03 * Math.sin(time * 2) + 1;
-    const currentColor = lerpColor(FLOATING_CONFIG.BASE_COLOR, FLOATING_CONFIG.HOVER_COLOR, hoverT.current);
+    const currentColor = lerpColor(
+      FLOATING_CONFIG.BASE_COLOR,
+      FLOATING_CONFIG.HOVER_COLOR,
+      hoverT.current
+    );
     const currentEmissive = lerp(
       FLOATING_CONFIG.BASE_EMISSIVE_INTENSITY * basePulse,
       FLOATING_CONFIG.HOVER_INTENSITY,
       hoverT.current
     );
-    if (material.emissive.getHexString() !== new Color(currentColor).getHexString()) {
+    if (
+      material.emissive.getHexString() !==
+      new Color(currentColor).getHexString()
+    ) {
       material.emissive = new Color(currentColor);
     }
     if (material.emissiveIntensity !== currentEmissive) {
@@ -172,10 +198,7 @@ function ResumeModel({
 
   return (
     <>
-      <group 
-        ref={groupRef}
-        position={basePosition.current}
-      >
+      <group ref={groupRef} position={basePosition.current}>
         <primitive object={optimizedScene} />
       </group>
       <mesh
@@ -185,7 +208,7 @@ function ResumeModel({
         position={basePosition.current}
       >
         <boxGeometry args={clickBoxScale as [number, number, number]} />
-        <meshBasicMaterial 
+        <meshBasicMaterial
           transparent={true}
           opacity={0}
           colorWrite={false}
@@ -202,10 +225,10 @@ export default function FloatingResumeLogo({
   clickBoxScale = [0.11, 0.11, 0.02],
 }: FloatingResumeLogoProps) {
   const handleLogoClick = useCallback(() => {
-    window.open(resumeUrl, '_blank', 'noopener,noreferrer');
+    window.open(resumeUrl, "_blank", "noopener,noreferrer");
   }, [resumeUrl]);
   return (
-    <ResumeModel 
+    <ResumeModel
       url={resumeUrl}
       onLogoClick={handleLogoClick}
       baseRotation={baseRotation}
@@ -214,4 +237,4 @@ export default function FloatingResumeLogo({
   );
 }
 
-useGLTF.preload('/resume/scene.glb'); 
+useGLTF.preload("/resume/scene.glb");
