@@ -336,7 +336,7 @@ export default function Home() {
         className={`
         transition-all duration-500 ease-out
         ${
-          showCardShowcase
+          showCardShowcase || showAboutMe
             ? "opacity-0 pointer-events-none"
             : "opacity-100 pointer-events-auto"
         }
