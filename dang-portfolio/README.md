@@ -1,62 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Danton Dang's Portfolio
+
+A 3D portfolio website inspired by Tokyo night markets and alleyways, built with React, TypeScript, and Three.js. This portfolio showcases my work, creativity, and personality as an engineer through an immersive 3D experience.
+
+## About
+
+This portfolio is heavily inspired by Tokyo alleyways and night life, featuring a Toyota AE86 Trueno Sprinter (one of my favorite cars) as the centerpiece. I wanted to create something different from typical engineering portfolios - something that showcases my personality and provides visitors with a unique experience.
+
+The site uses Three.js for 3D graphics and animations, creating an immersive environment that reflects my love for Japanese car culture and urban aesthetics.
+
+## Features
+
+- **3D Environment**: Interactive 3D scene with animated camera movements
+- **Tokyo Night Market Theme**: Neon lighting, urban atmosphere, and Japanese car culture
+- **Project Showcase**: Interactive cards displaying my work and experience
+- **Audio Integration**: Background music and sound effects for immersion
+- **Responsive Design**: Works on both desktop and mobile devices
+
+## Tech Stack
+
+- **Frontend**: React 19, TypeScript, Next.js 15
+- **3D Graphics**: Three.js, React Three Fiber, Drei
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
 
 ## Getting Started
 
-First, set up your environment variables:
+### Prerequisites
 
-1. Copy `env.example` to `.env.local`
-2. Update the email address in `.env.local`:
-   ```
-   NEXT_PUBLIC_CONTACT_EMAIL=your.actual.email@example.com
-   ```
+- Node.js (version 18 or higher)
+- npm or yarn
 
-Then, run the development server:
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/ddang175/portfolioWIP.git
+cd portfolioWIP
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up environment variables:
+   - Copy `env.example` to `.env.local`
+   - Add your email address:
+
+```bash
+NEXT_PUBLIC_CONTACT_EMAIL=your.email@example.com
+```
+
+4. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Environment Variables
-
-This project uses environment variables to keep sensitive information secure:
-
-- `NEXT_PUBLIC_CONTACT_EMAIL`: Your email address for contact functionality
-- `NEXT_PUBLIC_EMAIL_SUBJECT`: Default subject line for contact emails (optional)
-- `NEXT_PUBLIC_EMAIL_BODY`: Default body text for contact emails (optional)
-
-### For Vercel Deployment
-
-1. Go to your Vercel project dashboard
-2. Navigate to Settings > Environment Variables
-3. Add the variables listed above
-4. Redeploy your application
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` - Start development server with Turbopack
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
 ## Credits
 
