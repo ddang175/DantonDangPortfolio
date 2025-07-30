@@ -1,1 +1,1 @@
-export { default as FloatingResumeLogo } from './FloatingResumeLogo'; 
+export { default as FloatingResumeLogo } from "./FloatingResumeLogo";

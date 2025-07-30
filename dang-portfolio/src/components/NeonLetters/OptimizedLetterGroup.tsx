@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Text3D, Center } from '@react-three/drei';
-import { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
-import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
+import { Text3D, Center } from "@react-three/drei";
+import { useRef, useMemo } from "react";
+import { useFrame } from "@react-three/fiber";
+import { MeshStandardMaterial, Object3D } from "three";
+import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 
-const fontUrl = '/font/Chromia_Bold.json';
+const fontUrl = "/font/Chromia_Bold.json";
 
 interface LetterConfig {
   char: string;
@@ -26,15 +26,17 @@ interface OptimizedLetterGroupProps {
   emissiveIntensity?: number;
 }
 
-const createMaterial = (color: string, lightColor: string, emissiveIntensity = 3.5): THREE.MeshStandardMaterial => {
-  return new THREE.MeshStandardMaterial({
+const createMaterial = (
+  color: string,
+  lightColor: string,
+  emissiveIntensity = 3.5
+): MeshStandardMaterial => {
+  return new MeshStandardMaterial({
     color,
     emissive: lightColor,
     emissiveIntensity,
-    fog: false,
-    transparent: false,
-    depthWrite: true,
-    depthTest: true,
+    roughness: 0.3,
+    metalness: 0.8,
   });
 };
 
@@ -59,38 +61,72 @@ export default function OptimizedLetterGroup({
   color,
   lightColor,
   animationIntensity = 1.0,
-  emissiveIntensity = 3.5
+  emissiveIntensity = 3.5,
 }: OptimizedLetterGroupProps) {
-  const groupRef = useRef<THREE.Group>(null);
-  const material = useMemo(() => createMaterial(color, lightColor, emissiveIntensity), [color, lightColor, emissiveIntensity]);
-  
-  const secondaryPitchAmplitude = useMemo(() => FLOATING_CONFIG.PITCH_AMPLITUDE * FLOATING_CONFIG.SECONDARY_PITCH_MULT, []);
-  const secondaryYawAmplitude = useMemo(() => FLOATING_CONFIG.YAW_AMPLITUDE * FLOATING_CONFIG.SECONDARY_YAW_MULT, []);
-  const secondaryRollAmplitude = useMemo(() => FLOATING_CONFIG.ROLL_AMPLITUDE * FLOATING_CONFIG.SECONDARY_ROLL_MULT, []);
+  const groupRef = useRef<Object3D>(null);
+  const material = useMemo(
+    () => createMaterial(color, lightColor, emissiveIntensity),
+    [color, lightColor, emissiveIntensity]
+  );
 
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 45, enabled: true });
+  const secondaryPitchAmplitude = useMemo(
+    () =>
+      FLOATING_CONFIG.PITCH_AMPLITUDE * FLOATING_CONFIG.SECONDARY_PITCH_MULT,
+    []
+  );
+  const secondaryYawAmplitude = useMemo(
+    () => FLOATING_CONFIG.YAW_AMPLITUDE * FLOATING_CONFIG.SECONDARY_YAW_MULT,
+    []
+  );
+  const secondaryRollAmplitude = useMemo(
+    () => FLOATING_CONFIG.ROLL_AMPLITUDE * FLOATING_CONFIG.SECONDARY_ROLL_MULT,
+    []
+  );
+
+  const { shouldRenderFrame } = useFrameRateLimit({
+    targetFPS: 45,
+    enabled: true,
+  });
 
   useFrame((state) => {
     if (!groupRef.current) return;
-    
+
     if (!shouldRenderFrame(state.clock.elapsedTime * 1000)) return;
-    
+
     const time = state.clock.elapsedTime;
-    
-    groupRef.current.children.forEach((child, index) => {
+
+    groupRef.current.children.forEach((child: Object3D, index: number) => {
       const letter = letters[index];
       if (!letter) return;
-      
-      const letterTime = time + (letter.index * FLOATING_CONFIG.PHASE_OFFSET);
-      
-      const pitchOffset = Math.sin(letterTime * FLOATING_CONFIG.PITCH_SPEED) * FLOATING_CONFIG.PITCH_AMPLITUDE * animationIntensity;
-      const yawOffset = Math.cos(letterTime * FLOATING_CONFIG.YAW_SPEED) * FLOATING_CONFIG.YAW_AMPLITUDE * animationIntensity;
-      const rollOffset = Math.sin(letterTime * FLOATING_CONFIG.ROLL_SPEED) * FLOATING_CONFIG.ROLL_AMPLITUDE * animationIntensity;
-      
-      const secondaryPitch = Math.sin(letterTime * FLOATING_CONFIG.SECONDARY_PITCH_SPEED) * secondaryPitchAmplitude * animationIntensity;
-      const secondaryYaw = Math.cos(letterTime * FLOATING_CONFIG.SECONDARY_YAW_SPEED) * secondaryYawAmplitude * animationIntensity;
-      const secondaryRoll = Math.cos(letterTime * FLOATING_CONFIG.SECONDARY_ROLL_SPEED) * secondaryRollAmplitude * animationIntensity;
-      
+
+      const letterTime = time + letter.index * FLOATING_CONFIG.PHASE_OFFSET;
+
+      const pitchOffset =
+        Math.sin(letterTime * FLOATING_CONFIG.PITCH_SPEED) *
+        FLOATING_CONFIG.PITCH_AMPLITUDE *
+        animationIntensity;
+      const yawOffset =
+        Math.cos(letterTime * FLOATING_CONFIG.YAW_SPEED) *
+        FLOATING_CONFIG.YAW_AMPLITUDE *
+        animationIntensity;
+      const rollOffset =
+        Math.sin(letterTime * FLOATING_CONFIG.ROLL_SPEED) *
+        FLOATING_CONFIG.ROLL_AMPLITUDE *
+        animationIntensity;
+
+      const secondaryPitch =
+        Math.sin(letterTime * FLOATING_CONFIG.SECONDARY_PITCH_SPEED) *
+        secondaryPitchAmplitude *
+        animationIntensity;
+      const secondaryYaw =
+        Math.cos(letterTime * FLOATING_CONFIG.SECONDARY_YAW_SPEED) *
+        secondaryYawAmplitude *
+        animationIntensity;
+      const secondaryRoll =
+        Math.cos(letterTime * FLOATING_CONFIG.SECONDARY_ROLL_SPEED) *
+        secondaryRollAmplitude *
+        animationIntensity;
+
       child.rotation.x = letter.baseRotation[0] + pitchOffset + secondaryPitch;
       child.rotation.y = letter.baseRotation[1] + yawOffset + secondaryYaw;
       child.rotation.z = letter.baseRotation[2] + rollOffset + secondaryRoll;
@@ -100,7 +136,7 @@ export default function OptimizedLetterGroup({
   return (
     <group ref={groupRef}>
       {letters.map((letter, index) => (
-        <group 
+        <group
           key={`${letter.char}-${letter.position[0]}-${letter.position[1]}-${index}`}
           position={letter.position}
           rotation={letter.baseRotation}
@@ -122,4 +158,4 @@ export default function OptimizedLetterGroup({
       ))}
     </group>
   );
-} 
+}

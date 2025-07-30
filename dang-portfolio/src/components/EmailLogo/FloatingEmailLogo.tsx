@@ -1,44 +1,39 @@
-'use client';
+"use client";
 
-import { useGLTF } from '@react-three/drei';
-import { useRef, useMemo, useCallback, useEffect, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
-import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
-import { GLTF } from 'three-stdlib';
+import { useGLTF } from "@react-three/drei";
+import { useRef, useMemo, useCallback, useEffect, useState } from "react";
+import { useFrame } from "@react-three/fiber";
+import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
+import { GLTF } from "three-stdlib";
+import { MeshStandardMaterial, Group, Material, Color } from "three";
+import { getEmailAddress } from "../../utils/email";
 
 interface FloatingEmailLogoProps {
   emailAddress?: string;
   boundarySize?: number;
   glowColor?: string;
   emissiveColor?: string;
-  /**
-   * Base rotation of the logo in radians [x, y, z].
-   * Default: [0, 0, 0]
-   */
+
   baseRotation?: [number, number, number];
-  /**
-   * Size of the clickable box [x, y, z].
-   * Default: [0.06, 0.06, 0.02]
-   */
+
   clickBoxScale?: [number, number, number];
 }
 
 const FLOATING_CONFIG = {
-  PITCH_SPEED: 0.3,
-  YAW_SPEED: 0.8,
-  ROLL_SPEED: 0.6,
-  PITCH_AMPLITUDE: 0.15,
-  YAW_AMPLITUDE: 0.15,
-  ROLL_AMPLITUDE: 0.15,
+  PITCH_SPEED: 0.5,
+  YAW_SPEED: 0.4,
+  ROLL_SPEED: 0.3,
+  PITCH_AMPLITUDE: 0.2,
+  YAW_AMPLITUDE: 0.2,
+  ROLL_AMPLITUDE: 0.2,
   POSITION_SPEED: 0.15,
-  POSITION_AMPLITUDE: 0.03,
+  POSITION_AMPLITUDE: 0.12,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 4.2,
+  HOVER_INTENSITY: 5,
   BASE_EMISSIVE_INTENSITY: 4,
-  BASE_COLOR: '#ea4335',
-  HOVER_COLOR: '#ff6b6b',
+  BASE_COLOR: "#ea4335",
+  HOVER_COLOR: "#ff6b6b",
 };
 
 function lerp(a: number, b: number, t: number) {
@@ -46,34 +41,36 @@ function lerp(a: number, b: number, t: number) {
 }
 
 function lerpColor(a: string, b: string, t: number) {
-  const ah = parseInt(a.replace('#', ''), 16);
-  const bh = parseInt(b.replace('#', ''), 16);
-  const ar = (ah >> 16) & 0xff, ag = (ah >> 8) & 0xff, ab = ah & 0xff;
-  const br = (bh >> 16) & 0xff, bg = (bh >> 8) & 0xff, bb = bh & 0xff;
+  const ah = parseInt(a.replace("#", ""), 16);
+  const bh = parseInt(b.replace("#", ""), 16);
+  const ar = (ah >> 16) & 0xff,
+    ag = (ah >> 8) & 0xff,
+    ab = ah & 0xff;
+  const br = (bh >> 16) & 0xff,
+    bg = (bh >> 8) & 0xff,
+    bb = bh & 0xff;
   const rr = Math.round(lerp(ar, br, t));
   const rg = Math.round(lerp(ag, bg, t));
   const rb = Math.round(lerp(ab, bb, t));
   return `#${((1 << 24) + (rr << 16) + (rg << 8) + rb).toString(16).slice(1)}`;
 }
 
-function EmailModel({ 
-  url, 
-  boundarySize = 0.005,
+function EmailModel({
+  url,
   onLogoClick,
   baseRotation = [0, 0, 0],
-  clickBoxScale = [0.06, 0.06, 0.02],
+  clickBoxScale = [0.0, 0.001, 0.02],
 }: {
   url: string;
-  boundarySize?: number;
   onLogoClick: () => void;
   baseRotation?: [number, number, number];
   clickBoxScale?: [number, number, number];
 }) {
-  const { scene } = useGLTF(url) as GLTF & { scene: THREE.Group };
-  const groupRef = useRef<THREE.Group>(null);
-  const basePosition = useRef<[number, number, number]>([0, -1, -1.3]);
+  const { scene } = useGLTF(url) as GLTF & { scene: Group };
+  const groupRef = useRef<Group>(null);
+  const basePosition = useRef<[number, number, number]>([0, 0, 0]);
   const isHovered = useRef(false);
-  const materialsRef = useRef<THREE.Material[]>([]);
+  const materialsRef = useRef<Material[]>([]);
 
   const hoverT = useRef(0);
   const targetHoverT = useRef(0);
@@ -82,19 +79,22 @@ function EmailModel({
 
   useEffect(() => {
     if (isHoveredState) {
-      document.body.style.cursor = 'pointer';
+      document.body.style.cursor = "pointer";
     } else {
-      document.body.style.cursor = '';
+      document.body.style.cursor = "";
     }
     return () => {
-      document.body.style.cursor = '';
+      document.body.style.cursor = "";
     };
   }, [isHoveredState]);
 
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 30, enabled: true });
+  const { shouldRenderFrame } = useFrameRateLimit({
+    targetFPS: 30,
+    enabled: true,
+  });
 
   const material = useMemo(() => {
-    const mat = new THREE.MeshStandardMaterial({
+    const mat = new MeshStandardMaterial({
       color: FLOATING_CONFIG.BASE_COLOR,
       emissive: FLOATING_CONFIG.BASE_COLOR,
       emissiveIntensity: FLOATING_CONFIG.BASE_EMISSIVE_INTENSITY,
@@ -124,10 +124,13 @@ function EmailModel({
     return optimizedScene;
   }, [scene, material]);
 
-  const handleClick = useCallback((event: any) => {
-    event.stopPropagation();
-    onLogoClick();
-  }, [onLogoClick]);
+  const handleClick = useCallback(
+    (event: any) => {
+      event.stopPropagation();
+      onLogoClick();
+    },
+    [onLogoClick]
+  );
 
   const handlePointerEnter = useCallback(() => {
     isHovered.current = true;
@@ -148,9 +151,15 @@ function EmailModel({
 
     hoverT.current += (targetHoverT.current - hoverT.current) * 0.15;
 
-    const pitchOffset = Math.sin(time * FLOATING_CONFIG.PITCH_SPEED) * FLOATING_CONFIG.PITCH_AMPLITUDE;
-    const yawOffset = Math.cos(time * FLOATING_CONFIG.YAW_SPEED) * FLOATING_CONFIG.YAW_AMPLITUDE;
-    const rollOffset = Math.sin(time * FLOATING_CONFIG.ROLL_SPEED) * FLOATING_CONFIG.ROLL_AMPLITUDE;
+    const pitchOffset =
+      Math.sin(time * FLOATING_CONFIG.PITCH_SPEED) *
+      FLOATING_CONFIG.PITCH_AMPLITUDE;
+    const yawOffset =
+      Math.cos(time * FLOATING_CONFIG.YAW_SPEED) *
+      FLOATING_CONFIG.YAW_AMPLITUDE;
+    const rollOffset =
+      Math.sin(time * FLOATING_CONFIG.ROLL_SPEED) *
+      FLOATING_CONFIG.ROLL_AMPLITUDE;
     groupRef.current.rotation.x = baseRotation[0] + pitchOffset;
     groupRef.current.rotation.y = baseRotation[1] + yawOffset;
     groupRef.current.rotation.z = baseRotation[2] + rollOffset;
@@ -161,19 +170,30 @@ function EmailModel({
       basePosition.current[2]
     );
 
-    const baseScale = 0.0023;
-    const scale = lerp(baseScale, baseScale * FLOATING_CONFIG.HOVER_SCALE, hoverT.current);
+    const baseScale = 0.0004;
+    const scale = lerp(
+      baseScale,
+      baseScale * FLOATING_CONFIG.HOVER_SCALE,
+      hoverT.current
+    );
     groupRef.current.scale.setScalar(scale);
 
     const basePulse = 0.03 * Math.sin(time * 2) + 1;
-    const currentColor = lerpColor(FLOATING_CONFIG.BASE_COLOR, FLOATING_CONFIG.HOVER_COLOR, hoverT.current);
+    const currentColor = lerpColor(
+      FLOATING_CONFIG.BASE_COLOR,
+      FLOATING_CONFIG.HOVER_COLOR,
+      hoverT.current
+    );
     const currentEmissive = lerp(
       FLOATING_CONFIG.BASE_EMISSIVE_INTENSITY * basePulse,
       FLOATING_CONFIG.HOVER_INTENSITY,
       hoverT.current
     );
-    if (material.emissive.getHexString() !== new THREE.Color(currentColor).getHexString()) {
-      material.emissive = new THREE.Color(currentColor);
+    if (
+      material.emissive.getHexString() !==
+      new Color(currentColor).getHexString()
+    ) {
+      material.emissive = new Color(currentColor);
     }
     if (material.emissiveIntensity !== currentEmissive) {
       material.emissiveIntensity = currentEmissive;
@@ -182,10 +202,7 @@ function EmailModel({
 
   return (
     <>
-      <group 
-        ref={groupRef}
-        position={basePosition.current}
-      >
+      <group ref={groupRef} position={basePosition.current}>
         <primitive object={optimizedScene} />
       </group>
       <mesh
@@ -195,7 +212,7 @@ function EmailModel({
         position={basePosition.current}
       >
         <boxGeometry args={clickBoxScale as [number, number, number]} />
-        <meshBasicMaterial 
+        <meshBasicMaterial
           transparent={true}
           opacity={0}
           colorWrite={false}
@@ -207,25 +224,24 @@ function EmailModel({
 }
 
 export default function FloatingEmailLogo({
-  emailAddress = "testetsetset@gmail.com",
-  boundarySize = 0.005,
-  glowColor = '#ea4335',
-  emissiveColor = '#ff6b6b',
+  emailAddress,
   baseRotation = [0, 0, 0],
-  clickBoxScale = [0.4, 0.4, 0.02],
+  clickBoxScale = [0.05, 0.05, 0.02],
 }: FloatingEmailLogoProps) {
+  const secureEmailAddress = emailAddress || getEmailAddress();
+
   const handleLogoClick = useCallback(() => {
-    window.open(`mailto:${emailAddress}`, '_blank', 'noopener,noreferrer');
-  }, [emailAddress]);
+    const mailtoUrl = `mailto:${secureEmailAddress}`;
+    window.open(mailtoUrl, "_blank", "noopener,noreferrer");
+  }, [secureEmailAddress]);
+
   return (
-    <EmailModel 
-      url="/email/scene.gltf"
-      boundarySize={boundarySize}
+    <EmailModel
+      url="/email/scene.glb"
       onLogoClick={handleLogoClick}
       baseRotation={baseRotation}
       clickBoxScale={clickBoxScale}
     />
   );
 }
-
-useGLTF.preload('/email/scene.gltf'); 
+useGLTF.preload("/email/scene.glb");

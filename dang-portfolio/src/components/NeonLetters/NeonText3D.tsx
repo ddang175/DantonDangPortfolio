@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import * as THREE from 'three';
-import AnimatedLetter from './AnimatedLetter';
+import { useMemo } from "react";
+import { MeshStandardMaterial } from "three";
+import AnimatedLetter from "./AnimatedLetter";
 
 interface LetterConfig {
   char: string;
@@ -19,12 +19,15 @@ interface NeonText3DProps {
   lightColor?: string;
 }
 
-const materialCache = new Map<string, THREE.MeshStandardMaterial>();
+const materialCache = new Map<string, MeshStandardMaterial>();
 const MAX_CACHE_SIZE = 5;
 
-const getOrCreateMaterial = (color: string, lightColor: string): THREE.MeshStandardMaterial => {
+const getOrCreateMaterial = (
+  color: string,
+  lightColor: string
+): MeshStandardMaterial => {
   const key = `${color}-${lightColor}`;
-  
+
   if (!materialCache.has(key)) {
     if (materialCache.size >= MAX_CACHE_SIZE) {
       const firstKey = materialCache.keys().next().value;
@@ -36,24 +39,22 @@ const getOrCreateMaterial = (color: string, lightColor: string): THREE.MeshStand
         materialCache.delete(firstKey);
       }
     }
-    
-    const material = new THREE.MeshStandardMaterial({
+
+    const material = new MeshStandardMaterial({
       color,
       emissive: lightColor,
-      emissiveIntensity: 2,
-      fog: false,
-      transparent: false,
-      depthWrite: true,
-      depthTest: true,
+      emissiveIntensity: 1.6,
+      roughness: 0.1,
+      metalness: 0.9,
     });
     materialCache.set(key, material);
   }
-  
+
   return materialCache.get(key)!;
 };
 
 const cleanupMaterialCache = () => {
-  materialCache.forEach(material => {
+  materialCache.forEach((material) => {
     material.dispose();
   });
   materialCache.clear();
@@ -61,31 +62,34 @@ const cleanupMaterialCache = () => {
 
 export default function NeonText3D({
   letters,
-  fontSize = 0.6,
+  fontSize = 0.3,
   height = 0.15,
   letterSpacing = 0.04,
-  color = '#796094',
-  lightColor = '#d09eff',
+  color = "#796094",
+  lightColor = "#d09eff",
 }: NeonText3DProps) {
-  const material = useMemo(() => 
-    getOrCreateMaterial(color, lightColor), 
+  const material = useMemo(
+    () => getOrCreateMaterial(color, lightColor),
     [color, lightColor]
   );
 
-  const letterGroups = useMemo(() => 
-    letters.map((letter, i) => (
-      <AnimatedLetter
-        key={`${letter.char}-${letter.position[0]}-${letter.position[1]}-${i}`}
-        char={letter.char}
-        position={letter.position}
-        baseRotation={letter.rotation || [0, 0, 0]}
-        fontSize={fontSize}
-        height={height}
-        letterSpacing={letterSpacing}
-        material={material}
-        index={i}
-      />
-    )), [letters, fontSize, height, letterSpacing, material]);
+  const letterGroups = useMemo(
+    () =>
+      letters.map((letter, i) => (
+        <AnimatedLetter
+          key={`${letter.char}-${letter.position[0]}-${letter.position[1]}-${i}`}
+          char={letter.char}
+          position={letter.position}
+          baseRotation={letter.rotation || [0, 0, 0]}
+          fontSize={fontSize}
+          height={height}
+          letterSpacing={letterSpacing}
+          material={material}
+          index={i}
+        />
+      )),
+    [letters, fontSize, height, letterSpacing, material]
+  );
 
   return <group>{letterGroups}</group>;
 }

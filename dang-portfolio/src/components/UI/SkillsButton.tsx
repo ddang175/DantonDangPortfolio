@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface SkillsButtonProps {
   onButtonClick: () => void;
@@ -9,9 +9,9 @@ interface SkillsButtonProps {
 }
 
 const SkillsButton: React.FC<SkillsButtonProps> = ({
-  children = 'Skills',
+  children = "Skills",
   onButtonClick = () => {},
-  className = '',
+  className = "",
   disabled = false,
   style = {},
 }) => {
@@ -34,16 +34,16 @@ const SkillsButton: React.FC<SkillsButtonProps> = ({
         ${className}
       `}
       style={{
-        fontFamily: 'Inter, Arial, sans-serif',
-        fontSize: '20px',
-        background: 'linear-gradient(90deg, #000000 0%, #000000 100%)',
-        border: '5px solid transparent',
+        fontFamily: "Inter, Arial, sans-serif",
+        fontSize: "25px",
+        background: "linear-gradient(90deg, #000000 0%, #000000 100%)",
+        border: "5px solid transparent",
         backgroundImage: `
           linear-gradient(#000000, #000000),
           linear-gradient(90deg,rgb(173, 72, 255),rgb(186, 112, 255),rgb(200, 152, 255),rgb(224, 197, 255))
         `,
-        backgroundOrigin: 'border-box',
-        backgroundClip: 'padding-box, border-box',
+        backgroundOrigin: "border-box",
+        backgroundClip: "padding-box, border-box",
         ...style,
       }}
     >
@@ -52,22 +52,25 @@ const SkillsButton: React.FC<SkillsButtonProps> = ({
         className={`
           absolute inset-0 rounded-full pointer-events-none
           transition-all duration-300 ease-out
-          ${isHovered ? 'opacity-100' : 'opacity-70'}
+          ${isHovered ? "opacity-100" : "opacity-70"}
         `}
         style={{
-          background: 'linear-gradient(90deg, rgb(173, 72, 255),rgb(186, 112, 255),rgb(200, 152, 255),rgb(224, 197, 255))',
-          filter: isHovered ? 'blur(20px)' : 'blur(15px)',
-          transform: isHovered ? 'scale(1.15)' : 'scale(1.1)',
+          background:
+            "linear-gradient(90deg, rgb(173, 72, 255),rgb(186, 112, 255),rgb(200, 152, 255),rgb(224, 197, 255))",
+          filter: isHovered ? "blur(20px)" : "blur(15px)",
+          transform: isHovered ? "scale(1.15)" : "scale(1.1)",
           zIndex: -1,
         }}
       />
-      <span className={
-        `relative z-10 transition-all duration-300 ${isHovered ? 'text-white drop-shadow-lg' : 'text-gray-200'}`
-      }>
+      <span
+        className={`relative z-10 transition-all duration-300 ${
+          isHovered ? "text-white drop-shadow-lg" : "text-gray-200"
+        }`}
+      >
         {children}
       </span>
     </button>
   );
 };
 
-export default SkillsButton; 
+export default SkillsButton;

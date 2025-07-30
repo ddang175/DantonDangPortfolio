@@ -1,46 +1,65 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
-import { useFrameRateLimit } from '../../hooks/useFrameRateLimit';
+import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
+import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 
 export default function CursorGlow() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [lerpPosition, setLerpPosition] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
   const animationRef = useRef<number | undefined>(undefined);
 
-  const { shouldRenderFrame } = useFrameRateLimit({ targetFPS: 45, enabled: true });
+  const { shouldRenderFrame } = useFrameRateLimit({
+    targetFPS: 45,
+    enabled: true,
+  });
 
   useEffect(() => {
+    const updateScreenSize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    updateScreenSize();
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return; // Don't add mouse listeners on mobile
+
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
 
     const animate = () => {
       const currentTime = performance.now();
-      
+
       if (!shouldRenderFrame(currentTime)) {
         animationRef.current = requestAnimationFrame(animate);
         return;
       }
-      
-      setLerpPosition(prev => ({
-        x: prev.x + (position.x - prev.x) * 0.05,
-        y: prev.y + (position.y - prev.y) * 0.05,
+
+      setLerpPosition((prev) => ({
+        x: prev.x + (position.x - prev.x) * 0.07,
+        y: prev.y + (position.y - prev.y) * 0.07,
       }));
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
     animationRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [position]);
+  }, [position, isMobile]);
+
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <div
@@ -48,7 +67,7 @@ export default function CursorGlow() {
       style={{
         left: lerpPosition.x - 400,
         top: lerpPosition.y - 400,
-        transform: 'translate(0, 0)',
+        transform: "translate(0, 0)",
       }}
     >
       <Image
@@ -61,4 +80,4 @@ export default function CursorGlow() {
       />
     </div>
   );
-} 
+}
