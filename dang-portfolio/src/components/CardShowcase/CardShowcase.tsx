@@ -53,7 +53,7 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
     setTimeout(() => {
       setIsVisible(false);
       onClose();
-    }, 300);
+    }, 400);
   };
 
   const activeCard = cards[activeCardIndex];
@@ -62,7 +62,7 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
     <>
       <div
         className={`
-        fixed z-60 transition-all duration-300 ease-out
+        fixed z-60 transition-all duration-400 ease-in-out
         ${
           isVisible && !isClosing
             ? "opacity-100 translate-y-0"
@@ -70,14 +70,14 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
         }
         ${
           isMobile
-            ? "bottom-4 left-1/2 transform -translate-x-1/2 w-[92vw] max-w-[92vw]"
+            ? "bottom-[10] left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[90vw]"
             : "bottom-[17vh] left-1/2 transform -translate-x-1/2 w-[90vw] max-w-[90vw]"
         }
       `}
       >
         <div
           className={`
-          transition-all duration-300 ease-out
+          transition-all duration-400 ease-in-out
           ${isClosing ? "opacity-0 scale-95" : "opacity-100 scale-100"}
           ${isMobile ? "max-h-[340px]" : "max-h-[20vh]"}
         `}
@@ -86,7 +86,7 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
             className={`
             ${
               isMobile
-                ? "max-h-[calc(340px-2rem)] overflow-y-auto custom-scrollbar"
+                ? "max-h-[calc(220px)] overflow-y-auto custom-scrollbar"
                 : "max-h-[calc(20vh-2rem)] overflow-y-auto custom-scrollbar"
             }
           `}
@@ -121,7 +121,7 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
                   flex items-center justify-center
                   ${isMobile ? "w-full h-20" : "min-w-[140px] h-20"}
                   text-white font-sans tracking-widest uppercase
-                  transition-all duration-300 ease-out
+                  transition-all duration-400 ease-in-out
                   cursor-pointer
                   backdrop-blur-md bg-black/20 
                   border border-white/10
@@ -140,15 +140,13 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
         </div>
       </div>
 
-      {(isVisible || isClosing) && (
-        <CardModal
-          card={activeCard}
-          onClose={handleClose}
-          isTransitioning={isTransitioning}
-          isClosing={isClosing}
-          isMobile={isMobile}
-        />
-      )}
+      <CardModal
+        card={activeCard}
+        onClose={handleClose}
+        isTransitioning={isTransitioning}
+        isClosing={isClosing}
+        isMobile={isMobile}
+      />
     </>
   );
 };

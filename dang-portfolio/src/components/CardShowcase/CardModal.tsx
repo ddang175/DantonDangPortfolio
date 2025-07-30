@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CardData } from "./types";
 
 interface CardModalProps {
@@ -7,6 +7,7 @@ interface CardModalProps {
   isTransitioning?: boolean;
   isClosing?: boolean;
   isMobile?: boolean;
+  scrollArrowOffset?: number;
 }
 
 const CardModal: React.FC<CardModalProps> = ({
@@ -19,11 +20,21 @@ const CardModal: React.FC<CardModalProps> = ({
   const [isVisible, setIsVisible] = useState(false);
   const [contentOpacity, setContentOpacity] = useState(1);
   const [isContentVisible, setIsContentVisible] = useState(true);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const containerHeight = isMobile ? "85%" : "90%";
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (isClosing) {
+      setIsVisible(false);
+    }
+  }, [isClosing]);
 
   useEffect(() => {
     if (isTransitioning) {
@@ -37,16 +48,49 @@ const CardModal: React.FC<CardModalProps> = ({
     }
   }, [isTransitioning]);
 
+  useEffect(() => {
+    const checkScrollable = () => {
+      if (scrollContainerRef.current) {
+        const { scrollHeight, clientHeight, scrollTop } =
+          scrollContainerRef.current;
+        const hasOverflow = scrollHeight > clientHeight;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+
+        setShowScrollIndicator(hasOverflow && !isAtBottom);
+      }
+    };
+
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+
+    checkScrollable();
+
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", checkScrollable);
+    }
+
+    window.addEventListener("resize", checkScrollable);
+
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.removeEventListener("scroll", checkScrollable);
+      }
+      window.removeEventListener("resize", checkScrollable);
+    };
+  }, [card, contentOpacity]);
+
   const handleClose = () => {
-    setIsVisible(false);
-    setTimeout(onClose, 300);
+    // Don't set isVisible to false here - let the parent control the closing state
+    onClose();
   };
 
   const getModalPositioning = () => {
     if (isMobile) {
       return {
-        bottom: "calc(340px - 1rem)",
-        maxHeight: "calc(100vh - 340px - 1rem - 1rem - 2rem)",
+        bottom: "calc(240px - 1rem)",
+        maxHeight: "calc(100vh - 270px - 1rem - 1rem - 2rem)",
       };
     } else {
       return {
@@ -60,7 +104,9 @@ const CardModal: React.FC<CardModalProps> = ({
 
   return (
     <div
-      className="fixed inset-x-0 z-[70] flex items-end justify-center p-4 pointer-events-none"
+      className={`fixed inset-x-0 z-[70] flex items-end justify-center p-4 pointer-events-none transition-opacity duration-500 ${
+        isVisible && !isClosing ? "opacity-100" : "opacity-0"
+      }`}
       style={{
         bottom: modalPositioning.bottom,
       }}
@@ -74,7 +120,7 @@ const CardModal: React.FC<CardModalProps> = ({
         className={`
           relative w-full max-w-4xl bg-black/70 border border-white/20 rounded-2xl
           shadow-2xl overflow-hidden pointer-events-auto
-          transition-all duration-300 ease-out
+          transition-all duration-500 ease-out
           ${
             isVisible && !isClosing
               ? "opacity-100 scale-100"
@@ -87,7 +133,7 @@ const CardModal: React.FC<CardModalProps> = ({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-2 sm:p-4 border-b border-white/10 bg-black/10">
+        <div className="flex items-center justify-between p-2 border-b border-white/10 bg-black/10">
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white tracking-wider uppercase">
             {card.title}
           </h2>
@@ -118,12 +164,12 @@ const CardModal: React.FC<CardModalProps> = ({
         </div>
 
         <div
-          className="overflow-y-auto custom-scrollbar"
+          ref={scrollContainerRef}
+          className="overflow-y-auto modal-scrollbar relative"
           style={{
-            height: "calc(100% - 89px)",
+            height: containerHeight,
             scrollbarWidth: "thin",
-            scrollbarColor:
-              "rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05)",
+            scrollbarColor: "rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0)",
           }}
         >
           <div
@@ -143,13 +189,46 @@ const CardModal: React.FC<CardModalProps> = ({
             )}
 
             <div className="space-y-4">
-              {(card.company || card.date) && (
+              {(card.company || card.date || card.link) && (
                 <div className="flex items-center justify-between">
-                  {card.company && (
-                    <p className="text-purple-400 text-base sm:text-lg font-medium tracking-wider">
-                      {card.company}
-                    </p>
-                  )}
+                  <div className="flex items-center gap-4">
+                    {card.company && (
+                      <p className="text-purple-400 text-base sm:text-lg font-medium tracking-wider">
+                        {card.company}
+                      </p>
+                    )}
+                    {card.link && (
+                      <a
+                        href={card.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="
+                          inline-flex items-center gap-2
+                          px-4 py-2
+                          bg-purple-600 hover:bg-purple-700
+                          text-white font-medium
+                          rounded-lg
+                          transition-colors duration-200
+                          tracking-wider uppercase text-sm
+                        "
+                      >
+                        View Project
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                      </a>
+                    )}
+                  </div>
                   {card.date && (
                     <p className="text-purple-300 text-sm font-medium tracking-wider uppercase">
                       {card.date}
@@ -185,41 +264,34 @@ const CardModal: React.FC<CardModalProps> = ({
                   </div>
                 </div>
               )}
-
-              {card.link && (
-                <div className="pt-4">
-                  <a
-                    href={card.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="
-                      inline-flex items-center gap-2
-                      px-4 py-2
-                      bg-purple-600 hover:bg-purple-700
-                      text-white font-medium
-                      rounded-lg
-                      transition-colors duration-200
-                      tracking-wider uppercase text-sm
-                    "
-                  >
-                    View Project
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                      />
-                    </svg>
-                  </a>
-                </div>
-              )}
             </div>
+          </div>
+        </div>
+
+        <div
+          className={`scroll-arrow-container absolute left-1/2 pointer-events-none z-10 ${
+            showScrollIndicator ? "visible" : ""
+          }`}
+          style={{ bottom: `0px` }}
+        >
+          <div className="animate-pulse">
+            <svg
+              className="w-6 h-6 text-white/80 drop-shadow-lg animate-bounce"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              style={{
+                animationDuration: "2s",
+                filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5))",
+              }}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
           </div>
         </div>
       </div>

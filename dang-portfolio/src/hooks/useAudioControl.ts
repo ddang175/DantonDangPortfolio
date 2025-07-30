@@ -59,28 +59,27 @@ export const useAudioControl = ({
 
   const startMusic = useCallback(() => {
     if (!isMobile && audioRef.current) {
-      audioRef.current.play().catch((err) => {
-        console.log("Audio play failed:", err);
-      });
+      audioRef.current.play().catch((err) => {});
     }
   }, [isMobile]);
 
-  const playWhoosh = useCallback((delayMs: number = 0) => {
-    if (!whooshAudioRef.current) return;
+  const playWhoosh = useCallback(
+    (delayMs: number = 0) => {
+      if (isMobile || !whooshAudioRef.current) return;
 
-    const playWithDelay = () => {
-      whooshAudioRef.current!.currentTime = 0;
-      whooshAudioRef.current!.play().catch((err) => {
-        console.log("Whoosh audio play failed:", err);
-      });
-    };
+      const playWithDelay = () => {
+        whooshAudioRef.current!.currentTime = 0;
+        whooshAudioRef.current!.play().catch((err) => {});
+      };
 
-    if (delayMs > 0) {
-      setTimeout(playWithDelay, delayMs);
-    } else {
-      playWithDelay();
-    }
-  }, []);
+      if (delayMs > 0) {
+        setTimeout(playWithDelay, delayMs);
+      } else {
+        playWithDelay();
+      }
+    },
+    [isMobile]
+  );
 
   const fadeVolume = useCallback(
     (startVolume: number, endVolume: number, duration: number) => {

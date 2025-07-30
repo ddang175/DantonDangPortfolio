@@ -13,8 +13,6 @@ const NavButton: React.FC<NavButtonProps> = ({
   children,
   onClick,
   disabled = false,
-  isVertical = false,
-  isMobile = false,
   isGrid = false,
 }) => {
   const [isHovered, setIsHovered] = useState(false);

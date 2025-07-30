@@ -2,19 +2,23 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {
-    optimizePackageImports: ['@react-three/fiber', '@react-three/drei', 'three'],
+    optimizePackageImports: [
+      "@react-three/fiber",
+      "@react-three/drei",
+      "three",
+    ],
     turbo: {
       rules: {
-        '*.gltf': {
-          loaders: ['@next/gltf-loader'],
-          as: '*.gltf',
+        "*.gltf": {
+          loaders: ["@next/gltf-loader"],
+          as: "*.gltf",
         },
       },
     },
   },
 
   images: {
-    formats: ['image/webp', 'image/avif'],
+    formats: ["image/webp", "image/avif"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
@@ -27,45 +31,45 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
           {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
+            key: "X-Content-Type-Options",
+            value: "nosniff",
           },
           {
-            key: 'X-Frame-Options',
-            value: 'DENY',
+            key: "X-Frame-Options",
+            value: "DENY",
           },
           {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
           },
         ],
       },
       {
-        source: '/font/(.*)',
+        source: "/font/(.*)",
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
       {
-        source: '/ae86/(.*)',
+        source: "/ae86/(.*)",
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
     ];
   },
 
-  output: 'standalone',
-  
+  output: "standalone",
+
   swcMinify: true,
 };
 

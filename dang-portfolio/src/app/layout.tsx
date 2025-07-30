@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -21,13 +21,25 @@ export const metadata: Metadata = {
   description: "Danton Dang's Portfolio.",
   keywords: ["software engineer", "portfolio"],
   authors: [{ name: "Danton Dang" }],
-  viewport: "width=device-width, initial-scale=1",
   robots: "index, follow",
   openGraph: {
     title: "Danton Dang - Software Engineer",
     description: "Danton Dang's Portfolio.",
     type: "website",
   },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+    "mobile-web-app-capable": "yes",
+    "theme-color": "#000000",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -38,57 +50,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/me.webp" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
+        <meta name="mobile-web-app-capable" content="yes" />
+
         <link rel="preload" as="image" href="/glow.webp" />
-
-        <link
-          rel="preload"
-          as="fetch"
-          href="/ae86/initialdcarmesh.glb"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="fetch"
-          href="/city/city.glb"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="fetch"
-          href="/github/scene.glb"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="fetch"
-          href="/linkedin_3d/scene.glb"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="fetch"
-          href="/email/scene.glb"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          as="fetch"
-          href="/resume/scene.glb"
-          crossOrigin="anonymous"
-        />
-
-        <link rel="preload" as="audio" href="/audio/keys/1.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/2.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/3.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/4.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/5.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/6.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/7.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/8.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/9.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/10.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/11.mp3" />
-        <link rel="preload" as="audio" href="/audio/keys/12.mp3" />
 
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -2,12 +2,10 @@ import { Suspense, useState, useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Canvas } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
-import * as THREE from "three";
 import { ModelScene } from "./scene/ModelScene";
 import { NeonTextModelScene } from "./scene/NeonTextModelScene";
 import { FrameRateLimit } from "./utils/FrameRateLimit";
 import { CameraAnimation } from "./utils/CameraAnimation";
-import { MouseParallax } from "./utils/MouseParallax";
 import FloatingGitHubLogo from "@/components/GitHubLogo/FloatingGitHubLogo";
 import FloatingLinkedInLogo from "@/components/LinkedInLogo/FloatingLinkedInLogo";
 import FloatingEmailLogo from "@/components/EmailLogo/FloatingEmailLogo";
@@ -45,6 +43,50 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
     neonText: false,
   });
   const modelsReadyRef = useRef({ city: false, car: false, neonText: false });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const updateScreenSize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    updateScreenSize();
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
+
+  const getFloatingLogosY = () => {
+    return isMobile ? 0.22 : -0.27;
+  };
+
+  const getFloatingLogosXChance = () => {
+    return isMobile ? 0.8 : 1;
+  };
+
+  const emailx = () => {
+    return isMobile ? -0.12 : -0.15;
+  };
+  const emaily = () => {
+    return isMobile ? 0.1 : -0.27;
+  };
+  const resumex = () => {
+    return isMobile ? -0.12 : -0.05;
+  };
+  const resumey = () => {
+    return isMobile ? 0.05 : -0.27;
+  };
+
+  const linkedinx = () => {
+    return isMobile ? 0.12 : 0.15;
+  };
+  const linkediny = () => {
+    return isMobile ? 0.1 : -0.27;
+  };
+  const githubx = () => {
+    return isMobile ? 0.12 : 0.05;
+  };
+  const githuby = () => {
+    return isMobile ? 0.05 : -0.27;
+  };
 
   const sceneY = 0;
   const initialCameraPos: [number, number, number] = [0, 0, 60];
@@ -53,7 +95,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
   const targetFov = 70;
 
   const handleModelReady = (modelType: "city" | "car" | "neonText") => {
-    console.log(`Model ready: ${modelType}`);
     modelsReadyRef.current[modelType] = true;
     setModelsReady((prev) => ({ ...prev, [modelType]: true }));
   };
@@ -62,23 +103,21 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
     modelsReady.city && modelsReady.car && modelsReady.neonText;
   const [shouldStartAnimation, setShouldStartAnimation] = useState(false);
 
-  useEffect(() => {
-    console.log("Models ready state:", modelsReady);
-    console.log("Start animation:", startAnimation);
-    console.log("All models ready:", allModelsReady);
-    console.log("Should start animation:", shouldStartAnimation);
-  }, [modelsReady, startAnimation, allModelsReady, shouldStartAnimation]);
+  useEffect(() => {}, [
+    modelsReady,
+    startAnimation,
+    allModelsReady,
+    shouldStartAnimation,
+  ]);
 
   useEffect(() => {
     if (startAnimation && allModelsReady && !shouldStartAnimation) {
-      console.log("All models ready, starting camera animation now");
       setShouldStartAnimation(true);
     }
   }, [startAnimation, allModelsReady, shouldStartAnimation]);
 
   useEffect(() => {
     if (allModelsReady && onReady) {
-      console.log("All models ready, notifying parent");
       onReady();
     }
   }, [allModelsReady, onReady]);
@@ -86,7 +125,7 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
   return (
     <div className="absolute inset-0 w-full h-full z-0">
       <Canvas
-        dpr={1}
+        dpr={Math.min(window.devicePixelRatio || 1, 2)}
         shadows
         frameloop="demand"
         camera={{
@@ -102,13 +141,20 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
           width: "100%",
           height: "100%",
         }}
+        gl={{
+          antialias: true,
+          alpha: false,
+          powerPreference: "high-performance",
+          stencil: false,
+          depth: true,
+        }}
       >
         <EffectComposer>
           <Bloom
-            intensity={2}
-            luminanceThreshold={0.1}
-            luminanceSmoothing={0.025}
-            radius={0.7}
+            intensity={1}
+            luminanceThreshold={0}
+            luminanceSmoothing={0}
+            radius={0.5}
           />
         </EffectComposer>
 
@@ -121,8 +167,8 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
           distance={20}
           decay={1.5}
           castShadow
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
+          shadow-mapSize-width={512}
+          shadow-mapSize-height={512}
         />
 
         <spotLight
@@ -134,13 +180,13 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
           distance={8}
           decay={1.2}
           castShadow
-          shadow-mapSize-width={1024}
-          shadow-mapSize-height={1024}
+          shadow-mapSize-width={512}
+          shadow-mapSize-height={512}
         />
 
         <spotLight
           position={[4, 3, 6]}
-          intensity={4}
+          intensity={3}
           color={0x00bcd4}
           angle={Math.PI / 6}
           penumbra={0.4}
@@ -153,7 +199,7 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
 
         <spotLight
           position={[-3, 2, -4]}
-          intensity={3.5}
+          intensity={5}
           color={0x9c27b0}
           angle={Math.PI / 5}
           penumbra={0.5}
@@ -166,7 +212,7 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
 
         <spotLight
           position={[3, 2, -4]}
-          intensity={3.5}
+          intensity={4}
           color={0xff9800}
           angle={Math.PI / 5}
           penumbra={0.5}
@@ -180,7 +226,7 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
         <spotLight
           position={[0, 6, -2]}
           intensity={3}
-          color={0xe91e63}
+          color={0xff672b}
           angle={Math.PI / 10}
           penumbra={0.3}
           distance={10}
@@ -243,17 +289,17 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
             </group>
 
             <group>
-              <group position={[-0.15, -0.27, 4.5]}>
+              <group position={[emailx(), emaily(), 4.5]}>
                 <FloatingEmailLogo />
               </group>
-              <group position={[-0.05, -0.27, 4.5]}>
+              <group position={[resumex(), resumey(), 4.5]}>
                 <FloatingResumeLogo />
               </group>
-              <group position={[0.05, -0.27, 4.5]}>
+              <group position={[linkedinx(), linkediny(), 4.5]}>
                 <FloatingLinkedInLogo />
               </group>
 
-              <group position={[0.15, -0.27, 4.5]}>
+              <group position={[githubx(), githuby(), 4.5]}>
                 <FloatingGitHubLogo />
               </group>
             </group>

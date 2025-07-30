@@ -1,9 +1,9 @@
-import { useRef, useEffect } from 'react';
-import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { Group, Object3D, Mesh, Material, FrontSide } from 'three';
-import type { GLTF } from 'three-stdlib';
-import { useFrameRateLimit } from '@/hooks/useFrameRateLimit';
+import { useRef, useEffect } from "react";
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { Group, Object3D, Mesh, Material, FrontSide } from "three";
+import type { GLTF } from "three-stdlib";
+import { useFrameRateLimit } from "@/hooks/useFrameRateLimit";
 
 interface ModelSceneProps {
   modelPath: string;
@@ -23,7 +23,7 @@ interface GLTFResult extends GLTF {
   materials: Record<string, Material>;
 }
 
-export const ModelScene: React.FC<ModelSceneProps> = ({ 
+export const ModelScene: React.FC<ModelSceneProps> = ({
   modelPath,
   position = [0, 0, 0],
   rotation = [0, 0, 0],
@@ -46,10 +46,10 @@ export const ModelScene: React.FC<ModelSceneProps> = ({
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.current.y = ((e.clientY / window.innerHeight) * 2 - 1);
+      mouse.current.y = (e.clientY / window.innerHeight) * 2 - 1;
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export const ModelScene: React.FC<ModelSceneProps> = ({
           child.material.alphaTest = 0.5;
           child.material.depthWrite = true;
           child.material.depthTest = true;
-          
+
           child.material.needsUpdate = true;
         }
       }
@@ -72,7 +72,7 @@ export const ModelScene: React.FC<ModelSceneProps> = ({
     gltf.scene.position.set(...position);
     gltf.scene.rotation.set(...rotation);
     gltf.scene.scale.setScalar(scale);
-    
+
     modelRef.current.add(gltf.scene);
 
     if (onReady && !hasNotifiedReady.current) {
@@ -91,14 +91,13 @@ export const ModelScene: React.FC<ModelSceneProps> = ({
     const targetY = mouse.current.x * maxRotationY * rotationSensitivity;
     const targetX = mouse.current.y * maxRotationX * rotationSensitivity;
 
-    modelRef.current.rotation.y += (targetY - modelRef.current.rotation.y) * rotationSmoothness;
-    modelRef.current.rotation.x += (targetX - modelRef.current.rotation.x) * rotationSmoothness;
+    modelRef.current.rotation.y +=
+      (targetY - modelRef.current.rotation.y) * rotationSmoothness;
+    modelRef.current.rotation.x +=
+      (targetX - modelRef.current.rotation.x) * rotationSmoothness;
   });
 
-  return (
-    <group ref={modelRef}>
-    </group>
-  );
+  return <group ref={modelRef}></group>;
 };
 
-useGLTF.preload('/ae86/initialdcarmesh.glb');
+useGLTF.preload("/ae86/initialdcarmesh.glb");

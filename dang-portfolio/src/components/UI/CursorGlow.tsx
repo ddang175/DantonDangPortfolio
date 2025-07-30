@@ -7,6 +7,7 @@ import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 export default function CursorGlow() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [lerpPosition, setLerpPosition] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
   const animationRef = useRef<number | undefined>(undefined);
 
   const { shouldRenderFrame } = useFrameRateLimit({
@@ -15,6 +16,17 @@ export default function CursorGlow() {
   });
 
   useEffect(() => {
+    const updateScreenSize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    updateScreenSize();
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return; // Don't add mouse listeners on mobile
+
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
@@ -43,7 +55,11 @@ export default function CursorGlow() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [position]);
+  }, [position, isMobile]);
+
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <div

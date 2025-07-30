@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface AboutMeProps {
   onClose: () => void;
@@ -15,6 +15,8 @@ const AboutMe: React.FC<AboutMeProps> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [contentOpacity, setContentOpacity] = useState(1);
+  const [showScrollIndicator, setShowScrollIndicator] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const imagePosition = {
     mobile: { x: 50, y: 25 },
@@ -34,6 +36,35 @@ const AboutMe: React.FC<AboutMeProps> = ({
     }
   }, [isTransitioning]);
 
+  // Check if content is scrollable
+  useEffect(() => {
+    const checkScrollable = () => {
+      if (scrollContainerRef.current) {
+        const { scrollHeight, clientHeight, scrollTop } =
+          scrollContainerRef.current;
+        const hasOverflow = scrollHeight > clientHeight;
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10; // 10px threshold
+
+        setShowScrollIndicator(hasOverflow && !isAtBottom);
+      }
+    };
+
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      scrollContainer.addEventListener("scroll", checkScrollable);
+    }
+
+    checkScrollable();
+    window.addEventListener("resize", checkScrollable);
+
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.removeEventListener("scroll", checkScrollable);
+      }
+      window.removeEventListener("resize", checkScrollable);
+    };
+  }, [contentOpacity]);
+
   const handleClose = () => {
     setIsVisible(false);
     setTimeout(onClose, 300);
@@ -42,8 +73,8 @@ const AboutMe: React.FC<AboutMeProps> = ({
   const getModalPositioning = () => {
     if (isMobile) {
       return {
-        bottom: "calc(18vh + 1rem)",
-        maxHeight: "calc(80vh - 1rem - 1rem - 2rem)",
+        bottom: "calc(200px - 1rem)",
+        maxHeight: "calc(70vh - 1rem - 1rem - 2rem)",
       };
     } else {
       return {
@@ -119,13 +150,14 @@ const AboutMe: React.FC<AboutMeProps> = ({
         </div>
 
         <div
-          className="overflow-y-auto custom-scrollbar transition-opacity duration-150 ease-out"
+          ref={scrollContainerRef}
+          className="overflow-y-auto modal-scrollbar transition-opacity duration-150 ease-out relative"
           style={{
             opacity: contentOpacity,
-            height: "calc(100% - 89px)",
+            height: "calc(100% - 75px)",
             scrollbarWidth: "thin",
             scrollbarColor:
-              "rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05)",
+              "rgba(255, 255, 255, 0.4) rgba(255, 255, 255, 0.15)",
           }}
         >
           <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
@@ -340,8 +372,6 @@ const AboutMe: React.FC<AboutMeProps> = ({
                           "Prisma",
                           "ServiceNow",
                           "Nobl9",
-                          "Black",
-                          "Flake8",
                         ].map((skill, index) => (
                           <span
                             key={index}
@@ -358,6 +388,33 @@ const AboutMe: React.FC<AboutMeProps> = ({
                 <div className="h-8"></div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div
+          className={`scroll-arrow-container absolute left-1/2 pointer-events-none z-10 ${
+            showScrollIndicator ? "visible" : ""
+          }`}
+          style={{ bottom: `0px` }}
+        >
+          <div className="animate-pulse">
+            <svg
+              className="w-6 h-6 text-white/80 drop-shadow-lg animate-bounce"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              style={{
+                animationDuration: "2s",
+                filter: "drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5))",
+              }}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
           </div>
         </div>
       </div>

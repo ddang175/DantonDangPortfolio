@@ -5,14 +5,8 @@ import { useRef, useMemo, useCallback, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 import { GLTF } from "three-stdlib";
-import {
-  MeshStandardMaterial,
-  Group,
-  Object3D,
-  FrontSide,
-  Material,
-  Color,
-} from "three";
+import { MeshStandardMaterial, Group, Material, Color } from "three";
+import { getEmailAddress } from "../../utils/email";
 
 interface FloatingEmailLogoProps {
   emailAddress?: string;
@@ -36,8 +30,8 @@ const FLOATING_CONFIG = {
   POSITION_AMPLITUDE: 0.12,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 3.5,
-  BASE_EMISSIVE_INTENSITY: 3,
+  HOVER_INTENSITY: 5,
+  BASE_EMISSIVE_INTENSITY: 4,
   BASE_COLOR: "#ea4335",
   HOVER_COLOR: "#ff6b6b",
 };
@@ -230,13 +224,17 @@ function EmailModel({
 }
 
 export default function FloatingEmailLogo({
-  emailAddress = "testetsetset@gmail.com",
+  emailAddress,
   baseRotation = [0, 0, 0],
-  clickBoxScale = [0.11, 0.11, 0.02],
+  clickBoxScale = [0.05, 0.05, 0.02],
 }: FloatingEmailLogoProps) {
+  const secureEmailAddress = emailAddress || getEmailAddress();
+
   const handleLogoClick = useCallback(() => {
-    window.open(`mailto:${emailAddress}`, "_blank", "noopener,noreferrer");
-  }, [emailAddress]);
+    const mailtoUrl = `mailto:${secureEmailAddress}`;
+    window.open(mailtoUrl, "_blank", "noopener,noreferrer");
+  }, [secureEmailAddress]);
+
   return (
     <EmailModel
       url="/email/scene.glb"

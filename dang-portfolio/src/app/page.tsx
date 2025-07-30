@@ -8,8 +8,6 @@ import {
 } from "@/components/openingSequence";
 import { CursorGlow, PortfolioButton } from "@/components/UI";
 import { useAudioControl } from "@/hooks/useAudioControl";
-import { FloatingLinkedInLogo } from "@/components/LinkedInLogo";
-import { FloatingGitHubLogo } from "@/components/GitHubLogo";
 import { BackgroundCanvas } from "@/components/Background3D";
 import { useGLTF } from "@react-three/drei";
 import MinimalistNavbar from "@/components/UI/MinimalistNavbar";
@@ -43,7 +41,7 @@ Memory - Dancer will remember every segment and metronome timing configuration y
     modalImageUrl: "/projects/dancermodal.webp",
     technologies: ["JavaScript", "HTML", "CSS"],
     date: "July 2025",
-    link: "https://github.com/yourusername/portfolio",
+    link: "https://chromewebstore.google.com/detail/ldfjmoiiepkfjaaljhgcalapajddibgi?utm_source=item-share-cb",
   },
   {
     id: "project-2",
@@ -185,10 +183,17 @@ const leadershipData: CardData[] = [
     id: "lead-1",
     title: "Vice President",
     company: "Asian Student Union",
-    description:
-      "At John Deerfffffffffffff ffffffffff f f f f ff f f ff f f ff f f f ffffffff   ffffffffffff f f fffff  ffff fffff fffff ff ffffffff fffffffffffff f ff ffffffffff f  f f f  ffff ffffff ffe Financial, I worked on two internal apps.\nFor the Security Access Management app, I enhanced UX, integrated AWS APIs, and automated HR record cleanup.\nFor the Database team, I automated JIRA tickets, managed EC2 events, and maintained data integrity.\nAlso wrote API documentation following SALAD standards.",
+    description: `Asian Student Union (ASU) is an organization on campus that promotes inclusivity and has built a community through celebrating Asian culture.
+
+I started as an intern for ASU in February of 2025. As an intern, I learned much about community building and fostering connections with the ASU community. ASU allowed me to organize significant events, create promotional marketing materials, host events, fundraise, and impact the organization's future.
+
+One of our most significant events was collaborating with the Iowa State Vietnamese Student Association (VSA) to create a culture show called InnovAsian. InnovAsian took months of planning, organization of 10+ performances, communication between 15+ organizations, and $10,000+ in costs. Even though this was the only and first ever Asian culture show at Iowa State, we brought in over 350 guests.
+
+At the end of April, I became the Vice President of VSA. We are currently planning for the upcoming school year's events and fundraisers. I am responsible (alongside the president) for organizing officer meetings, planning general board meetings, communication and organization with our team, task delegation, communicating with Iowa State organizations, and room booking.
+
+If you are an Iowa State student, please check out ASU!!!!!!!`,
     shortDescription:
-      "Full stack engineer on the CyCloud team at ISU Research Park.",
+      "Leading an inclusive community of 150+ members celebrating Asian culture",
     previewImageUrl: "/leadership/asu.webp",
     modalImageUrl: "/leadership/asumodal.webp",
     date: "February 2025 - Present",
@@ -252,7 +257,6 @@ export default function Home() {
     timeoutRefs.current.push(loadingTimer);
 
     const fallbackTimer = setTimeout(() => {
-      console.log("Fallback: Forcing loading doors to open");
       setIsLoading(false);
       setCanStartCameraAnimation(true);
     }, 8000);

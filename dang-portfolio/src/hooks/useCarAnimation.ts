@@ -1,12 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useFrameRateLimit } from "./useFrameRateLimit";
 
-interface CarAnimationState {
-  carRotationX: number;
-  carRotationY: number;
-  targetRotation: { x: number; y: number };
-}
-
 export const useCarAnimation = (
   isMouseMoving: boolean,
   carTargetIntensity: number,

@@ -2,7 +2,15 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, set up your environment variables:
+
+1. Copy `env.example` to `.env.local`
+2. Update the email address in `.env.local`:
+   ```
+   NEXT_PUBLIC_CONTACT_EMAIL=your.actual.email@example.com
+   ```
+
+Then, run the development server:
 
 ```bash
 npm run dev
@@ -20,6 +28,21 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Environment Variables
+
+This project uses environment variables to keep sensitive information secure:
+
+- `NEXT_PUBLIC_CONTACT_EMAIL`: Your email address for contact functionality
+- `NEXT_PUBLIC_EMAIL_SUBJECT`: Default subject line for contact emails (optional)
+- `NEXT_PUBLIC_EMAIL_BODY`: Default body text for contact emails (optional)
+
+### For Vercel Deployment
+
+1. Go to your Vercel project dashboard
+2. Navigate to Settings > Environment Variables
+3. Add the variables listed above
+4. Redeploy your application
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
@@ -35,10 +58,11 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+## Credits
 
 Music from #Uppbeat (free for Creators!):
 https://uppbeat.io/t/walz/yen
 License code: 8XKYNR0MZXPUNE2V
 
-car:
+Car model:
 https://sketchfab.com/3d-models/initialdcarmesh-a8b3d9d2cf7346f2b33dad02b5c0053e

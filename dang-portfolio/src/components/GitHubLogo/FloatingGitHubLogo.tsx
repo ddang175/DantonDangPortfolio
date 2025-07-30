@@ -28,8 +28,8 @@ const FLOATING_CONFIG = {
   POSITION_AMPLITUDE: 0.05,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 4,
-  BASE_EMISSIVE_INTENSITY: 3,
+  HOVER_INTENSITY: 5,
+  BASE_EMISSIVE_INTENSITY: 4,
   BASE_COLOR: "#2ea44f",
   HOVER_COLOR: "#34d058",
 };
@@ -167,7 +167,7 @@ function GitHubModel({
       basePosition.current[2]
     );
 
-    const baseScale = 0.0005;
+    const baseScale = 0.00047;
     const scale = lerp(
       baseScale,
       baseScale * FLOATING_CONFIG.HOVER_SCALE,
@@ -225,7 +225,7 @@ export default function FloatingGitHubLogo({
   glowColor = "#2ea44f",
   emissiveColor = "#34d058",
   baseRotation = [0, 1.3, -0.1],
-  clickBoxScale = [0.11, 0.1, 0.02],
+  clickBoxScale = [0.05, 0.05, 0.02],
 }: FloatingGitHubLogoProps) {
   const handleLogoClick = useCallback(() => {
     window.open(githubUrl, "_blank", "noopener,noreferrer");

@@ -5,7 +5,7 @@ import { useRef, useMemo, useCallback, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 import { GLTF } from "three-stdlib";
-import { MeshStandardMaterial, Group, Object3D, FrontSide, Color } from "three";
+import { MeshStandardMaterial, Group, Color } from "three";
 
 interface FloatingResumeLogoProps {
   resumeUrl?: string;
@@ -220,16 +220,16 @@ function ResumeModel({
 }
 
 export default function FloatingResumeLogo({
-  resumeUrl = "/resume/scene.glb",
+  resumeUrl = "/resume/DantonDang_Resume.pdf",
   baseRotation = [0, 0, 0],
-  clickBoxScale = [0.11, 0.11, 0.02],
+  clickBoxScale = [0.045, 0.045, 0.02],
 }: FloatingResumeLogoProps) {
   const handleLogoClick = useCallback(() => {
     window.open(resumeUrl, "_blank", "noopener,noreferrer");
   }, [resumeUrl]);
   return (
     <ResumeModel
-      url={resumeUrl}
+      url="/resume/scene.glb"
       onLogoClick={handleLogoClick}
       baseRotation={baseRotation}
       clickBoxScale={clickBoxScale}

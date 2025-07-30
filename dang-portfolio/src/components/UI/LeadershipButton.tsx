@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 type LeadershipButtonProps = {
   onButtonClick?: React.MouseEventHandler<HTMLButtonElement>;

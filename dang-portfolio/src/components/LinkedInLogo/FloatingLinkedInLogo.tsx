@@ -24,8 +24,8 @@ const FLOATING_CONFIG = {
   POSITION_AMPLITUDE: 0.12,
   PHASE_OFFSET: 2.5,
   HOVER_SCALE: 1.2,
-  HOVER_INTENSITY: 8.0,
-  BASE_EMISSIVE_INTENSITY: 7,
+  HOVER_INTENSITY: 12,
+  BASE_EMISSIVE_INTENSITY: 10,
   BASE_COLOR: "#0077b5",
   HOVER_COLOR: "#38b6ff",
 };
@@ -162,7 +162,7 @@ function LinkedInModel({
       basePosition.current[2]
     );
 
-    const baseScale = 0.024;
+    const baseScale = 0.022;
     const scale = lerp(
       baseScale,
       baseScale * FLOATING_CONFIG.HOVER_SCALE,
