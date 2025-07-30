@@ -82,7 +82,6 @@ const CardModal: React.FC<CardModalProps> = ({
   }, [card, contentOpacity]);
 
   const handleClose = () => {
-    // Don't set isVisible to false here - let the parent control the closing state
     onClose();
   };
 
@@ -118,7 +117,7 @@ const CardModal: React.FC<CardModalProps> = ({
 
       <div
         className={`
-          relative w-full max-w-4xl bg-black/70 border border-white/20 rounded-2xl
+          relative w-full max-w-4xl bg-black/80 border border-white/20 rounded-2xl
           shadow-2xl overflow-hidden pointer-events-auto
           transition-all duration-500 ease-out
           ${
