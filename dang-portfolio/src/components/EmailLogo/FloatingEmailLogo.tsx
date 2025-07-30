@@ -5,17 +5,16 @@ import { useRef, useMemo, useCallback, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 import { GLTF } from "three-stdlib";
-import { MeshStandardMaterial, Group, Material, Color } from "three";
+import { MeshStandardMaterial, Group, Color, Mesh, Object3D } from "three";
 import { getEmailAddress } from "../../utils/email";
+import { ThreeEvent } from "@react-three/fiber";
 
 interface FloatingEmailLogoProps {
   emailAddress?: string;
   boundarySize?: number;
   glowColor?: string;
   emissiveColor?: string;
-
   baseRotation?: [number, number, number];
-
   clickBoxScale?: [number, number, number];
 }
 
@@ -70,7 +69,6 @@ function EmailModel({
   const groupRef = useRef<Group>(null);
   const basePosition = useRef<[number, number, number]>([0, 0, 0]);
   const isHovered = useRef(false);
-  const materialsRef = useRef<Material[]>([]);
 
   const hoverT = useRef(0);
   const targetHoverT = useRef(0);
@@ -113,8 +111,8 @@ function EmailModel({
 
   const optimizedScene = useMemo(() => {
     const optimizedScene = scene.clone();
-    optimizedScene.traverse((child: any) => {
-      if (child.isMesh) {
+    optimizedScene.traverse((child: Object3D) => {
+      if (child instanceof Mesh) {
         child.castShadow = false;
         child.receiveShadow = false;
         child.frustumCulled = true;
@@ -125,7 +123,7 @@ function EmailModel({
   }, [scene, material]);
 
   const handleClick = useCallback(
-    (event: any) => {
+    (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
       onLogoClick();
     },
@@ -226,7 +224,7 @@ function EmailModel({
 export default function FloatingEmailLogo({
   emailAddress,
   baseRotation = [0, 0, 0],
-  clickBoxScale = [0.05, 0.05, 0.02],
+  clickBoxScale = [0.035, 0.025, 0.02],
 }: FloatingEmailLogoProps) {
   const secureEmailAddress = emailAddress || getEmailAddress();
 

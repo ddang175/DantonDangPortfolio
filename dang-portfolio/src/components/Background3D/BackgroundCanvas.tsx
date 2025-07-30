@@ -36,7 +36,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
   startAnimation = false,
   onReady,
 }) => {
-  const [cameraAnimationComplete, setCameraAnimationComplete] = useState(false);
   const [modelsReady, setModelsReady] = useState({
     city: false,
     car: false,
@@ -53,14 +52,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
     window.addEventListener("resize", updateScreenSize);
     return () => window.removeEventListener("resize", updateScreenSize);
   }, []);
-
-  const getFloatingLogosY = () => {
-    return isMobile ? 0.22 : -0.27;
-  };
-
-  const getFloatingLogosXChance = () => {
-    return isMobile ? 0.8 : 1;
-  };
 
   const emailx = () => {
     return isMobile ? -0.12 : -0.15;
@@ -277,7 +268,6 @@ const BackgroundCanvasComponent: React.FC<BackgroundCanvasProps> = ({
               />
               {shouldStartAnimation && (
                 <CameraAnimation
-                  onAnimationComplete={() => setCameraAnimationComplete(true)}
                   initialPosition={initialCameraPos}
                   targetPosition={targetCameraPos}
                   initialFov={initialFov}

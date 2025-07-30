@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { CardData } from "./types";
 
 interface CardModalProps {
@@ -19,9 +20,9 @@ const CardModal: React.FC<CardModalProps> = ({
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [contentOpacity, setContentOpacity] = useState(1);
-  const [isContentVisible, setIsContentVisible] = useState(true);
   const [showScrollIndicator, setShowScrollIndicator] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const previousCardId = useRef<string | number | null>(null);
 
   const containerHeight = isMobile ? "85%" : "90%";
 
@@ -39,14 +40,21 @@ const CardModal: React.FC<CardModalProps> = ({
   useEffect(() => {
     if (isTransitioning) {
       setContentOpacity(0);
-      setIsContentVisible(false);
     } else {
+      if (
+        scrollContainerRef.current &&
+        previousCardId.current !== null &&
+        previousCardId.current !== card.id
+      ) {
+        scrollContainerRef.current.scrollTop = 0;
+      }
+
       setTimeout(() => {
-        setIsContentVisible(true);
         setContentOpacity(1);
+        previousCardId.current = card.id;
       }, 100);
     }
-  }, [isTransitioning]);
+  }, [isTransitioning, card.id]);
 
   useEffect(() => {
     const checkScrollable = () => {
@@ -60,8 +68,9 @@ const CardModal: React.FC<CardModalProps> = ({
       }
     };
 
-    if (scrollContainerRef.current) {
+    if (scrollContainerRef.current && previousCardId.current === null) {
       scrollContainerRef.current.scrollTop = 0;
+      previousCardId.current = card.id;
     }
 
     checkScrollable();
@@ -79,7 +88,7 @@ const CardModal: React.FC<CardModalProps> = ({
       }
       window.removeEventListener("resize", checkScrollable);
     };
-  }, [card, contentOpacity]);
+  }, [card.id, contentOpacity]);
 
   const handleClose = () => {
     onClose();
@@ -178,10 +187,16 @@ const CardModal: React.FC<CardModalProps> = ({
             {(card.modalImageUrl || card.imageUrl) && (
               <div className="w-full">
                 <div className="relative rounded-lg overflow-hidden bg-black/20">
-                  <img
-                    src={card.modalImageUrl || card.imageUrl}
+                  <Image
+                    src={card.modalImageUrl || ""}
                     alt={card.title}
+                    width={800}
+                    height={600}
                     className="w-full h-auto object-contain"
+                    style={{
+                      maxWidth: "100%",
+                      height: "auto",
+                    }}
                   />
                 </div>
               </div>

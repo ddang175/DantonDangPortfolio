@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 import { CardData } from "./types";
 
 interface PreviewCardProps {
@@ -111,10 +112,16 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
       `}
       >
         {card.previewImageUrl || card.imageUrl ? (
-          <img
-            src={card.previewImageUrl || card.imageUrl}
+          <Image
+            src={card.previewImageUrl || ""}
             alt={card.title}
+            width={isMobile ? 96 : 112}
+            height={isMobile ? 96 : 112}
             className="w-full h-full object-cover"
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-500">

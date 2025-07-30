@@ -2,8 +2,8 @@
 
 import { useGLTF } from "@react-three/drei";
 import { useRef, useMemo, useCallback, useEffect, useState, memo } from "react";
-import { useFrame } from "@react-three/fiber";
-import { MeshStandardMaterial, Group, Material, Color } from "three";
+import { useFrame, ThreeEvent } from "@react-three/fiber";
+import { MeshStandardMaterial, Group, Color, Mesh, Object3D } from "three";
 import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 
 interface FloatingLinkedInLogoProps {
@@ -51,7 +51,6 @@ function lerpColor(a: string, b: string, t: number) {
 
 function LinkedInModel({
   url,
-  boundarySize = 0.001,
   onLogoClick,
 }: {
   url: string;
@@ -62,7 +61,6 @@ function LinkedInModel({
   const groupRef = useRef<Group>(null);
   const basePosition = useRef<[number, number, number]>([0, 0, 0]);
   const isHovered = useRef(false);
-  const materialsRef = useRef<Material[]>([]);
 
   const hoverT = useRef(0);
   const targetHoverT = useRef(0);
@@ -105,8 +103,8 @@ function LinkedInModel({
 
   const optimizedScene = useMemo(() => {
     const optimizedScene = scene.clone();
-    optimizedScene.traverse((child: any) => {
-      if (child.isMesh) {
+    optimizedScene.traverse((child: Object3D) => {
+      if (child instanceof Mesh) {
         child.castShadow = false;
         child.receiveShadow = false;
         child.frustumCulled = true;
@@ -117,7 +115,7 @@ function LinkedInModel({
   }, [scene, material]);
 
   const handleClick = useCallback(
-    (event: any) => {
+    (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
       onLogoClick();
     },
@@ -216,8 +214,6 @@ function LinkedInModel({
 const FloatingLinkedInLogo = memo(function FloatingLinkedInLogo({
   linkedInUrl = "https://www.linkedin.com/in/ddang175",
   boundarySize = 0.005,
-  glowColor = "#0077b5",
-  emissiveColor = "#00a0dc",
 }: FloatingLinkedInLogoProps) {
   const handleLogoClick = useCallback(() => {
     window.open(linkedInUrl, "_blank", "noopener,noreferrer");

@@ -47,7 +47,6 @@ const NavButton: React.FC<NavButtonProps> = ({
       >
         {children}
       </span>
-      {/* underline */}
       <div
         className={`
           absolute left-0 bottom-0 w-full h-0.5
@@ -60,10 +59,10 @@ const NavButton: React.FC<NavButtonProps> = ({
   );
 };
 
-const Divider: React.FC<{ isVertical?: boolean; isHorizontal?: boolean }> = ({
-  isVertical = false,
-  isHorizontal = false,
-}) => (
+const Divider: React.FC<{
+  isVertical?: boolean;
+  isHorizontal?: boolean;
+}> = ({}) => (
   <div className="relative flex items-center justify-center h-8 sm:h-10 lg:h-12">
     <div
       className="w-px bg-gradient-to-b from-transparent via-gray-400 to-transparent h-full"

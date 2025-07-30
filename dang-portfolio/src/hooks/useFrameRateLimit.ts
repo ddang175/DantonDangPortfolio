@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 
 interface UseFrameRateLimitOptions {
   targetFPS?: number;
@@ -12,6 +12,10 @@ export const useFrameRateLimit = ({
   const lastFrameTime = useRef(0);
   const frameInterval = useRef(1000 / targetFPS);
 
+  useEffect(() => {
+    frameInterval.current = 1000 / targetFPS;
+  }, [targetFPS]);
+
   const shouldRenderFrame = useCallback(
     (currentTime: number) => {
       if (!enabled) return true;
@@ -23,7 +27,7 @@ export const useFrameRateLimit = ({
 
       return false;
     },
-    [enabled, targetFPS]
+    [enabled]
   );
 
   const updateTargetFPS = useCallback((newFPS: number) => {

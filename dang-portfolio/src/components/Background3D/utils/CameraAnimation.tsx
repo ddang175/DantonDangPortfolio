@@ -34,7 +34,7 @@ export const CameraAnimation: React.FC<CameraAnimationProps> = ({
     camera.lookAt(0, 0, 0);
     camera.up.set(0, 0, 0);
     perspectiveCamera.updateProjectionMatrix();
-  }, [camera, initialFov]);
+  }, [camera, perspectiveCamera, initialFov]);
 
   useFrame(({ clock }) => {
     if (isComplete.current) return;

@@ -81,7 +81,7 @@ export const ModelScene: React.FC<ModelSceneProps> = ({
     }
   }, [gltf.scene, position, rotation, scale, onReady]);
 
-  useFrame((_, delta) => {
+  useFrame(() => {
     if (!modelRef.current || !shouldRenderFrame(performance.now())) return;
     if (!enableMouseRotation) return;
     const now = performance.now();

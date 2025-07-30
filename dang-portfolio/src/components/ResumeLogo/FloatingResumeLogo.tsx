@@ -2,10 +2,10 @@
 
 import { useGLTF } from "@react-three/drei";
 import { useRef, useMemo, useCallback, useEffect, useState } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, ThreeEvent } from "@react-three/fiber";
 import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 import { GLTF } from "three-stdlib";
-import { MeshStandardMaterial, Group, Color } from "three";
+import { MeshStandardMaterial, Group, Color, Mesh, Object3D } from "three";
 
 interface FloatingResumeLogoProps {
   resumeUrl?: string;
@@ -109,8 +109,8 @@ function ResumeModel({
 
   const optimizedScene = useMemo(() => {
     const optimizedScene = scene.clone();
-    optimizedScene.traverse((child: any) => {
-      if (child.isMesh) {
+    optimizedScene.traverse((child: Object3D) => {
+      if (child instanceof Mesh) {
         child.castShadow = false;
         child.receiveShadow = false;
         child.frustumCulled = true;
@@ -121,7 +121,7 @@ function ResumeModel({
   }, [scene, material]);
 
   const handleClick = useCallback(
-    (event: any) => {
+    (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
       onLogoClick();
     },
@@ -222,7 +222,7 @@ function ResumeModel({
 export default function FloatingResumeLogo({
   resumeUrl = "/resume/DantonDang_Resume.pdf",
   baseRotation = [0, 0, 0],
-  clickBoxScale = [0.045, 0.045, 0.02],
+  clickBoxScale = [0.04, 0.045, 0.02],
 }: FloatingResumeLogoProps) {
   const handleLogoClick = useCallback(() => {
     window.open(resumeUrl, "_blank", "noopener,noreferrer");

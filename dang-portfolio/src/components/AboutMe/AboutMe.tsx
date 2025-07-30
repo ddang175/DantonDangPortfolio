@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image"; // Add this import
 
 interface AboutMeProps {
   onClose: () => void;
@@ -36,7 +37,6 @@ const AboutMe: React.FC<AboutMeProps> = ({
     }
   }, [isTransitioning]);
 
-  // Check if content is scrollable
   useEffect(() => {
     const checkScrollable = () => {
       if (scrollContainerRef.current) {
@@ -182,13 +182,16 @@ const AboutMe: React.FC<AboutMeProps> = ({
                     relative
                   "
                   >
-                    <img
+                    <Image
                       src="/me.webp"
                       alt="Profile"
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                       style={{
                         objectPosition: `${currentPosition.x}% ${currentPosition.y}%`,
                       }}
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
                 </div>
@@ -220,9 +223,10 @@ const AboutMe: React.FC<AboutMeProps> = ({
                   <p>
                     Outside of software engineering, I love playing volleyball,
                     hanging out with friends, building keyboards, helping run
-                    Iowa State's Asian Student Union as Vice President, and
+                    Iowa State&apos;s Asian Student Union as Vice President, and
                     continuously learning. I am always eager to learn and grow
-                    while collaborating/meeting with others, so let's connect!
+                    while collaborating/meeting with others, so let&apos;s
+                    connect!
                   </p>
                 </div>
 
@@ -238,7 +242,7 @@ const AboutMe: React.FC<AboutMeProps> = ({
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="text-base sm:text-lg font-semibold text-white">
-                      Bachelor's in Software Engineering
+                      Bachelor&apos;s in Software Engineering
                     </h4>
                     <span className="text-purple-300 text-sm font-medium tracking-wider uppercase">
                       August 2023 - May 2027
@@ -253,8 +257,8 @@ const AboutMe: React.FC<AboutMeProps> = ({
                     </span>
                   </div>
                   <p className="text-gray-300 text-sm leading-relaxed">
-                    4x Dean's List | 2x President's List | George Washington
-                    Carver Scholar (Full-Tuition Scholarship)
+                    4x Dean&apos;s List | 2x President&apos;s List | George
+                    Washington Carver Scholar (Full-Tuition Scholarship)
                   </p>
                 </div>
 

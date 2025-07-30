@@ -131,7 +131,6 @@ const AnimatedLetter: React.FC<AnimatedLetterProps> = ({
   letterSpacing,
   material,
   index,
-  enableMouseRotation,
   pitchSpeed,
   yawSpeed,
   rollSpeed,
@@ -147,7 +146,6 @@ const AnimatedLetter: React.FC<AnimatedLetterProps> = ({
   secondaryRollSpeed,
 }) => {
   const groupRef = useRef<Group>(null);
-  const timeRef = useRef(0);
 
   const phaseOffsetValue = useMemo(
     () => index * phaseOffset,
@@ -189,7 +187,6 @@ const AnimatedLetter: React.FC<AnimatedLetterProps> = ({
     const secondaryRoll =
       Math.cos(time * secondaryRollSpeed) * secondaryRollAmplitude;
 
-    // Set base floating animation
     const floatingRotation: [number, number, number] = [
       baseRotation[0] + pitchOffset + secondaryPitch,
       baseRotation[1] + yawOffset + secondaryYaw,
@@ -336,7 +333,7 @@ export const NeonTextModelScene: React.FC<NeonTextModelSceneProps> = ({
     }
   }, [position, rotation, scale, onReady]);
 
-  useFrame((_, delta) => {
+  useFrame(() => {
     if (!modelRef.current || !shouldRenderFrame(performance.now())) return;
     if (!enableMouseRotation) return;
     const now = performance.now();

@@ -2,8 +2,8 @@
 
 import { useGLTF } from "@react-three/drei";
 import { useRef, useMemo, useCallback, useEffect, useState } from "react";
-import { useFrame } from "@react-three/fiber";
-import { MeshStandardMaterial, Group, Material, Color } from "three";
+import { useFrame, ThreeEvent } from "@react-three/fiber";
+import { MeshStandardMaterial, Group, Color, Mesh, Object3D } from "three";
 import { useFrameRateLimit } from "../../hooks/useFrameRateLimit";
 import { GLTF } from "three-stdlib";
 
@@ -11,9 +11,7 @@ interface FloatingGitHubLogoProps {
   githubUrl?: string;
   glowColor?: string;
   emissiveColor?: string;
-
   baseRotation?: [number, number, number];
-
   clickBoxScale?: [number, number, number];
 }
 
@@ -110,8 +108,8 @@ function GitHubModel({
 
   const optimizedScene = useMemo(() => {
     const optimizedScene = scene.clone();
-    optimizedScene.traverse((child: any) => {
-      if (child.isMesh) {
+    optimizedScene.traverse((child: Object3D) => {
+      if (child instanceof Mesh) {
         child.castShadow = false;
         child.receiveShadow = false;
         child.frustumCulled = true;
@@ -122,7 +120,7 @@ function GitHubModel({
   }, [scene, material]);
 
   const handleClick = useCallback(
-    (event: any) => {
+    (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
       onLogoClick();
     },
@@ -222,10 +220,8 @@ function GitHubModel({
 
 export default function FloatingGitHubLogo({
   githubUrl = "https://github.com/ddang175",
-  glowColor = "#2ea44f",
-  emissiveColor = "#34d058",
   baseRotation = [0, 1.3, -0.1],
-  clickBoxScale = [0.05, 0.05, 0.02],
+  clickBoxScale = [0.045, 0.045, 0.02],
 }: FloatingGitHubLogoProps) {
   const handleLogoClick = useCallback(() => {
     window.open(githubUrl, "_blank", "noopener,noreferrer");

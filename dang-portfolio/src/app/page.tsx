@@ -215,13 +215,8 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
   const timeoutRefs = useRef<NodeJS.Timeout[]>([]);
 
-  const {
-    startIntroMusic,
-    completeIntroMusic,
-    startLoadingMusic,
-    completeLoadingMusic,
-    playWhoosh,
-  } = useAudioControl();
+  const { startIntroMusic, completeIntroMusic, startLoadingMusic, playWhoosh } =
+    useAudioControl();
 
   useEffect(() => {
     const updateScreenSize = () => {
@@ -244,12 +239,13 @@ export default function Home() {
   }, [startIntroMusic]);
 
   const handle3DReady = useCallback(() => {
-    timeoutRefs.current.forEach((timer, index) => {
+    timeoutRefs.current.forEach((timer) => {
       if (timer && typeof timer === "number") {
         clearTimeout(timer);
-        timeoutRefs.current[index] = null as any;
       }
     });
+
+    timeoutRefs.current = [];
 
     setShowLoadingIndicator(false);
     setShow3D(true);

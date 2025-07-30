@@ -25,7 +25,7 @@ export default function CursorGlow() {
   }, []);
 
   useEffect(() => {
-    if (isMobile) return; // Don't add mouse listeners on mobile
+    if (isMobile) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
@@ -55,7 +55,7 @@ export default function CursorGlow() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [position, isMobile]);
+  }, [position, isMobile, shouldRenderFrame]);
 
   if (isMobile) {
     return null;

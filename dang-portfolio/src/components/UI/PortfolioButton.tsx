@@ -1,6 +1,19 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+
+const ANIMATION_CONFIG = {
+  FADE_OUT_DURATION: 300,
+  TEXT_ANIMATION_DELAY: 300,
+  CURSOR_RETURN_SPEED: 0.9,
+
+  CURSOR_INFLUENCE_RADIUS: 150,
+  CURSOR_FOLLOW_SPEED: 0.03,
+
+  HOVER_SCALE: 1.05,
+  HOVER_GLOW_INTENSITY: 1.3,
+};
+
 interface PortfolioButtonProps {
   onButtonClick: () => void;
   className?: string;
@@ -10,18 +23,6 @@ export default function PortfolioButton({
   onButtonClick,
   className = "",
 }: PortfolioButtonProps) {
-  const ANIMATION_CONFIG = {
-    FADE_OUT_DURATION: 300,
-    TEXT_ANIMATION_DELAY: 300,
-    CURSOR_RETURN_SPEED: 0.9,
-
-    CURSOR_INFLUENCE_RADIUS: 150,
-    CURSOR_FOLLOW_SPEED: 0.03,
-
-    HOVER_SCALE: 1.05,
-    HOVER_GLOW_INTENSITY: 1.3,
-  };
-
   const [isVisible, setIsVisible] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });

@@ -59,7 +59,7 @@ export const useAudioControl = ({
 
   const startMusic = useCallback(() => {
     if (!isMobile && audioRef.current) {
-      audioRef.current.play().catch((err) => {});
+      audioRef.current.play().catch(() => {});
     }
   }, [isMobile]);
 
@@ -69,7 +69,7 @@ export const useAudioControl = ({
 
       const playWithDelay = () => {
         whooshAudioRef.current!.currentTime = 0;
-        whooshAudioRef.current!.play().catch((err) => {});
+        whooshAudioRef.current!.play().catch(() => {});
       };
 
       if (delayMs > 0) {
