@@ -119,7 +119,7 @@ Delete:
 Remove patents from stash or profile, Delete specific notes, links, or tags (if implemented)
 `,
     shortDescription:
-      "3D Portfolio based on Tokyo alley ways to showcase my work and who I am.",
+      "Library of NASA Patents and Technologies, inspiring innovation.",
     previewImageUrl: "/projects/NCT127.gif",
     modalImageUrl: "/projects/nct127modal.webp",
     technologies: ["React", "JavaScript XML", "MongoDB", "Express"],
