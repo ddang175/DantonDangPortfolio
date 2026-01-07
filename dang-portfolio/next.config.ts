@@ -7,14 +7,6 @@ const nextConfig: NextConfig = {
       "@react-three/drei",
       "three",
     ],
-    turbo: {
-      rules: {
-        "*.gltf": {
-          loaders: ["@next/gltf-loader"],
-          as: "*.gltf",
-        },
-      },
-    },
   },
 
   images: {
@@ -69,8 +61,6 @@ const nextConfig: NextConfig = {
   },
 
   output: "standalone",
-
-  swcMinify: true,
 };
 
 export default nextConfig;

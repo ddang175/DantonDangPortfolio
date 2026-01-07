@@ -203,11 +203,11 @@ const AboutMe: React.FC<AboutMeProps> = ({
                     problem-solving, and lifelong learning.
                   </p>
                   <p>
-                    Currently, I am a Software Engineer at John Deere team
+                    Currently, I am a Software Engineer at the John Deere team
                     called CyCloud. I focus on developing internal applications
                     that improve workflows, reduce manual work, and help people
                     adhere to enterprise standards (all while saving John Deere
-                    some money). My role at Deere requires front and backend
+                    some money). My role at Deere requires front-end and backend
                     development, exposing me to many different technologies and
                     skills.
                   </p>
@@ -222,10 +222,10 @@ const AboutMe: React.FC<AboutMeProps> = ({
                   </p>
                   <p>
                     Outside of software engineering, I love playing volleyball,
-                    hanging out with friends, building keyboards, helping run
-                    Iowa State&apos;s Asian Student Union as Vice President, and
-                    continuously learning. I am always eager to learn and grow
-                    while collaborating/meeting with others, so let&apos;s
+                    hanging out with friends, building keyboards, and helping
+                    run Iowa State&apos;s Asian Student Union as Vice President,
+                    and continuously learning. I am always eager to learn and
+                    grow while collaborating/meeting with others, so let&apos;s
                     connect!
                   </p>
                 </div>
