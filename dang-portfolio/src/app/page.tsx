@@ -26,15 +26,15 @@ Video Mirroring - Toggle button to mirror videos so you can learn the choreograp
 
 Speed Adjustment - Slider bar where you can adjust the speed quickly in 0.05x increments
 
-Countdown - You can toggle a countdown timer with whatever time you’d like. The countdown will play whenever the the video is unpaused, clicked through, or looped, allowing you time to get into position
+Countdown: You can toggle a countdown timer with whatever time you’d like. The countdown will play whenever the video is unpaused, clicked through, or looped, allowing you time to get into position.
 
-Segments - Segments allow you to split the video into different parts so you can practice certain sections of the choreography. Creating a segment will allow you to click play from that segment or loop that segment however long you would like. Segments are created by providing two timestamps.
+Segments: Segments enable you to split the video into distinct parts, allowing you to practice specific sections of the choreography. Creating a segment will help you to click play from that segment or loop it for as long as you would like. Segments are created by providing two timestamps.
 
-Looping - You can toggle a loop on any segment you would like, if you have the timer enabled the timer will countdown before the loop restarts.
+Looping: You can toggle a loop on any segment you like. If the timer is enabled, it will count down before the loop restarts.
 
-Metronome - You can toggle the metronome that matches the beat of the music after configuring the timing. To configure the timing you just have to tap to the beat of the music for 15 seconds
+Metronome: You can toggle the metronome that matches the beat of the music after configuring the timing. To configure the timing, you just have to tap to the beat of the music for 15 seconds
 
-Memory - Dancer will remember every segment and metronome timing configuration you make for each video so that you can come back and have everything you need to dance`,
+Memory - Dancer will remember every segment and metronome timing configuration you make for each video, so that you can come back and have everything you need to dance`,
     shortDescription:
       "A chrome extension to help people learn choreographies with video controls.",
     previewImageUrl: "/projects/dancer.gif",
@@ -46,11 +46,11 @@ Memory - Dancer will remember every segment and metronome timing configuration y
   {
     id: "project-2",
     title: "My Portfolio",
-    description: `I created this 3d portfolio to showcase my work, creativity, and who I am as an eningeer and a person.
+    description: `I created this 3d portfolio to showcase my work, creativity, and who I am as an engineer and a person.
 
-    I wanted to showcase my personality through this potrfolio and provide you with a different experience from other engineering portfolios. My portfolio is heavily inspired my Tokyo alleyways and night life. I also wanted to incooperate one of my favorite cars, the Toyota AE86 Trueno Sprinter :)
-    
-    ThreeJS was used because I saw so many creative 3D websites, so that was my main focus when creating this portfolio. Since you are already here on my portfolio, please have fun looking around and make sure to contact me!`,
+ I wanted to showcase my personality through this portfolio and offer you a unique experience compared to other engineering portfolios. The alleyways and nightlife of Tokyo heavily inspire my portfolio. I also wanted to incorporate one of my favorite cars, the Toyota AE86 Trueno Sprinter :)
+    
+ Three.js was used because I saw many creative 3D websites, which was my primary focus when creating this portfolio. Since you are already here on my portfolio, please take a moment to explore, and don't hesitate to contact me!`,
     shortDescription:
       "3D Portfolio based on Tokyo alley ways to showcase my work and who I am.",
     previewImageUrl: "/projects/port.gif",
@@ -63,12 +63,12 @@ Memory - Dancer will remember every segment and metronome timing configuration y
     id: "project-3",
     title: "PACC (Principal Automated Code Checker)",
     description: `PACC (Principal Automated Code Checker) was created the the Principal Intern 2025 Code Jam. My team and I had 3 days to complete this project and present it to an audience.
- 
-    PACC is an internal tool for developers to check for formatting and create code documentation before the user pushes to GitHub. GitHub Actions is a significant cost for an enterprise like Principal, so we wanted to create something to lower that cost. PACC formats your code by linting it (using ESList or Flake8 and Black) and using AWS Bedrock LLMs to format code. By running PACC, we will catch errors before the code is pushed to GitHub. This prevents wasted GitHub actions and saves the enterprise money. 
+ 
+ PACC is an internal tool for developers to check for formatting and create code documentation before pushing to GitHub. GitHub Actions is a high cost for an enterprise like Principal, so we wanted to create something to lower that cost. PACC formats your code by linting it (using ESList or Flake8 and Black) and using AWS Bedrock LLMs to format code. By running PACC, we will catch errors before the code is pushed to GitHub, ensuring a more stable codebase. This prevents wasted GitHub actions and saves the enterprise money. 
 
-    Built into PACC are also connections to GitHub. You can pull, commit, and push straight from the PACC application. When committing from PACC, an autogenerated commit message will be created for you.
- 
-    For PACC, I created the user interface, implemented the AI functionality, and created the GitHub functionality (pulling, committing, pushing)`,
+ Built into PACC are also connections to GitHub. You can pull, commit, and push straight from the PACC application. When committing from PACC, an autogenerated commit message will be created for you.
+ 
+ For PACC, I created the user interface, implemented the AI functionality, and created the GitHub functionality (pulling, committing, pushing)`,
     shortDescription: `Internal Principal tool that formats, documents, and pushes code with AI`,
     previewImageUrl: "/projects/pacc.gif",
     modalImageUrl: "/projects/paccmodal.webp",
@@ -86,20 +86,20 @@ Memory - Dancer will remember every segment and metronome timing configuration y
   {
     id: "project-4",
     title: "NCT127 - NASA Tech Library",
-    description: `NCT127 (NASA Collection of Technologies), is a full-stack web application designed to educate and inspire users by showcasing a curated collection of NASA’s patents. The core functionalities include:
-Patent Discovery: Users can search for NASA patents using keywords or explore curated categories. NCT127's was created using React for the front end and Express with MongoDB for backend/API calls.
+    description: `NCT127 (NASA Collection of Technologies) is a full-stack web application designed to educate and inspire users by showcasing a curated collection of NASA's patents. The core functionalities include:
+Patent Discovery: Users can search for NASA patents using keywords or explore curated categories. NCT127 was created using React for the front end and Express with MongoDB for backend/API calls.
 
-Patent Details: Each patent has a detailed view displayed via a modal, including metadata and descriptions.
+Patent Details: Each patent is displayed with a detailed view via a modal, including metadata and descriptions.
 Stashing Patents: Users can temporarily save patents to a "stash" (similar to a cart).
 Saving to Profile: From the stash, users can confirm which patents to save to their personal collection.
 User Authentication: Sign-up and login functionality for personalized access.
 Profile Management: Logged-in users can view, edit, or delete saved patents from their profile.
 Notes System: Users can add, edit, and view notes, links, and tags for each saved patent.
-Tag-Based Filtering: Patents in a user’s profile can be filtered in real-time using tags.
+Tag-Based Filtering: Patents in a user's profile can be filtered in real-time using tags.
 
 UI Flow
 Authentication: Users must either create an account or log in to access the site.
-Homepage/Dashboard: After login, users land on the homepage where they can search or browse patents.
+Homepage/Dashboard: After logging in, users are directed to the homepage, where they can search or browse patents.
 Patent Exploration: Users can view patent details and stash interesting ones.
 Stash Page: Users visit the stash to confirm which patents to save to their MongoDB-backed account.
 Profile Page: Saved patents appear here. Users can:
@@ -112,11 +112,11 @@ CRUD Operations
 Create:
 User accounts (sign-up), Stashing patents temporarily, Saving patents to user profile, Adding notes, links, and tags
 Read:
-Fetch patents from NASA’s Tech Transfer API, View patent details, user’s saved patents, and associated notes/tags
+Fetch patents from NASA's Tech Transfer API, View patent details, users' saved patents, and associated notes/tags
 Update:
 Edit notes, links, and tags for a saved patent
 Delete:
-Remove patents from stash or profile, Delete specific notes, links, or tags (if implemented)
+Remove patents from stash or profile, delete specific notes, links, or tags (if implemented)
 `,
     shortDescription:
       "Library of NASA Patents and Technologies, inspiring innovation.",
@@ -134,10 +134,10 @@ const experienceData: CardData[] = [
     title: "Software Engineer",
     company: "John Deere",
     description: `At John Deere Financial, I contributed to two major internal applications that improved operational efficiency and data integrity.
-    
-    For a global Security Access Management app used by over 470 managers, I helped build the front end using React and MUI, improved UI/UX, and supported backend integration with API Gateway and AWS Lambda. Also, I created a TypeScript CRON job using Prisma and Deere's HR API to automate the cleanup of terminated employee records and fix invalid IDs across a 2,000+ entry database. This tool reduced manual effort and saved the company over $18,000 annually.
-    
-    Separately, I developed an internal data management tool for the Database team. I automated JIRA ticket creation, managed AWS EC2 lifecycle events, and documented secure API integrations using Deere's internal SALAD standards.`,
+    
+ For a global Security Access Management app used by over 470 managers, I helped build the front end using React and MUI, improved UI/UX, and supported backend integration with API Gateway and AWS Lambda. Additionally, I created a TypeScript cron job using Prisma and Deere's HR API to automate the cleanup of terminated employee records and resolve invalid IDs across a database of over 2,000 entries. This tool reduced manual effort and saved the company over $18,000 annually.
+    
+ Separately, I developed an internal data management tool for the Database team. I automated JIRA ticket creation, managed AWS EC2 lifecycle events, and documented secure API integrations using Deere's internal SALAD standards.`,
     shortDescription:
       "Full stack engineer on the CyCloud team at ISU Research Park.",
     previewImageUrl: "/experience/johndeere.gif",
@@ -185,13 +185,13 @@ const leadershipData: CardData[] = [
     company: "Asian Student Union",
     description: `Asian Student Union (ASU) is an organization on campus that promotes inclusivity and has built a community through celebrating Asian culture.
 
-I started as an intern for ASU in February of 2025. As an intern, I learned much about community building and fostering connections with the ASU community. ASU allowed me to organize significant events, create promotional marketing materials, host events, fundraise, and impact the organization's future.
+I started as an intern for ASU in February of 2025. As an intern, I gained valuable insights into community building and fostering connections within the ASU community. ASU allowed me to organize significant events, create promotional marketing materials, host events, fundraise, and impact the organization's future.
 
-One of our most significant events was collaborating with the Iowa State Vietnamese Student Association (VSA) to create a culture show called InnovAsian. InnovAsian took months of planning, organization of 10+ performances, communication between 15+ organizations, and $10,000+ in costs. Even though this was the only and first ever Asian culture show at Iowa State, we brought in over 350 guests.
+One of our most significant events was collaborating with the Iowa State Vietnamese Student Association (VSA) to create a culture show called InnovAsian. InnovAsian required months of planning, organization of over 10 performances, communication with 15+ organizations, and over $ 10,000 in costs. Although this was the first-ever Asian culture show at Iowa State, we attracted over 350 guests.
 
-At the end of April, I became the Vice President of VSA. We are currently planning for the upcoming school year's events and fundraisers. I am responsible (alongside the president) for organizing officer meetings, planning general board meetings, communication and organization with our team, task delegation, communicating with Iowa State organizations, and room booking.
+At the end of April, I became the Vice President of ASU. We are currently planning for the upcoming school year's events and fundraisers. I am responsible (alongside the president) for organizing officer meetings, planning general board meetings, communication and organization with our team, delegation, communicating with Iowa State organizations, and room booking.
 
-If you are an Iowa State student, please check out ASU!!!!!!!`,
+If you are an Iowa State student, please consider checking out ASU!`,
     shortDescription:
       "Leading an inclusive community of 150+ members celebrating Asian culture",
     previewImageUrl: "/leadership/asu.webp",
